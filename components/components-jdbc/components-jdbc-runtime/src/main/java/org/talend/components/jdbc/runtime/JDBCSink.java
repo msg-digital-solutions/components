@@ -19,7 +19,6 @@ import org.talend.components.api.component.runtime.Result;
 import org.talend.components.api.component.runtime.Sink;
 import org.talend.components.api.component.runtime.WriteOperation;
 import org.talend.components.api.container.RuntimeContainer;
-import org.talend.daikon.properties.ValidationResult;
 
 /**
  * JDBC runtime execution object for output action
@@ -34,13 +33,6 @@ public class JDBCSink extends JDBCSourceOrSink implements Sink {
         return new JDBCOutputWriteOperation(this);
     }
 
-    @Override
-    public ValidationResult validate(RuntimeContainer runtime) {
-        if (setting.getTablename() == null || setting.getTablename().isEmpty()) {
-            return new ValidationResult(ValidationResult.Result.ERROR, "Table name is null or empty for JDBCOutput component");
-        }
-        return super.validate(runtime);
-    }
 
     @Override
     public Connection connect(RuntimeContainer runtime) throws ClassNotFoundException, SQLException {

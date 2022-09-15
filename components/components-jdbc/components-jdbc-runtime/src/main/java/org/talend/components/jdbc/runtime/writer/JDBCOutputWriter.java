@@ -33,7 +33,6 @@ import org.talend.components.jdbc.runtime.setting.JDBCSQLBuilder;
 import org.talend.components.jdbc.tjdbcoutput.TJDBCOutputProperties.DataAction;
 import org.talend.daikon.avro.AvroUtils;
 import org.talend.daikon.avro.converter.IndexedRecordConverter;
-import org.talend.daikon.properties.ValidationResult;
 
 import java.io.IOException;
 import java.sql.BatchUpdateException;
@@ -166,9 +165,8 @@ abstract public class JDBCOutputWriter implements WriterWithFeedback<Result, Ind
             columnList = JDBCSQLBuilder.getInstance().createColumnList(setting, componentSchema);
         }
 
-        ValidationResult vr = sink.validate(runtime);
-        if (vr.getStatus() != ValidationResult.Result.OK) {
-            throw new ComponentException(new IllegalStateException(vr.getMessage()));
+        if (setting.getTablename() == null || setting.getTablename().isEmpty()) {
+            throw new ComponentException(new IllegalStateException("Table name is null or empty for JDBCOutput component"));
         }
 
         if (!setting.getClearDataInTable()) {
