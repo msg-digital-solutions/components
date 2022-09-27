@@ -12,20 +12,15 @@
 // ============================================================================
 package org.talend.components.api.test;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLStreamHandler;
-import java.net.URLStreamHandlerFactory;
 import java.util.Collection;
 import java.util.Set;
 
 import org.junit.rules.ErrorCollector;
-import org.ops4j.pax.url.mvn.Handler;
-import org.ops4j.pax.url.mvn.ServiceConstants;
+import org.talend.components.api.DaikonLegacyAssertions;
 import org.talend.components.api.component.ComponentDefinition;
 import org.talend.components.api.component.ComponentImageType;
 import org.talend.components.api.properties.ComponentProperties;
@@ -36,7 +31,6 @@ import org.talend.daikon.definition.service.DefinitionRegistryService;
 import org.talend.daikon.properties.Properties;
 import org.talend.daikon.properties.PropertiesImpl;
 import org.talend.daikon.properties.property.Property;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
 import org.talend.daikon.runtime.RuntimeUtil;
 
 // import static org.hamcrest.Matchers.*;
@@ -44,7 +38,7 @@ import org.talend.daikon.runtime.RuntimeUtil;
 public class ComponentTestUtils {
 
     public static Properties checkSerialize(Properties props, ErrorCollector errorCollector) {
-        return PropertiesTestUtils.checkSerialize(props, errorCollector);
+        return DaikonLegacyAssertions.checkSerialize(props, errorCollector);
     }
 
     /**
@@ -53,7 +47,7 @@ public class ComponentTestUtils {
      * @param componentService where to get all the components
      * @param errorCollector used to collect all errors at once. @see
      *            <a href="http://junit.org/apidocs/org/junit/rules/ErrorCollector.html">ErrorCollector</a>
-     * @deprecated use {@link PropertiesTestUtils#assertAlli18nAreSetup(DefinitionRegistryService, ErrorCollector)} and
+     * @deprecated use {@link DaikonLegacyAssertions#assertAlli18nAreSetup(DefinitionRegistryService, ErrorCollector)} and
      *             {@link #assertReturnProperties18nAreSet(DefinitionRegistryService, ErrorCollector)}
      */
     @Deprecated
@@ -97,13 +91,13 @@ public class ComponentTestUtils {
     public static void checkAllPropertyI18n(Property<?>[] propertyArray, Object parent, ErrorCollector errorCollector) {
         if (propertyArray != null) {
             for (Property<?> prop : propertyArray) {
-                PropertiesTestUtils.chekProperty(errorCollector, prop, parent);
+                DaikonLegacyAssertions.chekProperty(errorCollector, prop, parent);
             }
         } // else no property to check so ignore.
     }
 
     static public void checkAllI18N(Properties checkedProps, ErrorCollector errorCollector) {
-        PropertiesTestUtils.checkAllI18N(checkedProps, errorCollector);
+        DaikonLegacyAssertions.checkAllI18N(checkedProps, errorCollector);
     }
 
     /**

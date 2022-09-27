@@ -50,7 +50,7 @@ import org.talend.daikon.properties.ValidationResult;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.daikon.properties.property.Property;
 import org.talend.daikon.properties.service.Repository;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SpringTestApp.class)
@@ -120,7 +120,7 @@ public class SpringSnowflakeTestIT extends SnowflakeRuntimeIT {
         assertEquals("Password", passwordSe.getDisplayName());
         NamedThing nameProp = connFormWizard.getWidget("name").getContent(); //$NON-NLS-1$
         assertEquals("Name", nameProp.getDisplayName());
-        PropertiesTestUtils.checkAndValidate(getComponentService(), connFormWizard, "testConnection", connProps);
+        DaikonLegacyAssertions.checkAndValidate(getComponentService(), connFormWizard, "testConnection", connProps);
         assertTrue(connFormWizard.isAllowForward());
 
         Form modForm = forms.get(1);
@@ -199,7 +199,7 @@ public class SpringSnowflakeTestIT extends SnowflakeRuntimeIT {
         SnowflakeConnectionProperties props = (SnowflakeConnectionProperties) setupProps(null);
         LOGGER.debug(String.valueOf(props));
         Form f = props.getForm(SnowflakeConnectionProperties.FORM_WIZARD);
-        props = (SnowflakeConnectionProperties) PropertiesTestUtils.checkAndValidate(getComponentService(), f, "testConnection",
+        props = (SnowflakeConnectionProperties) DaikonLegacyAssertions.checkAndValidate(getComponentService(), f, "testConnection",
                 props);
         LOGGER.debug(props.getValidationResult().toString());
         assertEquals(ValidationResult.Result.OK, props.getValidationResult().getStatus());
@@ -210,7 +210,7 @@ public class SpringSnowflakeTestIT extends SnowflakeRuntimeIT {
         SnowflakeConnectionProperties props = (SnowflakeConnectionProperties) setupProps(null);
         props.userPassword.userId.setValue("blah");
         Form f = props.getForm(SnowflakeConnectionProperties.FORM_WIZARD);
-        props = (SnowflakeConnectionProperties) PropertiesTestUtils.checkAndValidate(getComponentService(), f, "testConnection",
+        props = (SnowflakeConnectionProperties) DaikonLegacyAssertions.checkAndValidate(getComponentService(), f, "testConnection",
                 props);
         LOGGER.debug(props.getValidationResult().toString());
         assertEquals(ValidationResult.Result.ERROR, props.getValidationResult().getStatus());

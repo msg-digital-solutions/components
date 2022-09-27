@@ -58,7 +58,7 @@ import org.talend.daikon.properties.Properties;
 import org.talend.daikon.properties.ValidationResult;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.daikon.properties.property.Property;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 
 @SuppressWarnings("nls")
 public class SalesforceTestBase extends AbstractComponentTest {
@@ -134,7 +134,7 @@ public class SalesforceTestBase extends AbstractComponentTest {
 
     protected void setupModule(SalesforceModuleProperties moduleProps, String module) throws Throwable {
         Form f = moduleProps.getForm(Form.REFERENCE);
-        moduleProps = (SalesforceModuleProperties) PropertiesTestUtils.checkAndBeforeActivate(getComponentService(), f,
+        moduleProps = (SalesforceModuleProperties) DaikonLegacyAssertions.checkAndBeforeActivate(getComponentService(), f,
                 "moduleName", moduleProps);
         moduleProps.moduleName.setValue(module);
         moduleProps = (SalesforceModuleProperties) checkAndAfter(f, "moduleName", moduleProps);
@@ -142,7 +142,7 @@ public class SalesforceTestBase extends AbstractComponentTest {
 
     protected void setupModuleWithEmptySchema(SalesforceModuleProperties moduleProps, String module) throws Throwable {
         Form f = moduleProps.getForm(Form.REFERENCE);
-        moduleProps = (SalesforceModuleProperties) PropertiesTestUtils.checkAndBeforeActivate(getComponentService(), f,
+        moduleProps = (SalesforceModuleProperties) DaikonLegacyAssertions.checkAndBeforeActivate(getComponentService(), f,
                 "moduleName", moduleProps);
         moduleProps.moduleName.setValue(module);
         Schema emptySchema = Schema.createRecord(module, null, null, false);

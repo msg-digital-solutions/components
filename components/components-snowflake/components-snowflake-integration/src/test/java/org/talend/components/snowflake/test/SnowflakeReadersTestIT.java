@@ -46,7 +46,7 @@ import org.talend.components.snowflake.tsnowflakeoutput.TSnowflakeOutputProperti
 import org.talend.daikon.avro.SchemaConstants;
 import org.talend.daikon.properties.ValidationResult;
 import org.talend.daikon.properties.presentation.Form;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 
 /**
  * created by dmytro.chmyga on Mar 6, 2017
@@ -70,7 +70,7 @@ public class SnowflakeReadersTestIT extends SnowflakeRuntimeIOTestIT {
         setupProps(props.getConnectionProperties());
         Form f = props.getForm(MAIN);
         props.manualQuery.setValue(false);
-        props = (TSnowflakeInputProperties) PropertiesTestUtils.checkAndAfter(getComponentService(), f,
+        props = (TSnowflakeInputProperties) DaikonLegacyAssertions.checkAndAfter(getComponentService(), f,
                 props.manualQuery.getName(), props);
 
         props.condition.setValue("ID > 80");
@@ -87,7 +87,7 @@ public class SnowflakeReadersTestIT extends SnowflakeRuntimeIOTestIT {
         setupProps(props.getConnectionProperties());
         Form f = props.getForm(MAIN);
         props.manualQuery.setValue(true);
-        props = (TSnowflakeInputProperties) PropertiesTestUtils.checkAndAfter(getComponentService(), f,
+        props = (TSnowflakeInputProperties) DaikonLegacyAssertions.checkAndAfter(getComponentService(), f,
                 props.manualQuery.getName(), props);
 
         props.query.setValue("select ID, C7 from " + testTable + " where ID > 80");
@@ -242,7 +242,7 @@ public class SnowflakeReadersTestIT extends SnowflakeRuntimeIOTestIT {
                 .setValue(ComponentReferenceProperties.ReferenceType.COMPONENT_INSTANCE);
         props.connection.referencedComponent.componentInstanceId.setValue(compId);
         props.connection.referencedComponent.setReference(cProps);
-        PropertiesTestUtils.checkAndAfter(getComponentService(), props.connection.getForm(Form.REFERENCE), "referencedComponent",
+        DaikonLegacyAssertions.checkAndAfter(getComponentService(), props.connection.getForm(Form.REFERENCE), "referencedComponent",
                 props.connection);
 
         resetUser();
@@ -262,7 +262,7 @@ public class SnowflakeReadersTestIT extends SnowflakeRuntimeIOTestIT {
         props.connection.referencedComponent.componentInstanceId.setValue(null);
         props.connection.referencedComponent.setReference(null);
         // Check that the null referenced component works.
-        PropertiesTestUtils.checkAndAfter(getComponentService(), props.connection.getForm(Form.REFERENCE), "referencedComponent",
+        DaikonLegacyAssertions.checkAndAfter(getComponentService(), props.connection.getForm(Form.REFERENCE), "referencedComponent",
                 props.connection);
 
         resetUser();
@@ -282,10 +282,10 @@ public class SnowflakeReadersTestIT extends SnowflakeRuntimeIOTestIT {
 
         Form f = props.table.getForm(Form.REFERENCE);
         SnowflakeTableProperties moduleProps = (SnowflakeTableProperties) f.getProperties();
-        moduleProps = (SnowflakeTableProperties) PropertiesTestUtils.checkAndBeforeActivate(getComponentService(), f,
+        moduleProps = (SnowflakeTableProperties) DaikonLegacyAssertions.checkAndBeforeActivate(getComponentService(), f,
                 moduleProps.tableName.getName(), moduleProps);
         moduleProps.tableName.setValue(testTable);
-        moduleProps = (SnowflakeTableProperties) PropertiesTestUtils.checkAndAfter(getComponentService(), f,
+        moduleProps = (SnowflakeTableProperties) DaikonLegacyAssertions.checkAndAfter(getComponentService(), f,
                 moduleProps.tableName.getName(), moduleProps);
         Schema schema = moduleProps.main.schema.getValue();
         LOGGER.debug(schema.toString());
@@ -330,7 +330,7 @@ public class SnowflakeReadersTestIT extends SnowflakeRuntimeIOTestIT {
         setupProps(props.getConnectionProperties());
         Form f = props.getForm(MAIN);
         props.manualQuery.setValue(true);
-        props = (TSnowflakeInputProperties) PropertiesTestUtils.checkAndAfter(getComponentService(), f,
+        props = (TSnowflakeInputProperties) DaikonLegacyAssertions.checkAndAfter(getComponentService(), f,
                 props.manualQuery.getName(), props);
 
         props.query.setValue("bad query");
