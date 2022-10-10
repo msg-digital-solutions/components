@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2017 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2022 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%${symbol_escape}features${symbol_escape}org.talend.rcp.branding.%PRODUCTNAME%${symbol_escape}%PRODUCTNAME%license.txt
