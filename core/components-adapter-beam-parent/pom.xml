@@ -17,7 +17,7 @@
     <properties>
         <avro.version>1.8.1</avro.version>
         <beam.version>2.33.0</beam.version>
-        <spark.version>2.4.6</spark.version>
+        <spark.version>2.4.7.7.1.7.1055-1</spark.version>
         <hadoop.version>3.2.4</hadoop.version>
     </properties>
 
@@ -32,6 +32,17 @@
             </releases>
             <snapshots>
                 <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>cloudera.libs</id>
+            <name>Cloudera Libs Repository</name>
+            <url>https://repository.cloudera.com/artifactory/libs-release-local/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
             </snapshots>
         </repository>
     </repositories>
