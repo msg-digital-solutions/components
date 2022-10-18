@@ -41,7 +41,7 @@ public class SalesforceBulkV2Runtime {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SalesforceBulkV2Runtime.class);
 
-    private static final I18nMessages MESSAGES =
+    private final I18nMessages MESSAGES =
             GlobalI18N.getI18nMessageProvider().getI18nMessages(SalesforceBulkV2Runtime.class);
 
     private String objectType;

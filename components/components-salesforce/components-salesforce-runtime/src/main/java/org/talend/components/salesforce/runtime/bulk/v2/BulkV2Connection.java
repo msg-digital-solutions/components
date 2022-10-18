@@ -72,7 +72,7 @@ public class BulkV2Connection {
 
     public static final String CSV_CONTENT_TYPE = "text/csv";
 
-    private static final I18nMessages MESSAGES =
+    private final I18nMessages MESSAGES =
             GlobalI18N.getI18nMessageProvider().getI18nMessages(BulkV2Connection.class);
 
     private ConnectorConfig config;

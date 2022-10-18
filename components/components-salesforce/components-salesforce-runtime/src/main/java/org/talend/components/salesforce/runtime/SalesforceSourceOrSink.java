@@ -79,7 +79,7 @@ public class SalesforceSourceOrSink implements SalesforceRuntimeSourceOrSink, Sa
 
     private transient final Logger LOG = LoggerFactory.getLogger(SalesforceSourceOrSink.class);
 
-    private static final I18nMessages MESSAGES = GlobalI18N.getI18nMessageProvider()
+    private transient final I18nMessages MESSAGES = GlobalI18N.getI18nMessageProvider()
             .getI18nMessages(SalesforceSourceOrSink.class);
 
     protected SalesforceProvideConnectionProperties properties;
