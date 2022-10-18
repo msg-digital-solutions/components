@@ -22,13 +22,17 @@ import org.talend.components.salesforce.runtime.SalesforceBulkExecRuntime;
 import org.talend.daikon.i18n.GlobalI18N;
 import org.talend.daikon.i18n.I18nMessages;
 
-public abstract class SalesforceSchemaUtils {
+class SalesforceSchemaUtils {
 
-    private static final I18nMessages MESSAGES =
+    private final I18nMessages MESSAGES =
             GlobalI18N.getI18nMessageProvider().getI18nMessages(SalesforceSchemaUtils.class);
 
-
     public static Schema getSchema(SalesforceDatasetProperties dataset, SalesforceDataprepSource sds, RuntimeContainer container)
+            throws IOException {
+        return new SalesforceSchemaUtils().guessSchema(dataset, sds, container);
+    }
+
+    private Schema guessSchema(SalesforceDatasetProperties dataset, SalesforceDataprepSource sds, RuntimeContainer container)
             throws IOException {
         if (dataset.sourceType.getValue() == SalesforceDatasetProperties.SourceType.MODULE_SELECTION) {
             List<String> fields = dataset.selectColumnIds.getValue();
@@ -45,7 +49,7 @@ public abstract class SalesforceSchemaUtils {
         }
     }
 
-    private static String query(SalesforceDataprepSource sds, SalesforceDatasetProperties dataset, List<String> fields)
+    private String query(SalesforceDataprepSource sds, SalesforceDatasetProperties dataset, List<String> fields)
             throws IOException {
         if (dataset.sourceType.getValue() != SalesforceDatasetProperties.SourceType.MODULE_SELECTION || fields.isEmpty()) {
             throw new IllegalArgumentException(MESSAGES.getMessage("error.moduleAndFieldEmpty"));

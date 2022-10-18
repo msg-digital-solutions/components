@@ -41,7 +41,7 @@ public class SalesforceBulkExecRuntime extends SalesforceSourceOrSink
 
     private transient final Logger LOG = getLogger(SalesforceBulkExecRuntime.class);
 
-    private static final I18nMessages MESSAGES =
+    private transient final I18nMessages MESSAGES =
             GlobalI18N.getI18nMessageProvider().getI18nMessages(SalesforceBulkExecRuntime.class);
 
     protected int dataCount;

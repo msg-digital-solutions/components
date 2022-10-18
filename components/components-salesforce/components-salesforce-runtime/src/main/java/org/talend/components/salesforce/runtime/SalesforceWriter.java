@@ -67,7 +67,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
 
     private transient final Logger LOGGER = LoggerFactory.getLogger(SalesforceWriter.class);
 
-    private static final I18nMessages MESSAGES = GlobalI18N.getI18nMessageProvider().getI18nMessages(SalesforceWriter.class);
+    private final I18nMessages MESSAGES = GlobalI18N.getI18nMessageProvider().getI18nMessages(SalesforceWriter.class);
 
     private final SalesforceWriteOperation salesforceWriteOperation;
 

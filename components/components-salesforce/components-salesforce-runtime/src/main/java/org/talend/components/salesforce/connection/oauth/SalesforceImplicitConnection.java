@@ -33,7 +33,7 @@ public class SalesforceImplicitConnection {
 
     private final Logger LOGGER = LoggerFactory.getLogger(SalesforceImplicitConnection.class.getName());
 
-    private static final I18nMessages messages = GlobalI18N.getI18nMessageProvider()
+    private final I18nMessages MESSAGES = GlobalI18N.getI18nMessageProvider()
             .getI18nMessages(SalesforceImplicitConnection.class);
 
     private static final String REFRESHTOKEN_KEY = "refreshtoken"; //$NON-NLS-1$
@@ -93,9 +93,9 @@ public class SalesforceImplicitConnection {
                 }
 
             } catch (FileNotFoundException e) {// ignored exception
-                LOGGER.warn(messages.getMessage("warn.notFoundRefreshToken"), e);
+                LOGGER.warn(MESSAGES.getMessage("warn.notFoundRefreshToken"), e);
             } catch (IOException e) {// ignored exception
-                LOGGER.warn(messages.getMessage("warn.cantRefreshToken"), e);
+                LOGGER.warn(MESSAGES.getMessage("warn.cantRefreshToken"), e);
             }
         }
 
@@ -122,7 +122,7 @@ public class SalesforceImplicitConnection {
                             .build();
             SalesforceOAuthAccessTokenResponse token = oauthClient.getToken(SalesforceOAuthAccessTokenResponse.class);
             if (token == null) {
-                throw new RuntimeException(messages.getMessage("err.nullToken"));
+                throw new RuntimeException(MESSAGES.getMessage("err.nullToken"));
             }
 
             return token;
@@ -146,7 +146,7 @@ public class SalesforceImplicitConnection {
                 tokenFile.getParentFile().mkdirs();
                 tokenFile.createNewFile();
             } catch (IOException e) {
-                throw new RuntimeException(messages.getMessage("err.tokenFileCreationFailed"), e);
+                throw new RuntimeException(MESSAGES.getMessage("err.tokenFileCreationFailed"), e);
             }
         }
 
@@ -155,7 +155,7 @@ public class SalesforceImplicitConnection {
             prop.setProperty(REFRESHTOKEN_KEY, token.getRefreshToken());
             prop.store(outputStream, null);
         } catch (IOException e) {
-            throw new RuntimeException(messages.getMessage("err.unexpectedTokenFileCreationError"), e);
+            throw new RuntimeException(MESSAGES.getMessage("err.unexpectedTokenFileCreationError"), e);
         }
 
     }

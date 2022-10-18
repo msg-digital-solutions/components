@@ -38,7 +38,7 @@ public abstract class SalesforceReader<T> extends AbstractBoundedReader<T> {
 
     private transient final Logger LOGGER = LoggerFactory.getLogger(SalesforceReader.class);
 
-    private static final I18nMessages MESSAGES = GlobalI18N.getI18nMessageProvider()
+    private final I18nMessages MESSAGES = GlobalI18N.getI18nMessageProvider()
             .getI18nMessages(SalesforceReader.class);
 
     private transient PartnerConnection connection;

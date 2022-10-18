@@ -32,7 +32,7 @@ import com.sforce.ws.ConnectorConfig;
 
 final class SalesforceBulkQueryV2Reader extends SalesforceReader {
 
-    private static final I18nMessages MESSAGES =
+    private final I18nMessages MESSAGES =
             GlobalI18N.getI18nMessageProvider().getI18nMessages(SalesforceBulkQueryV2Reader.class);
 
     protected SalesforceBulkQueryV2Runtime bulkRuntime;

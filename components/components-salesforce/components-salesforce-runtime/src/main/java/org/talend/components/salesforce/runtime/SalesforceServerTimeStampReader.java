@@ -36,7 +36,7 @@ public class SalesforceServerTimeStampReader extends AbstractBoundedReader<Index
 
     private transient final Logger LOGGER = LoggerFactory.getLogger(SalesforceServerTimeStampReader.class);
 
-    private static final I18nMessages MESSAGES = GlobalI18N.getI18nMessageProvider()
+    private final I18nMessages MESSAGES = GlobalI18N.getI18nMessageProvider()
             .getI18nMessages(SalesforceServerTimeStampReader.class);
 
     private transient IndexedRecord result;

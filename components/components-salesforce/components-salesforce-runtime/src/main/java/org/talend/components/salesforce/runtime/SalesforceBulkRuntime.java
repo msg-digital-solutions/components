@@ -77,7 +77,7 @@ public class SalesforceBulkRuntime {
 
     private final Logger LOGGER = LoggerFactory.getLogger(SalesforceBulkRuntime.class.getName());
 
-    private static final I18nMessages MESSAGES =
+    private final I18nMessages MESSAGES =
             GlobalI18N.getI18nMessageProvider().getI18nMessages(SalesforceBulkRuntime.class);
 
     private final String FILE_ENCODING = "UTF-8";
