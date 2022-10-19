@@ -61,8 +61,8 @@ public class GoogleDriveCopyRuntimeTest extends GoogleDriveTestBaseRuntime {
         files.add(dest);
         list.setFiles(files);
         final String q1 = "name='A' and 'root' in parents and mimeType='application/vnd.google-apps.folder'";
-        final String q2 = "name='fileName-copy-name' and mimeType!='application/vnd.google-apps.folder'";
-        final String q3 = "name='A' and mimeType='application/vnd.google-apps.folder'";
+        final String q2 = "name='fileName-copy-name' and mimeType!='application/vnd.google-apps.folder' and 'me' in owners";
+        final String q3 = "name='A' and mimeType='application/vnd.google-apps.folder' and 'me' in owners";
 
         when(drive
                 .files()
