@@ -117,7 +117,7 @@
         <jackson-jaxrs.version>1.9.13</jackson-jaxrs.version>
         <jackson-xc.version>1.9.13</jackson-xc.version>
         <jackson.1x.version>1.9.16-TALEND</jackson.1x.version>
-        <jackson.version>2.13.2.20220328</jackson.version>
+        <jackson.version>2.13.4.20221013</jackson.version>
         <javapoet.version>1.8.0</javapoet.version>
         <javax.activation.version>1.1.1</javax.activation.version>
         <javax.inject.version>1</javax.inject.version>
