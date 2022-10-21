@@ -598,10 +598,10 @@ public class SalesforceSourceOrSink implements SalesforceRuntimeSourceOrSink, Sa
             throw new RuntimeException(e.getMessage());
         }
 
-        Schema entitySchema = SalesforceAvroRegistry.get().inferSchema(describeSObjectResult);
+        Schema querySchema = SalesforceAvroRegistry.get().inferSchema(describeSObjectResult);
 
         for (FieldDescription fieldDescription : query.getFieldDescriptions()) {
-            Schema.Field schemaField = entitySchema.getField(fieldDescription.getSimpleName());
+            Schema.Field schemaField = querySchema.getField(fieldDescription.getSimpleName());
 
             SchemaBuilder.FieldBuilder builder = fieldAssembler.name(fieldDescription.getFullName());
 
