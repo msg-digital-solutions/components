@@ -208,6 +208,7 @@
         <talend-proxy.version>1.0.2</talend-proxy.version>
         <xstream.version>1.4.19</xstream.version>
         <zookeeper.version>3.4.14</zookeeper.version>
+        <commons-text.version>1.10.0</commons-text.version>
     </properties>
 
     <distributionManagement>
@@ -1761,7 +1762,11 @@
                 <artifactId>zookeeper</artifactId>
                 <version>${zookeeper.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
 </project>
