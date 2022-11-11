@@ -200,7 +200,6 @@
         <zookeeper.version>3.4.14</zookeeper.version>
         <woodstox.version>6.2.8</woodstox.version>
         <commons-text.version>1.10.0</commons-text.version>
-        <jettison.version>1.5.1</jettison.version>
     </properties>
 
     <distributionManagement>
@@ -1763,11 +1762,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
                 <version>${commons-text.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.jettison</groupId>
-                <artifactId>jettison</artifactId>
-                <version>${jettison.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
