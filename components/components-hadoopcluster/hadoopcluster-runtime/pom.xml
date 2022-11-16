@@ -114,10 +114,10 @@
 					<artifactId>jetty-util</artifactId>
 				</exclusion>
 				<!-- CVE-2022-40149 -->
-                <exclusion>
-                    <groupId>org.codehaus.jettison</groupId>
-                    <artifactId>jettison</artifactId>
-                </exclusion>
+				<exclusion>
+					<groupId>org.codehaus.jettison</groupId>
+					<artifactId>jettison</artifactId>
+				</exclusion>
             </exclusions>
         </dependency>
         <!-- Tests -->
