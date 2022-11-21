@@ -169,6 +169,8 @@ public class SnowflakeWriter implements WriterWithFeedback<Result, IndexedRecord
             List<Field> columns, boolean orderIsAdjusted, List<Field> remoteColumns, TableAction.TableActionEnum tableAction, boolean isDynamic) {
         boolean isUpperCase = false;
         boolean upsert = false;
+        // Use runtime schema only if checkbox is set
+        boolean useDatabaseSchema = Boolean.TRUE.equals(outputProperties.enforceDatabaseSchema.getValue());
         if (outputProperties != null) {
             isUpperCase = outputProperties.convertColumnsAndTableToUppercase.getValue();
             upsert = UPSERT.equals(outputProperties.outputAction.getValue());
@@ -183,14 +185,14 @@ public class SnowflakeWriter implements WriterWithFeedback<Result, IndexedRecord
         //in my view, it's totally wrong, a bug, but consider some customer job may depend on the wrong action when table action is not "NONE", we do the special process here:
         //only when table action is "NONE", not dynamic, we use component fields, not input fields
         //TODO if one bug is reported in future, we consider to remove the code below
-        boolean avoidUseInputField = (tableAction!=null) && (tableAction == TableAction.TableActionEnum.NONE) && !isDynamic;
+        boolean avoidUseInputField = (tableAction == TableAction.TableActionEnum.NONE) && !isDynamic;
 
         int i = 0;
         List<Field> mainFields = mainSchema.getFields();
         for (Field overlapField : columns) {
             Field f;
             if(avoidUseInputField) {
-                f = orderIsAdjusted ? remoteColumns.get(i) : mainFields.get(i);
+                f = orderIsAdjusted || !useDatabaseSchema ? remoteColumns.get(i) : mainFields.get(i);
             } else {
                 f = overlapField == null ? (orderIsAdjusted ? remoteColumns.get(i) : mainFields.get(i)) : overlapField;
             }
@@ -230,7 +232,7 @@ public class SnowflakeWriter implements WriterWithFeedback<Result, IndexedRecord
 
         row = new Object[ssi.columnsStr.size()];
 
-        //TODO remove the condition, now add it only for more safe for old job
+        // TODO remove the condition, now add it only for more safe for old job
         if(orderIsAdjusted || (sprops.tableAction.getValue()!=TableAction.TableActionEnum.NONE)) {
             loader.setProperty(LoaderProperty.columns, ssi.columnsStr);
             if (ssi.keyStr.size() > 0) {
@@ -339,8 +341,10 @@ public class SnowflakeWriter implements WriterWithFeedback<Result, IndexedRecord
             // fetch the runtime schema after table action is over which make sure the table is create already
             initRuntimeSchemaAndMapIfNecessary();
 
-            //correct order by runtime schema after sure table exists already
-            boolean orderIsAdjusted = false;
+            // correct order by runtime schema after sure table exists already
+            // For Snowflake defined schema is ignored when it's dynamic.
+            // But we do want to get additional information from defined schema in some cases. For example: keys
+            boolean orderIsAdjusted = isDynamic(mainSchema) && !Boolean.TRUE.equals(sprops.enforceDatabaseSchema.getValue());
             if(needCorrectColumnOrderByRuntimeSchema()) {
                 List<Field> finalCollectedFields = new ArrayList<>();
                 List<Field> finalRemoteTableFields = new ArrayList<>();
@@ -419,7 +423,7 @@ public class SnowflakeWriter implements WriterWithFeedback<Result, IndexedRecord
 
     protected Object getFieldValue(Object inputValue, Field field) {
         Schema s = AvroUtils.unwrapIfNullable(field.schema());
-        if (inputValue != null && inputValue instanceof String && ((String) inputValue).isEmpty()) {
+        if (inputValue instanceof String && ((String) inputValue).isEmpty()) {
             return emptyStringValue;
         } else if (null == inputValue || inputValue instanceof String) {
             return inputValue;
@@ -536,10 +540,12 @@ public class SnowflakeWriter implements WriterWithFeedback<Result, IndexedRecord
         Schema designSchema = connectionTableProperties.getSchema();
 
         // Don't retrieve schema from database if there is a table action that will create the table
-        if (isDynamic(designSchema)
-                && supposeTableExists()) {
+        if (isDynamic(designSchema) && supposeTableExists()) {
             useRuntimeSchemaForMainSchema = true;
-            return initRuntimeSchemaAndMapIfNecessary();
+            // Also don't retrieve for dynamic schema when not required (controlled by checkbox)
+            if (Boolean.TRUE.equals(sprops.enforceDatabaseSchema.getValue())) {
+                return initRuntimeSchemaAndMapIfNecessary();
+            }
         }
 
         return designSchema;

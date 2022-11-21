@@ -46,7 +46,8 @@ public class TSnowflakeOutputProperties extends SnowflakeConnectionTableProperti
     private static final int CONVERT_COLUMNS_AND_TABLE_TO_UPPERCASE_VERSION = 1;
     private static final int TABLE_ACTION_VERSION = 2;
     private static final int CONVERT_EMPTY_STRINGS_TO_NULL_VERSION = 3;
-    private static final int USE_SCHEMA_KEYS_FOR_UPSERT = 4;
+    private static final int USE_SCHEMA_KEYS_FOR_UPSERT_VERSION = 4;
+    private static final int ENFORCE_USE_DATABASE_SCHEMA_VERSION = 5;
 
     public enum OutputAction {
         INSERT,
@@ -62,6 +63,8 @@ public class TSnowflakeOutputProperties extends SnowflakeConnectionTableProperti
     public Property<String> upsertKeyColumn = newString("upsertKeyColumn"); //$NON-NLS-1$
 
     public Property<Boolean> useSchemaKeysForUpsert = newBoolean("useSchemaKeysForUpsert");
+    
+    public Property<Boolean> enforceDatabaseSchema = newBoolean("enforceDatabaseSchema");
 
     protected transient PropertyPathConnector FLOW_CONNECTOR = new PropertyPathConnector(Connector.MAIN_NAME, "schemaFlow");
 
@@ -178,6 +181,7 @@ public class TSnowflakeOutputProperties extends SnowflakeConnectionTableProperti
         advancedForm.addRow(convertColumnsAndTableToUppercase);
         advancedForm.addRow(convertEmptyStringsToNull);
         advancedForm.addRow(widget(useSchemaKeysForUpsert));
+        advancedForm.addRow(widget(enforceDatabaseSchema));
 
         advancedForm.addRow(usePersonalDBType);
         widget(usePersonalDBType).setVisible(false);
@@ -234,6 +238,7 @@ public class TSnowflakeOutputProperties extends SnowflakeConnectionTableProperti
                 if (isUpsert && !isUseSchemaKeysForUpsert) {
                     beforeUpsertKeyColumn();
                 }
+                advForm.getWidget(enforceDatabaseSchema.getName()).setVisible(isDesignSchemaDynamic());
             }
         }
     }
@@ -323,7 +328,7 @@ public class TSnowflakeOutputProperties extends SnowflakeConnectionTableProperti
 
     @Override
     public int getVersionNumber() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -350,9 +355,14 @@ public class TSnowflakeOutputProperties extends SnowflakeConnectionTableProperti
             migrated = true;
         }
 
-        if (version < USE_SCHEMA_KEYS_FOR_UPSERT) {
+        if (version < USE_SCHEMA_KEYS_FOR_UPSERT_VERSION) {
             useSchemaKeysForUpsert.setValue(
                     !OutputAction.UPSERT.equals(outputAction.getValue()));
+            migrated = true;
+        }
+        
+        if (version < ENFORCE_USE_DATABASE_SCHEMA_VERSION) {
+            enforceDatabaseSchema.setValue(true);
             migrated = true;
         }
 
