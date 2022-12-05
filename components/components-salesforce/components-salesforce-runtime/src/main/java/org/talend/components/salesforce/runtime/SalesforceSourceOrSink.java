@@ -205,10 +205,6 @@ public class SalesforceSourceOrSink implements SalesforceRuntimeSourceOrSink, Sa
         if (openNewSession && isReuseSession()) {
             this.sessionId = config.getSessionId();
             this.serviceEndPoint = config.getServiceEndpoint();
-            if (this.sessionId != null && this.serviceEndPoint != null) {
-                // update session file with current sessionId/serviceEndPoint
-                setupSessionProperties(connection);
-            }
         }
         if(!isOAuth && connProps.sslProperties.mutualAuth.getValue()){
 
@@ -220,6 +216,12 @@ public class SalesforceSourceOrSink implements SalesforceRuntimeSourceOrSink, Sa
             } catch (Throwable e) {
                 LOG.error(e.getMessage(),e);
                 throw new ConnectionException(e.getMessage());
+            }
+        }
+        if (openNewSession && isReuseSession()) {
+            if (this.sessionId != null && this.serviceEndPoint != null) {
+                // update session file with current sessionId/serviceEndPoint
+                setupSessionProperties(connection);
             }
         }
         return connection;
