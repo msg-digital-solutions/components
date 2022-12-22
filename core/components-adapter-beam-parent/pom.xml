@@ -19,6 +19,7 @@
         <beam.version>2.33.0</beam.version>
         <spark.version>2.4.6</spark.version>
         <hadoop.version>3.2.4</hadoop.version>
+        <libthrift.version>0.15.0</libthrift.version>
     </properties>
 
     <!-- Necessary if you want to compile with a SNAPSHOT of beam. -->
@@ -93,7 +94,12 @@
                 <version>${spark.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.thrift</groupId>
+                <artifactId>libthrift</artifactId>
+                <version>${libthrift.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
-
