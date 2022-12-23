@@ -199,7 +199,7 @@
         <talend-proxy.version>1.0.2</talend-proxy.version>
         <xstream.version>1.4.19</xstream.version>
         <zookeeper.version>3.4.14</zookeeper.version>
-        <woodstox.version>6.2.8</woodstox.version>
+        <woodstox.version>6.4.0</woodstox.version>
         <commons-text.version>1.10.0</commons-text.version>
         <jettison.version>1.5.1</jettison.version>
     </properties>
