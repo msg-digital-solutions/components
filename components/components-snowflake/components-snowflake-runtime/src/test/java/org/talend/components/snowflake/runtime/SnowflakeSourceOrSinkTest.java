@@ -321,4 +321,100 @@ public class SnowflakeSourceOrSinkTest {
         assertFalse(tableNotFoundMessage.equals("error.tableNotFound"));
         assertFalse(requiredPropertyIsEmptyMessage.equals("error.requiredPropertyIsEmpty"));
     }
+
+
+    @Test
+    public void testChangeSchema() {
+        final Schema parse = Schema.parse("{\n" +
+                "\t\"type\": \"record\",\n" +
+                "\t\"name\": \"AINTEGER\",\n" +
+                "\t\"fields\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"NEWCOLUMN\",\n" +
+                "\t\t\t\"type\": [\n" +
+                "\t\t\t\t{\n" +
+                "\t\t\t\t\t\"type\": \"string\",\n" +
+                "\t\t\t\t\t\"java-class\": \"java.math.BigDecimal\"\n" +
+                "\t\t\t\t},\n" +
+                "\t\t\t\t\"null\"\n" +
+                "\t\t\t],\n" +
+                "\t\t\t\"talend.field.length\": \"10\",\n" +
+                "\t\t\t\"talend.field.precision\": \"0\",\n" +
+                "\t\t\t\"talend.field.dbType\": -5,\n" +
+                "\t\t\t\"talend.field.dbColumnName\": \"NEWCOLUMN\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"NEWCOLUMN1\",\n" +
+                "\t\t\t\"type\": [\n" +
+                "\t\t\t\t{\n" +
+                "\t\t\t\t\t\"type\": \"string\",\n" +
+                "\t\t\t\t\t\"java-class\": \"java.math.BigDecimal\"\n" +
+                "\t\t\t\t},\n" +
+                "\t\t\t\t\"null\"\n" +
+                "\t\t\t],\n" +
+                "\t\t\t\"talend.field.length\": \"15\",\n" +
+                "\t\t\t\"talend.field.precision\": \"0\",\n" +
+                "\t\t\t\"talend.field.dbType\": -5,\n" +
+                "\t\t\t\"talend.field.dbColumnName\": \"NEWCOLUMN1\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"NEWCOLUMN2\",\n" +
+                "\t\t\t\"type\": {\n" +
+                "\t\t\t\t\"type\": \"string\",\n" +
+                "\t\t\t\t\"java-class\": \"java.math.BigDecimal\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"talend.field.length\": \"20\",\n" +
+                "\t\t\t\"talend.field.precision\": \"0\",\n" +
+                "\t\t\t\"talend.field.dbType\": -5,\n" +
+                "\t\t\t\"talend.field.dbColumnName\": \"NEWCOLUMN2\"\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}");
+
+        SnowflakeSourceOrSink sss = new SnowflakeSourceOrSink();
+        final Schema actual = sss.changeFields(parse);
+        Schema expect = Schema.parse("{\n" +
+                "\t\"type\": \"record\",\n" +
+                "\t\"name\": \"AINTEGER\",\n" +
+                "\t\"fields\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"NEWCOLUMN\",\n" +
+                "\t\t\t\"type\": [\n" +
+                "\t\t\t\t\"null\",\n" +
+                "\t\t\t\t\"int\"\n" +
+                "\t\t\t],\n" +
+                "\t\t\t\"talend.field.length\": \"10\",\n" +
+                "\t\t\t\"talend.field.precision\": \"0\",\n" +
+                "\t\t\t\"talend.field.dbType\": -5,\n" +
+                "\t\t\t\"talend.field.dbColumnName\": \"NEWCOLUMN\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"NEWCOLUMN1\",\n" +
+                "\t\t\t\"type\": [\n" +
+                "\t\t\t\t\"null\",\n" +
+                "\t\t\t\t\"long\"\n" +
+                "\t\t\t],\n" +
+                "\t\t\t\"talend.field.length\": \"15\",\n" +
+                "\t\t\t\"talend.field.precision\": \"0\",\n" +
+                "\t\t\t\"talend.field.dbType\": -5,\n" +
+                "\t\t\t\"talend.field.dbColumnName\": \"NEWCOLUMN1\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"NEWCOLUMN2\",\n" +
+                "\t\t\t\"type\": {\n" +
+                "\t\t\t\t\"type\": \"string\",\n" +
+                "\t\t\t\t\"java-class\": \"java.math.BigDecimal\"\n" +
+                "\t\t\t},\n" +
+                "\t\t\t\"talend.field.length\": \"20\",\n" +
+                "\t\t\t\"talend.field.precision\": \"0\",\n" +
+                "\t\t\t\"talend.field.dbType\": -5,\n" +
+                "\t\t\t\"talend.field.dbColumnName\": \"NEWCOLUMN2\"\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}");
+
+        Assert.assertEquals(expect,actual);
+
+
+    }
 }

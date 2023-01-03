@@ -23,9 +23,12 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avro.Schema;
+import org.apache.avro.SchemaBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +48,9 @@ import org.talend.components.snowflake.tsnowflakeconnection.AuthenticationType;
 import org.talend.daikon.NamedThing;
 import org.talend.daikon.SimpleNamedThing;
 import org.talend.daikon.avro.AvroUtils;
+import org.talend.daikon.avro.SchemaConstants;
+import org.talend.daikon.exception.TalendRuntimeException;
+import org.talend.daikon.exception.error.CommonErrorCodes;
 import org.talend.daikon.i18n.GlobalI18N;
 import org.talend.daikon.i18n.I18nMessages;
 import org.talend.daikon.properties.ValidationResult;
@@ -286,12 +292,75 @@ public class SnowflakeSourceOrSink extends SnowflakeRuntime implements SourceOrS
             if (tableSchema == null) {
                 throw new IOException(i18nMessages.getMessage("error.tableNotFound", tableName));
             }
+            LOG.debug("tableSchema: "+tableSchema);
         } catch (SQLException se) {
             throw new IOException(se);
         }
 
-        return tableSchema;
+        return changeFields(tableSchema);
 
+    }
+
+    public Schema changeFields(Schema schema) {
+        Schema newSchema = schema;
+        if (schema.getType() == Schema.Type.RECORD) {
+            newSchema = Schema.createRecord(schema.getName(), schema.getDoc(), schema.getNamespace(), schema.isError());
+            List<Schema.Field> copyFieldList = new ArrayList();
+            Iterator<Schema.Field> fields = schema.getFields().iterator();
+
+            while (fields.hasNext()) {
+                Schema.Field se = fields.next();
+                if (se.schema().getType() == Schema.Type.UNION && se.schema().getTypes().stream().anyMatch(e -> AvroUtils.isSameType(e, AvroUtils._decimal()))) {
+                    changSchema(se, copyFieldList, true);
+                } else if (se.schema().getType() == Schema.Type.STRING && AvroUtils.isSameType(AvroUtils._decimal(), se.schema())) {
+                    changSchema(se, copyFieldList, false);
+                } else {
+                    copyFieldList.add(copyProperties(se, se.schema(), false));
+                }
+            }
+            newSchema.setFields(copyFieldList);
+            Map<String, Object> props = schema.getObjectProps();
+            Iterator var11 = props.keySet().iterator();
+
+            while (var11.hasNext()) {
+                String propKey = (String) var11.next();
+                newSchema.addProp(propKey, props.get(propKey));
+            }
+        } else {
+            TalendRuntimeException.build(CommonErrorCodes.UNEXPECTED_EXCEPTION).setAndThrow(new String[]{"Not support this type " + schema.getType() + ", only support record type"});
+        }
+
+        return newSchema;
+    }
+
+    private void changSchema(Schema.Field se, List<Schema.Field> copyFieldList, boolean nullable) {
+
+        final int length = Integer.parseInt(se.getProp(SchemaConstants.TALEND_COLUMN_DB_LENGTH));
+        final int precision = Integer.parseInt(se.getProp(SchemaConstants.TALEND_COLUMN_PRECISION));
+        if (precision == 0) {
+            if (length < 13) {
+                copyFieldList.add(copyProperties(se, AvroUtils._int(), nullable));
+            } else if (length < 19) {
+                copyFieldList.add(copyProperties(se, AvroUtils._long(), nullable));
+            } else {
+                copyFieldList.add(copyProperties(se, se.schema(), false));
+            }
+        }else{
+            copyFieldList.add(copyProperties(se, se.schema(), false));
+        }
+    }
+
+    private  Schema.Field copyProperties(Schema.Field se, Schema type,boolean addNullable) {
+        Schema.Field field;
+        if (addNullable) {
+            final Schema schema = SchemaBuilder.unionOf().nullType().and().type(type).endUnion();
+
+            field = new Schema.Field(se.name(), schema, se.doc(), se.defaultVal());
+        } else {
+            field = new Schema.Field(se.name(), type, se.doc(), se.defaultVal());
+        }
+        se.getObjectProps().entrySet().forEach(e -> field.addProp(e.getKey(), e.getValue()));
+        return field;
     }
 
     private String escapeUnderscores(String value) {
