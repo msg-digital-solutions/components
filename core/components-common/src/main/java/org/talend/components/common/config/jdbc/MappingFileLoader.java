@@ -82,6 +82,11 @@ public class MappingFileLoader {
         
         try {
             documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } catch (Throwable e) {
+            //do nothing, even no need warn
+        }
+
+        try {
             documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         } catch (Throwable e) {
             //do nothing, even no need warn
