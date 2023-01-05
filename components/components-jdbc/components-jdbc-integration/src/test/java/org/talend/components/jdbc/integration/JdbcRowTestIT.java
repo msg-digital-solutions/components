@@ -50,7 +50,7 @@ import org.talend.components.jdbc.tjdbcinput.TJDBCInputProperties;
 import org.talend.components.jdbc.tjdbcrow.TJDBCRowDefinition;
 import org.talend.components.jdbc.tjdbcrow.TJDBCRowProperties;
 import org.talend.daikon.properties.ValidationResult;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 import org.talend.daikon.runtime.RuntimeUtil;
 import org.talend.daikon.sandbox.SandboxedInstance;
 

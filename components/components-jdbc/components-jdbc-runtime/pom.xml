@@ -51,12 +51,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.talend.daikon</groupId>
-            <artifactId>daikon-spring-utils</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <exclusions>

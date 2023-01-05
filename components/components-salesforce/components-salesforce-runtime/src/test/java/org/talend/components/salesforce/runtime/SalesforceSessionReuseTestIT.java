@@ -51,7 +51,7 @@ import org.talend.components.salesforce.tsalesforceoutput.TSalesforceOutputPrope
 import org.talend.daikon.properties.ValidationResult;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.daikon.properties.property.Property;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 
 import com.sforce.async.AsyncApiException;
 import com.sforce.soap.partner.PartnerConnection;
@@ -188,7 +188,7 @@ public class SalesforceSessionReuseTestIT extends SalesforceTestBase {
 
         try {
             // 3. input components would be get connection from connection session file
-            moduleProps = (ComponentProperties) PropertiesTestUtils.checkAndBeforeActivate(getComponentService(), f, "moduleName",
+            moduleProps = (ComponentProperties) DaikonLegacyAssertions.checkAndBeforeActivate(getComponentService(), f, "moduleName",
                     moduleProps);
 
             Object connection = connContainer.getComponentData(currentComponentName, SalesforceSourceOrSink.KEY_CONNECTION);
@@ -208,7 +208,7 @@ public class SalesforceSessionReuseTestIT extends SalesforceTestBase {
             // 4. invalid the session, then the session should be renew based on reference connection information(wrong pwd)
             // connect would be fail
 
-            moduleProps = (ComponentProperties) PropertiesTestUtils.checkAndBeforeActivate(getComponentService(), f, "moduleName",
+            moduleProps = (ComponentProperties) DaikonLegacyAssertions.checkAndBeforeActivate(getComponentService(), f, "moduleName",
                     moduleProps);
             assertEquals(ValidationResult.Result.ERROR, moduleProps.getValidationResult().getStatus());
             LOGGER.debug(moduleProps.getValidationResult().toString());
@@ -222,7 +222,7 @@ public class SalesforceSessionReuseTestIT extends SalesforceTestBase {
 
         // 5.set correct pwd back
         setupProps(connProps);
-        moduleProps = (ComponentProperties) PropertiesTestUtils.checkAndBeforeActivate(getComponentService(), f, "moduleName",
+        moduleProps = (ComponentProperties) DaikonLegacyAssertions.checkAndBeforeActivate(getComponentService(), f, "moduleName",
                 moduleProps);
         assertEquals(ValidationResult.Result.OK, moduleProps.getValidationResult().getStatus());
         LOGGER.debug(moduleProps.getValidationResult().toString());

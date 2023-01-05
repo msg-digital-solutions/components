@@ -60,7 +60,7 @@ import org.talend.daikon.avro.SchemaConstants;
 import org.talend.daikon.properties.ValidationResult;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.daikon.properties.property.Property;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 
 public abstract class SnowflakeRuntimeIT extends SnowflakeTestIT {
 
@@ -343,7 +343,7 @@ public abstract class SnowflakeRuntimeIT extends SnowflakeTestIT {
         Schema mainSchema = getMakeRowSchema();
         tableProps.main.schema.setValue(mainSchema);
         Form schemaForm = tableProps.main.getForm(Form.REFERENCE);
-        PropertiesTestUtils.checkAndAfter(getComponentService(), schemaForm, tableProps.main.schema.getName(), tableProps.main);
+        DaikonLegacyAssertions.checkAndAfter(getComponentService(), schemaForm, tableProps.main.schema.getName(), tableProps.main);
     }
 
     protected void checkAndSetupTable(SnowflakeConnectionTableProperties props) throws Throwable {
@@ -352,7 +352,7 @@ public abstract class SnowflakeRuntimeIT extends SnowflakeTestIT {
         SnowflakeTableProperties tableProps = (SnowflakeTableProperties) f.getProperties();
         assertTrue(f.getWidget(tableProps.tableName.getName()).isCallBeforeActivate());
 
-        tableProps = (SnowflakeTableProperties) PropertiesTestUtils.checkAndBeforeActivate(getComponentService(), f,
+        tableProps = (SnowflakeTableProperties) DaikonLegacyAssertions.checkAndBeforeActivate(getComponentService(), f,
                 tableProps.tableName.getName(), tableProps);
         Property prop = (Property) f.getWidget(tableProps.tableName.getName()).getContent();
         LOGGER.debug(prop.getPossibleValues().toString());
@@ -361,10 +361,10 @@ public abstract class SnowflakeRuntimeIT extends SnowflakeTestIT {
         assertEquals(1, prop.getPossibleValues().size());
 
         tableProps.tableName.setValue(testTable);
-        tableProps = (SnowflakeTableProperties) PropertiesTestUtils.checkAndAfter(getComponentService(), f,
+        tableProps = (SnowflakeTableProperties) DaikonLegacyAssertions.checkAndAfter(getComponentService(), f,
                 tableProps.tableName.getName(), tableProps);
         Form schemaForm = tableProps.main.getForm(Form.REFERENCE);
-        PropertiesTestUtils.checkAndAfter(getComponentService(), schemaForm, tableProps.main.schema.getName(), tableProps.main);
+        DaikonLegacyAssertions.checkAndAfter(getComponentService(), schemaForm, tableProps.main.schema.getName(), tableProps.main);
         Schema schema = tableProps.main.schema.getValue();
         LOGGER.debug(schema.toString());
         for (Schema.Field child : schema.getFields()) {

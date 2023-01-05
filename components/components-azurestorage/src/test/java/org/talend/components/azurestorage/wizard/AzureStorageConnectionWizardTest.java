@@ -35,7 +35,7 @@ import org.talend.daikon.NamedThing;
 import org.talend.daikon.properties.Properties;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.daikon.properties.service.Repository;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 
 public class AzureStorageConnectionWizardTest extends AzureStorageGenericBase {
 
@@ -148,7 +148,7 @@ public class AzureStorageConnectionWizardTest extends AzureStorageGenericBase {
         // check name i18n
         NamedThing nameProp = connFormWizard.getWidget("name").getContent(); //$NON-NLS-1$
         assertEquals("Name", nameProp.getDisplayName());
-        connProps = (TAzureStorageConnectionProperties) PropertiesTestUtils.checkAndValidate(getComponentService(),
+        connProps = (TAzureStorageConnectionProperties) DaikonLegacyAssertions.checkAndValidate(getComponentService(),
                 connFormWizard, "testConnection", connProps);
         assertFalse(connFormWizard.isAllowForward());
 
