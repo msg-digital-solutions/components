@@ -44,7 +44,12 @@
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.talend.components</groupId>
+            <artifactId>components-api</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
         <!-- Tests -->
         <dependency>
             <groupId>org.ops4j.pax.url</groupId>

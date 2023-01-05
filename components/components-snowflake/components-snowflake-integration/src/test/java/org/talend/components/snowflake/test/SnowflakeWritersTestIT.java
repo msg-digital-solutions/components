@@ -63,7 +63,7 @@ import org.talend.daikon.avro.AvroUtils;
 import org.talend.daikon.avro.SchemaConstants;
 import org.talend.daikon.properties.ValidationResult;
 import org.talend.daikon.properties.presentation.Form;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 
 /**
  * created by dmytro.chmyga on Mar 6, 2017
@@ -141,7 +141,7 @@ public class SnowflakeWritersTestIT extends SnowflakeRuntimeIOTestIT {
         SnowflakeTableProperties tableProps = outputProps.table;
         Form f = tableProps.getForm(Form.REFERENCE);
         tableProps.tableName.setValue("BADONE");
-        tableProps = (SnowflakeTableProperties) PropertiesTestUtils.checkAndAfter(getComponentService(), f,
+        tableProps = (SnowflakeTableProperties) DaikonLegacyAssertions.checkAndAfter(getComponentService(), f,
                 tableProps.tableName.getName(), tableProps);
         LOGGER.info(String.valueOf(tableProps.getValidationResult()));
         assertEquals(ValidationResult.Result.OK, tableProps.getValidationResult().getStatus());
@@ -155,7 +155,7 @@ public class SnowflakeWritersTestIT extends SnowflakeRuntimeIOTestIT {
         // No connection information
         SnowflakeTableProperties tableProps = outputProps.table;
         Form f = tableProps.getForm(Form.REFERENCE);
-        tableProps = (SnowflakeTableProperties) PropertiesTestUtils.checkAndBeforeActivate(getComponentService(), f,
+        tableProps = (SnowflakeTableProperties) DaikonLegacyAssertions.checkAndBeforeActivate(getComponentService(), f,
                 tableProps.tableName.getName(), tableProps);
         LOGGER.info(String.valueOf(tableProps.getValidationResult()));
         assertEquals(ValidationResult.Result.ERROR, tableProps.getValidationResult().getStatus());
@@ -303,7 +303,7 @@ public class SnowflakeWritersTestIT extends SnowflakeRuntimeIOTestIT {
         assertEquals(50, readRows(props).size());
 
         Form f = props.getForm(MAIN);
-        props = (TSnowflakeOutputProperties) PropertiesTestUtils.checkAndBeforePresent(getComponentService(), f,
+        props = (TSnowflakeOutputProperties) DaikonLegacyAssertions.checkAndBeforePresent(getComponentService(), f,
                 props.upsertKeyColumn.getName(), props);
         LOGGER.debug(props.upsertKeyColumn.getPossibleValues().toString());
         assertEquals(NUM_COLUMNS, props.upsertKeyColumn.getPossibleValues().size());
@@ -321,7 +321,7 @@ public class SnowflakeWritersTestIT extends SnowflakeRuntimeIOTestIT {
         assertEquals(50, readRows(props).size());
 
         Form f = props.getForm(MAIN);
-        props = (TSnowflakeOutputProperties) PropertiesTestUtils.checkAndBeforePresent(getComponentService(), f,
+        props = (TSnowflakeOutputProperties) DaikonLegacyAssertions.checkAndBeforePresent(getComponentService(), f,
                 props.upsertKeyColumn.getName(), props);
         LOGGER.debug(props.upsertKeyColumn.getPossibleValues().toString());
         props.convertColumnsAndTableToUppercase.setValue(true);

@@ -42,7 +42,7 @@ import org.talend.components.snowflake.SnowflakeRegion;
 import org.talend.components.snowflake.tsnowflakeconnection.AuthenticationType;
 import org.talend.daikon.definition.service.DefinitionRegistryService;
 import org.talend.daikon.properties.service.Repository;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 
 @SuppressWarnings("nls")
 public abstract class SnowflakeTestIT extends AbstractComponentTest {
@@ -128,7 +128,7 @@ public abstract class SnowflakeTestIT extends AbstractComponentTest {
         Set<ComponentDefinition> allComponents = getComponentService().getAllComponents();
         for (ComponentDefinition cd : allComponents) {
             ComponentProperties props = cd.createProperties();
-            String javaCode = PropertiesTestUtils.generatedNestedComponentCompatibilitiesJavaCode(props);
+            String javaCode = DaikonLegacyAssertions.generatedNestedComponentCompatibilitiesJavaCode(props);
             LOGGER.debug("Nested Props for (" + cd.getClass().getSimpleName() + ".java:1)" + javaCode);
         }
     }
@@ -141,7 +141,7 @@ public abstract class SnowflakeTestIT extends AbstractComponentTest {
     @Override
     @Test
     public void testAlli18n() {
-        PropertiesTestUtils.assertAlli18nAreSetup(getDefinitionService(), errorCollector);
+        DaikonLegacyAssertions.assertAlli18nAreSetup(getDefinitionService(), errorCollector);
     }
 
     protected DefinitionRegistryService getDefinitionService() {

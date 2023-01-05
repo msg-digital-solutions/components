@@ -28,7 +28,7 @@ import org.talend.components.jdbc.runtime.JdbcRuntimeUtils;
 import org.talend.components.jdbc.runtime.dataprep.JDBCDatasetRuntime;
 import org.talend.components.jdbc.runtime.setting.AllSetting;
 import org.talend.daikon.java8.Consumer;
-import org.talend.daikon.properties.test.PropertiesTestUtils;
+import org.talend.components.api.DaikonLegacyAssertions;
 
 public class JdbcDatasetTestIT {
 
@@ -36,7 +36,7 @@ public class JdbcDatasetTestIT {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        PropertiesTestUtils.setupPaxUrlFromMavenLaunch();
+        DaikonLegacyAssertions.setupPaxUrlFromMavenLaunch();
         allSetting = DBTestUtils.createAllSetting();
         try (Connection conn = JdbcRuntimeUtils.createConnection(allSetting)) {
           DBTestUtils.createTestTable(conn, tablename);
