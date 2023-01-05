@@ -13,11 +13,7 @@
 package org.talend.components.salesforce.runtime;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import org.apache.avro.Schema;
 import org.apache.avro.Schema.Field;
@@ -58,45 +54,24 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
             querySchema = super.getSchema();
             if (inProperties.manualQuery.getValue()) {
                 if (AvroUtils.isIncludeAllFields(properties.module.main.schema.getValue())) {
-                    List<Schema.Field> copyFieldList = new ArrayList<>();
+                    final SoqlQuery query = SoqlQuery.getInstance();
 
-                    // logic almost the same as it is in GuessSchema (SalesforceSourseOrSink): TDI-48569
-                    SoqlQuery query = SoqlQuery.getInstance();
-                    query.init(inProperties.query.getValue());
-                    for (FieldDescription fieldDescription : query.getFieldDescriptions()) {
-                        final String simpleName = fieldDescription.getSimpleName();
-                        Schema.Field schemaField = querySchema.getField(simpleName);
-                        final String fullName;
-                        if (schemaField == null) {
-                            final Optional<Field> optionalField = querySchema.getFields().stream()
-                                    .filter(it -> it.name().equalsIgnoreCase(simpleName))
-                                    .findAny();
-                            schemaField = optionalField.orElse(null);
-                            // fix fullName if it doesn't match the real column name
-                            // case not sensitive
-                            fullName = optionalField
-                                    // we already checked that those parts are equal when ignore case
-                                    // possible problem when we replace not only simple name
-                                    .map(it -> fieldDescription.getFullName().replace(simpleName, it.name()))
-                                    // else value doesn't matter, we expect to handle next iteration instead
-                                    .orElse(null);
-                        } else {
-                            fullName = fieldDescription.getFullName();
-                        }
-                        if (schemaField == null) {
-                            continue;
-                        }
-
-                        Schema.Field field = new Schema.Field(fullName, schemaField.schema(), schemaField.doc(), schemaField.defaultVal());
-                        Map<String, Object> props = schemaField.getObjectProps();
-                        for (String propName : props.keySet()) {
-                            Object propValue = props.get(propName);
-                            if (propValue != null) {
-                                field.addProp(propName, propValue);
-                            }
-                        }
-                        copyFieldList.add(field);
+                    boolean passSoqlParserValidation = true;
+                    try {
+                        query.init(inProperties.query.getValue());
+                    } catch(Exception e) {
+                        passSoqlParserValidation = false;
+                        //ignore any parser exception, even no log, as current parser can't support full soql grammar, that log info will mislead user
                     }
+
+                    final List<Schema.Field> copyFieldList = new ArrayList<>();
+
+                    if(passSoqlParserValidation) {
+                        fillFieldListByStaticSoqlParser(query, copyFieldList);
+                    } else {
+                        fillFieldListByResultObject(copyFieldList);
+                    }
+
                     Map<String, Object> objectProps = querySchema.getObjectProps();
                     querySchema = Schema.createRecord(querySchema.getName(), querySchema.getDoc(), querySchema.getNamespace(),
                             querySchema.isError());
@@ -109,6 +84,77 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
         }
         addDateTimeUTCField(querySchema);
         return querySchema;
+    }
+
+    private void fillFieldListByResultObject(List<Field> copyFieldList) {
+        SObject currentSObject = getCurrentSObject();
+        Iterator<XmlObject> children = currentSObject.getChildren();
+        List<String> columnsName = new ArrayList<>();
+        int idCount = 0;
+        while (children.hasNext()) {
+            String elementName = children.next().getName().getLocalPart();
+            if ("Id".equals(elementName) && idCount == 0) {
+                // Ignore the first 'Id' field which always return for query.
+                idCount++;
+                continue;
+            }
+            if (!columnsName.contains(elementName)) {
+                columnsName.add(elementName);
+            }
+        }
+
+        for (String columnName : columnsName) {
+            Field se = querySchema.getField(columnName);
+            if (se != null) {
+                Field field = new Field(se.name(), se.schema(), se.doc(), se.defaultVal());
+                Map<String, Object> fieldProps = se.getObjectProps();
+                for (String propName : fieldProps.keySet()) {
+                    Object propValue = fieldProps.get(propName);
+                    if (propValue != null) {
+                        field.addProp(propName, propValue);
+                    }
+                }
+                copyFieldList.add(field);
+            }
+        }
+    }
+
+    private void fillFieldListByStaticSoqlParser(SoqlQuery query, List<Field> copyFieldList) {
+        // logic almost the same as it is in GuessSchema (SalesforceSourseOrSink): TDI-48569
+        for (FieldDescription fieldDescription : query.getFieldDescriptions()) {
+            final String simpleName = fieldDescription.getSimpleName();
+            Field schemaField = querySchema.getField(simpleName);
+            final String fullName;
+            if (schemaField == null) {
+                final Optional<Field> optionalField = querySchema.getFields().stream()
+                        .filter(it -> it.name().equalsIgnoreCase(simpleName))
+                        .findAny();
+                schemaField = optionalField.orElse(null);
+                // fix fullName if it doesn't match the real column name
+                // case not sensitive
+                fullName = optionalField
+                        // we already checked that those parts are equal when ignore case
+                        // possible problem when we replace not only simple name
+                        .map(it -> fieldDescription.getFullName().replace(simpleName, it.name()))
+                        // else value doesn't matter, we expect to handle next iteration instead
+                        .orElse(null);
+            } else {
+                fullName = fieldDescription.getFullName();
+            }
+            if (schemaField == null) {
+                continue;
+            }
+
+            Field field = new Field(fullName, schemaField.schema(), schemaField.doc(), schemaField.defaultVal());
+            Map<String, Object> props = schemaField.getObjectProps();
+            for (String propName : props.keySet()) {
+                Object propValue = props.get(propName);
+                if (propValue != null) {
+                    field.addProp(propName, propValue);
+                }
+            }
+            copyFieldList.add(field);
+        }
     }
 
     @Override
