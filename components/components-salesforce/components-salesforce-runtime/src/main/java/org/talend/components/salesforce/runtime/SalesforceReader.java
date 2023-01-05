@@ -53,8 +53,6 @@ public abstract class SalesforceReader<T> extends AbstractBoundedReader<T> {
 
     protected RuntimeContainer container;
 
-    protected boolean isDynamic;
-
     public SalesforceReader(RuntimeContainer container, SalesforceSource source) {
         super(source);
         this.container = container;
@@ -106,7 +104,6 @@ public abstract class SalesforceReader<T> extends AbstractBoundedReader<T> {
                 if (properties instanceof SalesforceConnectionModuleProperties) {
                     moduleName = properties.module.moduleName.getStringValue();
                 }
-                isDynamic = true;
                 querySchema = getCurrentSource().getEndpointSchema(container, moduleName);
             }
         }

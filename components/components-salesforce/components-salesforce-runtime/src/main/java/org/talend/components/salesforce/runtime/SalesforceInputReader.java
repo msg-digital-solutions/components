@@ -122,7 +122,8 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
                     }
                 }
                 copyFieldList.add(field);
-            } else if(isDynamic) {
+            } else {
+                //here sure dynamic schema case.
                 //salesforce use name mapping here, if static design schema, is ok, user need to set right name in talend schema
                 //but if dynamic schema, column data will be lost, for example:
                 //"SELECT COUNT(Id) C1 FROM Account" or "SELECT Id,TotalAmount,convertCurrency(TotalAmount) The_Amount FROM Order"
@@ -178,6 +179,8 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
         } else if(value instanceof BigInteger) {
             base = AvroUtils._decimal();
         } else if(value instanceof Date) {
+            base = AvroUtils._date();
+        } else if(value instanceof Calendar) {
             base = AvroUtils._date();
         } else if(value instanceof byte[]) {
             base = AvroUtils._bytes();
