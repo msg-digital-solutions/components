@@ -68,7 +68,6 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
                     }
 
                     final List<Schema.Field> copyFieldList = new ArrayList<>();
-
                     if(passSoqlParserValidation) {
                         fillFieldListByStaticSoqlParser(query, copyFieldList);
                     } else {
@@ -137,6 +136,19 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
 
                 final XmlObject xmlObject = columnNameAndXmlObject.getValue();
                 final String xmlType = xmlObject.getXmlType()!=null ? xmlObject.getXmlType().getLocalPart() : null;
+
+                //salesforce api may don't return nested object, just null, so we may can't get any info, like path, like nested value
+                //here need do sample, for example, read first or random 10 rows to decide, but that also have special case, not sure worth do it now, TODO
+                /*
+                Iterator<XmlObject> child = xmlObject.getChildren();
+                if("sObject".equals(xmlType) && child!=null) {
+                    while(child.hasNext()) {
+                        XmlObject xo = child.next();
+
+                    }
+                }
+                */
+
                 final Object value = xmlObject.getValue();
                 final Schema fieldSchema;
                 if(value!=null) {
@@ -278,6 +290,8 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
         // logic almost the same as it is in GuessSchema (SalesforceSourseOrSink): TDI-48569
         for (FieldDescription fieldDescription : query.getFieldDescriptions()) {
             final String simpleName = fieldDescription.getSimpleName();
+            //TODO here is right? for example, full name is "Account_Name", simple name is "Name", module is "Contact" which also have "Name" self,
+            //so question is here, why we can use Contact.Name type as Contact.Account.Name type?
             Field schemaField = querySchema.getField(simpleName);
             final String fullName;
             if (schemaField == null) {
