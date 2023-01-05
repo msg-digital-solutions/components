@@ -13,6 +13,8 @@
 package org.talend.components.salesforce.runtime;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 import org.apache.avro.Schema;
@@ -31,6 +33,7 @@ import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.bind.XmlObject;
+import org.talend.daikon.avro.SchemaConstants;
 
 public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
 
@@ -89,21 +92,25 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
     private void fillFieldListByResultObject(List<Field> copyFieldList) {
         SObject currentSObject = getCurrentSObject();
         Iterator<XmlObject> children = currentSObject.getChildren();
-        List<String> columnsName = new ArrayList<>();
+        Map<String, XmlObject> columnName2XmlObject = new LinkedHashMap<>();
         int idCount = 0;
         while (children.hasNext()) {
-            String elementName = children.next().getName().getLocalPart();
+            XmlObject xmlObject = children.next();
+            String elementName = xmlObject.getName().getLocalPart();
             if ("Id".equals(elementName) && idCount == 0) {
                 // Ignore the first 'Id' field which always return for query.
                 idCount++;
                 continue;
             }
-            if (!columnsName.contains(elementName)) {
-                columnsName.add(elementName);
+            if (!columnName2XmlObject.containsKey(elementName)) {
+                columnName2XmlObject.put(elementName, xmlObject);
             }
         }
 
-        for (String columnName : columnsName) {
+        int typeCount = 0;
+        for (Map.Entry<String, XmlObject> columnNameAndXmlObject : columnName2XmlObject.entrySet()) {
+            final String columnName = columnNameAndXmlObject.getKey();
+
             Field se = querySchema.getField(columnName);
             if (se != null) {
                 Field field = new Field(se.name(), se.schema(), se.doc(), se.defaultVal());
@@ -115,7 +122,152 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
                     }
                 }
                 copyFieldList.add(field);
+            } else if(isDynamic) {
+                //salesforce use name mapping here, if static design schema, is ok, user need to set right name in talend schema
+                //but if dynamic schema, column data will be lost, for example:
+                //"SELECT COUNT(Id) C1 FROM Account" or "SELECT Id,TotalAmount,convertCurrency(TotalAmount) The_Amount FROM Order"
+                //as no C1 and The_Amount in the Account module, so they will be lost, here fix it.
+
+                //here ignore "type", not "Type" which is data column for some module like Account
+                if ("type".equals(columnName) && typeCount == 0) {
+                    typeCount++;
+                    continue;
+                }
+
+                final XmlObject xmlObject = columnNameAndXmlObject.getValue();
+                final String xmlType = xmlObject.getXmlType()!=null ? xmlObject.getXmlType().getLocalPart() : null;
+                final Object value = xmlObject.getValue();
+                final Schema fieldSchema;
+                if(value!=null) {
+                    fieldSchema = inferSchema4FieldFromValue(value, xmlType);
+                } else if(xmlType!=null) {
+                    fieldSchema = inferSchema4FieldFromXmlType(xmlType);
+                } else {
+                    fieldSchema = AvroUtils.wrapAsNullable(AvroUtils._string());
+                }
+
+                //no length and scale info, and be nullable always as no that info here
+
+                //SalesforceAvroRegistry not make sure columnName is valid as avro field name, here align it
+                Field avroField = new Field(columnName, fieldSchema, null, (Object)null);
+                copyFieldList.add(avroField);
             }
+        }
+    }
+
+    private Schema inferSchema4FieldFromValue(final Object value, final String xmlType4DateStyleType) {
+        final Schema base;
+        if(value instanceof String) {
+            base = AvroUtils._string();
+        } else if(value instanceof Integer) {
+            base = AvroUtils._int();
+        } else if(value instanceof Long) {
+            base = AvroUtils._long();
+        } else if(value instanceof Short) {
+            base = AvroUtils._short();
+        } else if(value instanceof Byte) {
+            base = AvroUtils._byte();
+        } else if(value instanceof Boolean) {
+            base = AvroUtils._boolean();
+        } else if(value instanceof Double) {
+            base = AvroUtils._double();
+        } else if(value instanceof Float) {
+            base = AvroUtils._float();
+        } else if(value instanceof BigDecimal) {
+            base = AvroUtils._decimal();
+        } else if(value instanceof BigInteger) {
+            base = AvroUtils._decimal();
+        } else if(value instanceof Date) {
+            base = AvroUtils._date();
+        } else if(value instanceof byte[]) {
+            base = AvroUtils._bytes();
+        } else {
+            base = AvroUtils._string();
+        }
+
+        Schema wrappedOne = AvroUtils.wrapAsNullable(base);
+
+        setPattern(xmlType4DateStyleType, wrappedOne);
+
+        //not process AvroUtils._character() as align with SalesforceAvroRegistry.getConverterFromString
+
+        return wrappedOne;
+    }
+
+    private Schema inferSchema4FieldFromXmlType(final String xmlType) {
+        //see https://developer.salesforce.com/docs/atlas.en-us.200.0.object_reference.meta/object_reference/primitive_data_types.htm
+        //and https://www.w3.org/TR/xmlschema-2
+        final Schema base;
+        switch (xmlType) {
+            case "string":
+                base = AvroUtils._string();
+                break;
+            case "int":
+                base = AvroUtils._int();
+                break;
+            case "long":
+                base = AvroUtils._long();
+                break;
+            case "short":
+                base = AvroUtils._short();
+                break;
+            case "byte":
+                base = AvroUtils._byte();
+                break;
+            case "date":
+                base = AvroUtils._date();
+                break;
+            case "time":
+                base = AvroUtils._date();
+                break;
+            case "dateTime":
+                base = AvroUtils._date();
+                break;
+            case "boolean":
+                base = AvroUtils._boolean();
+                break;
+            case "float":
+                base = AvroUtils._float();
+                break;
+            case "double":
+                base = AvroUtils._double();
+                break;
+            case "decimal":
+                base = AvroUtils._decimal();
+                break;
+            case "binary":
+            case "base64Binary":
+                base = AvroUtils._bytes();
+                break;
+            default:
+                base = AvroUtils._string();
+                break;
+        }
+
+        final Schema wrappedOne = AvroUtils.wrapAsNullable(base);
+
+        setPattern(xmlType, wrappedOne);
+
+        return wrappedOne;
+    }
+
+    private void setPattern(String xmlType, Schema wrappedOne) {
+        if(xmlType == null) {
+            return;
+        }
+
+        switch (xmlType) {
+            case "date":
+                wrappedOne.addProp(SchemaConstants.TALEND_COLUMN_PATTERN, "yyyy-MM-dd");
+                break;
+            case "time":
+                wrappedOne.addProp(SchemaConstants.TALEND_COLUMN_PATTERN, "HH:mm:ss.SSS'Z'");
+                break;
+            case "dateTime":
+                wrappedOne.addProp(SchemaConstants.TALEND_COLUMN_PATTERN, "yyyy-MM-dd'T'HH:mm:ss'.000Z'");
+                break;
+            default:
+                break;
         }
     }
 
