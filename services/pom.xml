@@ -18,15 +18,15 @@
 
     <properties>
         <!-- /!\ START Spring BOM PROPERTIES /!\ -->
-        <talend.springboot.bom.version>0.0.3</talend.springboot.bom.version>
+        <talend.springboot.bom.version>0.0.13</talend.springboot.bom.version>
         <talend.springboot.bom.artifactId>2.7</talend.springboot.bom.artifactId>
         <!-- /!\ END Spring BOM PROPERTIES /!\ -->
 
         <!-- /!\ START TSBI PROPERTIES /!\ -->
         <docker.tsbiImage>java8-base</docker.tsbiImage>
-        <docker.tsbiVersion>2.10.4-20220707080343</docker.tsbiVersion>
-        <docker.registryName>docker-dev-local</docker.registryName>
-        <docker.tsbiPath>/tlnd-docker-dev/talend/common/tsbi</docker.tsbiPath>
+        <docker.tsbiVersion>3.1.6-20221214132533</docker.tsbiVersion>
+        <docker.registryName>docker-prod-local</docker.registryName>
+        <docker.tsbiPath>/tlnd-docker-prod/talend/common/tsbi</docker.tsbiPath>
         <!-- /!\ END TSBI PROPERTIES /!\ -->
 
         <maven.deploy.skip>true</maven.deploy.skip>
