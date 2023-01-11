@@ -211,7 +211,7 @@
         <xstream.version>1.4.19</xstream.version>
         <zookeeper.version>3.4.14</zookeeper.version>
         <commons-text.version>1.10.0</commons-text.version>
-        <jettison.version>1.5.1</jettison.version>
+        <jettison.version>1.5.3</jettison.version>
     </properties>
 
     <distributionManagement>
