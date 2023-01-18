@@ -40,7 +40,7 @@ public class NetSuiteConnectionDefinitionTest {
 
     @Test
     public void testGetName() {
-        assertEquals("tNetsuiteConnection", definition.getName());
+        assertEquals("tNetSuiteLegacyConnection", definition.getName());
     }
 
     @Test

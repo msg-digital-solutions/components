@@ -28,7 +28,7 @@ import org.talend.daikon.runtime.RuntimeInfo;
  */
 public class NetSuiteConnectionDefinition extends NetSuiteComponentDefinition {
 
-    public static final String COMPONENT_NAME = "tNetsuiteConnection"; //$NON-NLS-1$
+    public static final String COMPONENT_NAME = "tNetSuiteLegacyConnection"; //$NON-NLS-1$
 
     public NetSuiteConnectionDefinition() {
         super(COMPONENT_NAME, ExecutionEngine.DI);

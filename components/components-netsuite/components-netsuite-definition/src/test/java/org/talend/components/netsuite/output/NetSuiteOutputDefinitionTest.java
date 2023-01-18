@@ -51,7 +51,7 @@ public class NetSuiteOutputDefinitionTest {
 
     @Test
     public void testGetName() {
-        assertEquals("tNetsuiteOutput", definition.getName());
+        assertEquals("tNetSuiteLegacyOutput", definition.getName());
     }
 
     @Test

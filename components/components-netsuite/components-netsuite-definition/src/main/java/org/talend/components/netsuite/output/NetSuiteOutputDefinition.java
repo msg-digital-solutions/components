@@ -37,7 +37,7 @@ import org.talend.daikon.runtime.RuntimeInfo;
  */
 public class NetSuiteOutputDefinition extends NetSuiteComponentDefinition {
 
-    public static final String COMPONENT_NAME = "tNetsuiteOutput"; //$NON-NLS-1$
+    public static final String COMPONENT_NAME = "tNetSuiteLegacyOutput"; //$NON-NLS-1$
 
     public static final String RETURN_LEGACY_CURRENT_INTERNAL_ID = "CURRENT_INTERNALID";
 
