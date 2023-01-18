@@ -29,7 +29,7 @@ import org.talend.daikon.runtime.RuntimeInfo;
  */
 public class NetSuiteInputDefinition extends NetSuiteComponentDefinition {
 
-    public static final String COMPONENT_NAME = "tNetsuiteInput"; //$NON-NLS-1$
+    public static final String COMPONENT_NAME = "tNetSuiteLegacyInput"; //$NON-NLS-1$
 
     public NetSuiteInputDefinition() {
         super(COMPONENT_NAME, ExecutionEngine.DI);

@@ -47,7 +47,7 @@ public class NetSuiteInputDefinitionTest {
 
     @Test
     public void testGetName() {
-        assertEquals("tNetsuiteInput", definition.getName());
+        assertEquals("tNetSuiteLegacyInput", definition.getName());
     }
 
     @Test

@@ -57,11 +57,6 @@ public abstract class NetSuiteComponentDefinition extends AbstractComponentDefin
         super(componentName, engine1, engines);
     }
 
-    @Override
-    public String[] getFamilies() {
-        return new String[] { "Business/NetSuite", "Cloud/NetSuite" };
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public Class<? extends ComponentProperties>[] getNestedCompatibleComponentPropertiesClass() {
