@@ -13,8 +13,6 @@
 package org.talend.components.salesforce;
 
 import org.talend.components.api.properties.ComponentBasePropertiesImpl;
-import org.talend.daikon.i18n.GlobalI18N;
-import org.talend.daikon.i18n.I18nMessages;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.daikon.properties.presentation.Widget;
 import org.talend.daikon.properties.property.Property;
@@ -27,9 +25,6 @@ import static org.talend.daikon.properties.property.PropertyFactory.newString;
 
 public class SalesforceSSLProperties extends ComponentBasePropertiesImpl {
 
-    private static final I18nMessages MESSAGES =
-            GlobalI18N.getI18nMessageProvider().getI18nMessages(SalesforceSSLProperties.class);
-
     public Property<Boolean> mutualAuth  = newBoolean("mutualAuth"); //$NON-NLS-1$
 
     public Property<String> keyStorePath = newString("keyStorePath"); //$NON-NLS-1$
@@ -39,9 +34,6 @@ public class SalesforceSSLProperties extends ComponentBasePropertiesImpl {
 
     public SalesforceSSLProperties(String name) {
         super(name);
-        mutualAuth.setI18nMessageFormatter(MESSAGES);
-        keyStorePath.setI18nMessageFormatter(MESSAGES);
-        keyStorePwd.setI18nMessageFormatter(MESSAGES);
     }
 
     @Override
