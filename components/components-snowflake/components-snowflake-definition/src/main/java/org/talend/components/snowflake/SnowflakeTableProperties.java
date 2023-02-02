@@ -18,11 +18,14 @@ import static org.talend.components.snowflake.SnowflakeDefinition.getSandboxedIn
 import static org.talend.daikon.properties.presentation.Widget.widget;
 import static org.talend.daikon.properties.property.PropertyFactory.newString;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.avro.Schema;
 import org.talend.components.api.component.ISchemaListener;
 import org.talend.components.api.properties.ComponentPropertiesImpl;
+import org.talend.components.api.service.SchemaRetrieve;
 import org.talend.components.common.SchemaProperties;
 import org.talend.daikon.NamedThing;
 import org.talend.daikon.properties.ValidationResult;
@@ -109,6 +112,16 @@ public class SnowflakeTableProperties extends ComponentPropertiesImpl implements
         }
         tableName.setPossibleNamedThingValues(Collections.<NamedThing>emptyList());
         return vr;
+    }
+
+    @SchemaRetrieve
+    public Schema retrieveSchema() throws IOException {
+        try (SandboxedInstance sandboxedInstance = getSandboxedInstance(SOURCE_OR_SINK_CLASS, USE_CURRENT_JVM_PROPS)) {
+            SnowflakeRuntimeSourceOrSink ss = (SnowflakeRuntimeSourceOrSink) sandboxedInstance.getInstance();
+            ss.initialize(null, this);
+            Schema schema = ss.getEndpointSchema(null, this.tableName.getValue());
+            return schema;
+        }
     }
 
     @Override

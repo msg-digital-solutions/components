@@ -13,6 +13,8 @@
 package org.talend.components.api.service;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
@@ -209,5 +211,33 @@ public interface ComponentService extends PropertiesService<Properties> {
             Set<? extends Connector> connectedConnetor, boolean isOuput);
 
     <T extends Properties> void postDeserialize(T props);
+
+    /**
+     * retrieve schema base on the component properties which should contains object name and connection info, see {@link SchemaRetrieve}
+     *
+     * @param properties component properties
+     * @return the runtime schema
+     */
+    default Schema retrieveSchema(ComponentProperties properties) {
+        if(properties == null) {
+            return null;
+        }
+
+        Class<?> clazz = properties.getClass();
+        Method method = java.util.stream.Stream.of(clazz.getDeclaredMethods()).filter(m -> m.isAnnotationPresent(SchemaRetrieve.class)).findFirst().orElse(null);
+
+        if(method == null) {
+            return null;
+        }
+
+        try {
+            Object result = method.invoke(properties);
+            return Schema.class.cast(result);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
