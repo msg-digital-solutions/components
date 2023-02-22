@@ -22,6 +22,7 @@
         <tika.version>2.4.1</tika.version>
         <poi.version>5.2.2</poi.version>
         <excel-streaming-reader.version>4.0.1</excel-streaming-reader.version>
+        <velocity-engine-core.version>2.3</velocity-engine-core.version>
         <coverage.sonar.reportRoot>${project.basedir}/..</coverage.sonar.reportRoot>
     </properties>
 
@@ -131,6 +132,11 @@
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>jackson-mapper-asl</artifactId>
                 </exclusion>
+                <!--  exclude old & vulnerable velocity version -->
+                <exclusion>
+                    <groupId>org.apache.velocity</groupId>
+                    <artifactId>velocity</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -143,6 +149,11 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
         </dependency>
+        <dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-engine-core</artifactId>
+			<version>${velocity-engine-core.version}</version>
+		</dependency>
 
         <!-- To include in dependencies.txt. -->
         <dependency>
