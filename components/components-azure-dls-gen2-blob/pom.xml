@@ -16,7 +16,6 @@
         <parquet.version>1.9.0</parquet.version>
         <geronimo-json.version>1.3</geronimo-json.version>
         <reactor-netty.version>1.0.20</reactor-netty.version>
-        <woodstox.version>5.0.3</woodstox.version>
     </properties>
 
     <dependencies>
@@ -42,7 +41,6 @@
         <dependency>
             <artifactId>woodstox-core</artifactId>
             <groupId>com.fasterxml.woodstox</groupId>
-            <version>${woodstox.version}</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>

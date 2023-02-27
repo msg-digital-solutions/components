@@ -127,7 +127,7 @@
         <jackson-jaxrs.version>1.9.13</jackson-jaxrs.version>
         <jackson-xc.version>1.9.13</jackson-xc.version>
         <jackson.1x.version>1.9.15-TALEND</jackson.1x.version>
-        <jackson.version>2.13.3</jackson.version>
+        <jackson.version>2.13.4.20221013</jackson.version>
         <javapoet.version>1.8.0</javapoet.version>
         <javax.activation.version>1.1.1</javax.activation.version>
         <javax.inject.version>1</javax.inject.version>
@@ -163,7 +163,7 @@
         <log4j.version>2.17.2</log4j.version>
         <marketo-soap-sdk.version>3.1</marketo-soap-sdk.version>
         <mockito-core.version>2.24.0</mockito-core.version>
-        <netty.version>4.1.79.Final</netty.version>
+        <netty.version>4.1.86.Final</netty.version>
         <nimbus-jose-jwt.version>9.23</nimbus-jose-jwt.version>
         <okio.version>1.14.0</okio.version>
         <org.codehaus.janino.commons-compiler.version>${org.codehaus.janino.version}
@@ -177,7 +177,7 @@
         <pax-url-aether.version>2.6.2</pax-url-aether.version>
         <powermock-api-mockito.version>2.0.0</powermock-api-mockito.version>
         <powermock-module-junit4.version>${powermock-api-mockito.version}</powermock-module-junit4.version>
-        <protobuf-java.version>3.21.2</protobuf-java.version>
+        <protobuf-java.version>3.21.7</protobuf-java.version>
         <scala.version>2.11.11</scala.version>
         <slf4j.version>1.7.36</slf4j.version>
         <snakeyaml.version>1.26</snakeyaml.version>
@@ -199,6 +199,8 @@
         <talend-proxy.version>1.0.2</talend-proxy.version>
         <xstream.version>1.4.18</xstream.version>
         <zookeeper.version>3.4.14</zookeeper.version>
+        <woodstox.version>6.4.0</woodstox.version>
+        <jettison.version>1.5.3</jettison.version>
     </properties>
 
     <distributionManagement>
@@ -1615,6 +1617,16 @@
                 <groupId>org.apache.ivy</groupId>
                 <artifactId>ivy</artifactId>
                 <version>${ivy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jettison</groupId>
+                <artifactId>jettison</artifactId>
+                <version>${jettison.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.woodstox</groupId>
+                <artifactId>woodstox-core</artifactId>
+                <version>${woodstox.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
