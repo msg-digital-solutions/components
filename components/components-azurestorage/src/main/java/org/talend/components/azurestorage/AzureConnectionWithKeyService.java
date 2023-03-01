@@ -16,6 +16,8 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.StorageCredentialsAccountAndKey;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class hold and provide azure storage connection using a key
@@ -28,21 +30,20 @@ public class AzureConnectionWithKeyService implements AzureConnection {
 
     private String accountKey;
 
+    private String endpoint;
+
     AzureConnectionWithKeyService(Builder builder) {
         this.protocol = builder.protocol;
         this.accountName = builder.accountName;
         this.accountKey = builder.accountKey;
+        this.endpoint = builder.endpoint;
     }
 
     @Override
     public CloudStorageAccount getCloudStorageAccount() throws InvalidKeyException, URISyntaxException {
-
-        StringBuilder connectionString = new StringBuilder();
-        connectionString.append("DefaultEndpointsProtocol=").append(protocol) //
-                .append(";AccountName=").append(accountName) //
-                .append(";AccountKey=").append(accountKey);
-
-        return CloudStorageAccount.parse(connectionString.toString());
+        final StorageCredentialsAccountAndKey storageCredentials = new StorageCredentialsAccountAndKey(accountName,accountKey);
+        CloudStorageAccount cloudStorageAccount = new CloudStorageAccount(storageCredentials, true, endpoint);
+        return cloudStorageAccount;
     }
 
     public String getProtocol() {
@@ -57,11 +58,11 @@ public class AzureConnectionWithKeyService implements AzureConnection {
         return accountKey;
     }
 
-    public static Protocol builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    private static class Builder implements Build, Protocol, AccountName, AccountKey {
+    public static class Builder  {
 
         private String protocol;
 
@@ -69,18 +70,27 @@ public class AzureConnectionWithKeyService implements AzureConnection {
 
         private String accountKey;
 
-        public AccountName protocol(String protocol) {
+        private String endpoint;
+
+        public Builder protocol(String protocol) {
             this.protocol = protocol;
             return this;
         }
 
-        public AccountKey accountName(String accountName) {
+        public Builder accountName(String accountName) {
             this.accountName = accountName;
             return this;
         }
 
-        public Build accountKey(String accountKey) {
+        public Builder accountKey(String accountKey) {
             this.accountKey = accountKey;
+            return this;
+        }
+
+        public Builder withEndpoint(String endpoint) {
+            if (!StringUtils.isEmpty(endpoint)){
+                this.endpoint = endpoint;
+            }
             return this;
         }
 
@@ -89,24 +99,6 @@ public class AzureConnectionWithKeyService implements AzureConnection {
         }
     }
 
-    public interface Protocol {
 
-        public AccountName protocol(String protocol);
-    }
-
-    public interface AccountName {
-
-        public AccountKey accountName(String accountName);
-    }
-
-    public interface AccountKey {
-
-        public Build accountKey(String accountKey);
-    }
-
-    public interface Build {
-
-        public AzureConnectionWithKeyService build();
-    }
 
 }

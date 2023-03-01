@@ -28,12 +28,12 @@ public class AzureConnectionWithTokenTest {
         String testAccountName = "someAccountName";
         AzureActiveDirectoryTokenGetter mockedTokenGetter = Mockito.mock(AzureActiveDirectoryTokenGetter.class);
         Mockito.when(mockedTokenGetter.retrieveAccessToken()).thenReturn("testToken");
-        AzureConnectionWithToken sutTokenConnection = new AzureConnectionWithToken(testAccountName, mockedTokenGetter);
+        AzureConnectionWithToken sutTokenConnection = new AzureConnectionWithToken(testAccountName, mockedTokenGetter, "core.windows.net");
 
 
         CloudStorageAccount account = sutTokenConnection.getCloudStorageAccount();
 
-        Mockito.verify(mockedTokenGetter).retrieveAccessToken();
+        Mockito.verify(mockedTokenGetter).retrieveAccessToken("core.windows.net");
         Assert.assertEquals(testAccountName, account.getCredentials().getAccountName());
     }
 }

@@ -1,16 +1,16 @@
 package org.talend.components.azurestorage.blob.runtime;
 
-import java.net.URISyntaxException;
-import java.security.InvalidKeyException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.microsoft.azure.storage.CloudStorageAccount;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.talend.components.api.component.runtime.RuntimableRuntime;
 import org.talend.components.api.container.RuntimeContainer;
 import org.talend.components.api.properties.ComponentProperties;
+import org.talend.components.azure.runtime.token.EndpointUtil;
 import org.talend.components.azurestorage.AzureConnection;
 import org.talend.components.azurestorage.AzureConnectionWithKeyService;
+import org.talend.components.azurestorage.AzureConnectionWithManagedIdentities;
 import org.talend.components.azurestorage.AzureConnectionWithSasService;
 import org.talend.components.azurestorage.AzureConnectionWithToken;
 import org.talend.components.azurestorage.AzureStorageProvideConnectionProperties;
@@ -21,9 +21,14 @@ import org.talend.daikon.i18n.GlobalI18N;
 import org.talend.daikon.i18n.I18nMessages;
 import org.talend.daikon.properties.ValidationResult;
 
-import com.microsoft.azure.storage.CloudStorageAccount;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AzureStorageRuntime implements RuntimableRuntime<ComponentProperties> {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(AzureStorageRuntime.class);
 
     private static final long serialVersionUID = 8150539704549116311L;
 
@@ -58,6 +63,8 @@ public class AzureStorageRuntime implements RuntimableRuntime<ComponentPropertie
                     || StringUtils.isEmpty(conn.clientId.getValue()) || StringUtils.isEmpty(conn.clientSecret.getValue())) {
                 errorMessage = messages.getMessage("error.EmptyADProperties");
             }
+        } else if (conn.authenticationType.getValue() == AuthType.MANAGED_IDENTITIES){
+
         } else if (conn.useSharedAccessSignature.getValue()) { // checks
             if (StringUtils.isEmpty(conn.sharedAccessSignature.getStringValue())) {
                 errorMessage = messages.getMessage("error.EmptySAS"); //$NON-NLS-1$
@@ -89,13 +96,16 @@ public class AzureStorageRuntime implements RuntimableRuntime<ComponentPropertie
     public TAzureStorageConnectionProperties getUsedConnection(RuntimeContainer runtimeContainer) {
         TAzureStorageConnectionProperties connectionProperties = properties.getConnectionProperties();
         String refComponentId = connectionProperties.getReferencedComponentId();
+        LOGGER.debug("RefComponentId: "+ refComponentId);
 
         // Using another component's connection
         if (refComponentId != null) {
             // In a runtime container
             if (runtimeContainer != null) {
+                LOGGER.debug("Runtime container id: "+runtimeContainer.getCurrentComponentId());
                 TAzureStorageConnectionProperties sharedConn = (TAzureStorageConnectionProperties) runtimeContainer
                         .getComponentData(refComponentId, KEY_CONNECTION_PROPERTIES);
+                LOGGER.debug("sharedConn: " +sharedConn.name.getValue());
                 if (sharedConn != null) {
                     return sharedConn;
                 }
@@ -119,6 +129,7 @@ public class AzureStorageRuntime implements RuntimableRuntime<ComponentPropertie
     public AzureConnection getAzureConnection(RuntimeContainer runtimeContainer) {
 
         TAzureStorageConnectionProperties conn = getUsedConnection(runtimeContainer);
+        String endpoint  = EndpointUtil.getEndpoint(conn.region.getValue().toString(),conn.customEndpoint.getValue());
         if (conn.authenticationType.getValue() == AuthType.BASIC) {
             if (conn.useSharedAccessSignature.getValue()) {
                 // extract account name and sas token from sas url
@@ -136,11 +147,18 @@ public class AzureStorageRuntime implements RuntimableRuntime<ComponentPropertie
                 return AzureConnectionWithKeyService.builder()//
                         .protocol(conn.protocol.getValue().toString().toLowerCase())//
                         .accountName(conn.accountName.getValue())//
-                        .accountKey(conn.accountKey.getValue()).build();
+                        .accountKey(conn.accountKey.getValue())
+                        .withEndpoint(endpoint).build();
+
             }
 
-        } else {
-            return new AzureConnectionWithToken(conn.accountName.getValue(), conn.tenantId.getValue(), conn.clientId.getValue(), conn.clientSecret.getValue());
+        } else if(conn.authenticationType.getValue() == AuthType.ACTIVE_DIRECTORY_CLIENT_CREDENTIAL){
+            String authorityHost = conn.region.getValue().equals(TAzureStorageConnectionProperties.Region.CUSTOM)?conn.authorityHost.getValue():null;
+            return new AzureConnectionWithToken(conn.accountName.getValue(),
+                    conn.tenantId.getValue(), conn.clientId.getValue(), conn.clientSecret.getValue(),
+                    endpoint, authorityHost);
+        }else {//AuthType.MANAGED_IDENTITIES
+            return new AzureConnectionWithManagedIdentities(conn.accountName.getValue(),endpoint);
         }
     }
 }

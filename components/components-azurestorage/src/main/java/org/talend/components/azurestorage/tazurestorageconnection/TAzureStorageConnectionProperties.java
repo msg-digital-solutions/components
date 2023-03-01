@@ -12,13 +12,6 @@
 // ============================================================================
 package org.talend.components.azurestorage.tazurestorageconnection;
 
-import static org.talend.daikon.properties.presentation.Widget.widget;
-import static org.talend.daikon.properties.property.PropertyFactory.newEnum;
-import static org.talend.daikon.properties.property.PropertyFactory.newString;
-
-import java.util.EnumSet;
-import java.util.List;
-
 import org.talend.components.api.properties.ComponentPropertiesImpl;
 import org.talend.components.api.properties.ComponentReferenceProperties;
 import org.talend.components.azurestorage.AzureStorageProvideConnectionProperties;
@@ -37,6 +30,13 @@ import org.talend.daikon.properties.presentation.Widget;
 import org.talend.daikon.properties.property.Property;
 import org.talend.daikon.properties.property.PropertyFactory;
 import org.talend.daikon.properties.service.Repository;
+
+import java.util.EnumSet;
+import java.util.List;
+
+import static org.talend.daikon.properties.presentation.Widget.widget;
+import static org.talend.daikon.properties.property.PropertyFactory.newEnum;
+import static org.talend.daikon.properties.property.PropertyFactory.newString;
 
 /**
  * Class TAzureStorageConnectionProperties.
@@ -92,6 +92,21 @@ public class TAzureStorageConnectionProperties extends ComponentPropertiesImpl
 
     public List<NamedThing> BlobSchema = null, QueueSchema = null, TableSchema = null;
 
+    public enum Region {
+        AZURE_CLOUD,
+        AZURE_CHINA_CLOUD,
+        AZURE_GERMAN_CLOUD,
+        AZURE_US_GOVERNMENT,
+        CUSTOM
+    }
+    
+    public Property<Region> region =
+            newEnum("region", Region.class).setValue(Region.AZURE_CLOUD);
+
+    public Property<String> customEndpoint = PropertyFactory.newString("customEndpoint").setValue("\"core.windows.net\""); //$NON-NLS-1$
+
+    public Property<String> authorityHost = PropertyFactory.newString("authorityHost").setValue("\"https://login.microsoftonline.com/\""); //$NON-NLS-1$
+
     public TAzureStorageConnectionProperties(String name) {
         super(name);
     }
@@ -104,6 +119,7 @@ public class TAzureStorageConnectionProperties extends ComponentPropertiesImpl
         accountName.setValue("");
         accountKey.setValue("");
         useSharedAccessSignature.setValue(false);
+        region.setValue(Region.AZURE_CLOUD);
     }
 
     @Override
@@ -112,6 +128,9 @@ public class TAzureStorageConnectionProperties extends ComponentPropertiesImpl
         Form mainForm = new Form(this, Form.MAIN);
         mainForm.addRow(accountName);
         mainForm.addRow(authenticationType);
+        mainForm.addRow(region);
+        mainForm.addRow(customEndpoint);
+        mainForm.addColumn(authorityHost);
         mainForm.addRow(widget(accountKey).setWidgetType(Widget.HIDDEN_TEXT_WIDGET_TYPE));
         mainForm.addRow(protocol);
         mainForm.addRow(useSharedAccessSignature);
@@ -120,6 +139,7 @@ public class TAzureStorageConnectionProperties extends ComponentPropertiesImpl
         mainForm.addRow(tenantId);
         mainForm.addRow(clientId);
         mainForm.addColumn(widget(clientSecret).setWidgetType(Widget.HIDDEN_TEXT_WIDGET_TYPE));
+
 
         Form refForm = Form.create(this, Form.REFERENCE);
         Widget compListWidget = widget(referencedComponent).setWidgetType(Widget.COMPONENT_REFERENCE_WIDGET_TYPE);
@@ -139,6 +159,9 @@ public class TAzureStorageConnectionProperties extends ComponentPropertiesImpl
         wizardForm.addRow(clientId);
         wizardForm.addColumn(widget(clientSecret).setWidgetType(Widget.HIDDEN_TEXT_WIDGET_TYPE));
         wizardForm.addColumn(widget(testConnection).setLongRunning(true).setWidgetType(Widget.BUTTON_WIDGET_TYPE));
+        wizardForm.addRow(region);
+        wizardForm.addRow(customEndpoint);
+        wizardForm.addColumn(authorityHost);
 
     }
 
@@ -156,15 +179,21 @@ public class TAzureStorageConnectionProperties extends ComponentPropertiesImpl
             form.getWidget(accountName).setHidden(useOtherConnection);
             form.getWidget(authenticationType).setHidden(useOtherConnection);
 
-            form.getWidget(tenantId).setHidden(useOtherConnection || isBasicAuthUsed);
-            form.getWidget(clientId).setHidden(useOtherConnection || isBasicAuthUsed);
-            form.getWidget(clientSecret).setHidden(useOtherConnection || isBasicAuthUsed);
+            form.getWidget(tenantId).setVisible(!useOtherConnection && (authenticationType.getValue() == AuthType.ACTIVE_DIRECTORY_CLIENT_CREDENTIAL));
+            form.getWidget(clientId).setVisible(!useOtherConnection && (authenticationType.getValue() == AuthType.ACTIVE_DIRECTORY_CLIENT_CREDENTIAL));
+            form.getWidget(clientSecret).setVisible(!useOtherConnection && (authenticationType.getValue() == AuthType.ACTIVE_DIRECTORY_CLIENT_CREDENTIAL));
 
             form.getWidget(accountKey).setVisible(!useOtherConnection && isBasicAuthUsed && !isSASAuthUsed);
             form.getWidget(protocol).setVisible(!useOtherConnection && isBasicAuthUsed && !isSASAuthUsed);
 
             form.getWidget(useSharedAccessSignature.getName()).setVisible(!useOtherConnection && isBasicAuthUsed);
             form.getWidget(sharedAccessSignature.getName()).setVisible(!useOtherConnection && isBasicAuthUsed && isSASAuthUsed);
+            form.getWidget(region)
+                    .setHidden(useOtherConnection || (authenticationType.getValue() == AuthType.MANAGED_IDENTITIES) || (isBasicAuthUsed && isSASAuthUsed));
+            form.getWidget(customEndpoint).setHidden(useOtherConnection || (region.getValue() != Region.CUSTOM) || (authenticationType.getValue() == AuthType.MANAGED_IDENTITIES) || (isBasicAuthUsed && isSASAuthUsed));
+            form.getWidget(authorityHost).setHidden(useOtherConnection || (region.getValue() != Region.CUSTOM)
+                    || (authenticationType.getValue() != AuthType.ACTIVE_DIRECTORY_CLIENT_CREDENTIAL) || (authenticationType.getValue() == AuthType.MANAGED_IDENTITIES));
+
         }
     }
 
@@ -174,6 +203,12 @@ public class TAzureStorageConnectionProperties extends ComponentPropertiesImpl
     }
 
     public void afterUseSharedAccessSignature() {
+        refreshLayout(getForm(Form.MAIN));
+        refreshLayout(getForm(Form.REFERENCE));
+        refreshLayout(getForm(FORM_WIZARD));
+    }
+
+    public void afterRegion() {
         refreshLayout(getForm(Form.MAIN));
         refreshLayout(getForm(Form.REFERENCE));
         refreshLayout(getForm(FORM_WIZARD));
