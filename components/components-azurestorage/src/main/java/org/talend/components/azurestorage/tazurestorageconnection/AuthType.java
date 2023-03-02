@@ -15,5 +15,6 @@ package org.talend.components.azurestorage.tazurestorageconnection;
 
 public enum AuthType {
     BASIC,
-    ACTIVE_DIRECTORY_CLIENT_CREDENTIAL
+    ACTIVE_DIRECTORY_CLIENT_CREDENTIAL,
+    MANAGED_IDENTITIES
 }

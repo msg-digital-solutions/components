@@ -17,6 +17,7 @@ import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.microsoft.azure.storage.core.Base64;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.talend.components.api.component.runtime.BoundedReader;
@@ -74,6 +75,8 @@ public abstract class AzureStorageTableBaseTestIT extends AzureStorageBaseTestIT
         properties = (TAzureStorageOutputTableProperties) setupConnectionProperties(
                 (AzureStorageProvideConnectionProperties) properties);
         properties.setupProperties();
+        properties.connection.accountName.setValue("account1");
+        properties.connection.accountKey.setValue(Base64.encode("asdfgasadf".getBytes()));
         properties.tableName.setValue(tbl_test);
         properties.actionOnTable.setValue(ActionOnTable.Create_table_if_does_not_exist);
 
