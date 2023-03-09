@@ -38,7 +38,7 @@ spec:
     containers:
         -
             name: main
-            image: '${env.TSBI_IMAGE}'
+            image: artifactory.datapwn.com/tlnd-docker-dev/talend/common/tsbi/jdk8-svc-springboot-builder:1.14.0-2.1-20191203093421
             command: [cat]
             tty: true
             volumeMounts: [{name: m2main, mountPath: /root/.m2/repository}]
@@ -48,7 +48,7 @@ spec:
                 value: tcp://localhost:2375
         -
             name: dind-daemon
-            image: docker:19.03-dind
+            image: artifactory.datapwn.com/docker-io-remote/docker:23.0.1-dind
             resources:
                 requests:
                     cpu: 2.5
