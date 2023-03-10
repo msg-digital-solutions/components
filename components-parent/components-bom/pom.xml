@@ -187,7 +187,7 @@
         <spring-test.version>4.3.25.RELEASE</spring-test.version>
         <stax2-api.version>4.1</stax2-api.version>
         <talend_file_enhanced_20070724.version>6.0.0</talend_file_enhanced_20070724.version>
-        <talendcsv.version>1.0.0</talendcsv.version>
+        <talendcsv.version>1.1.0</talendcsv.version>
         <tomcat-jasper.version>5.5.23</tomcat-jasper.version>
         <xercesImpl.version>2.12.2</xercesImpl.version>
         <xml-apis.version>1.4.01</xml-apis.version>
