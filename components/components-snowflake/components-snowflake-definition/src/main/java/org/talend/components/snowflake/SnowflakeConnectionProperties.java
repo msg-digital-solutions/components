@@ -295,7 +295,7 @@ public class SnowflakeConnectionProperties extends ComponentPropertiesImpl
 
     /**
      *
-     * @param access token
+     * @param accessToken
      * @return properties
      */
     public Properties getJdbcProperties(String accessToken) {
@@ -354,6 +354,9 @@ public class SnowflakeConnectionProperties extends ComponentPropertiesImpl
         appendProperty("schema", schema, connectionParams);
         appendProperty("role", role, connectionParams);
         appendProperty("application", getApplication(), connectionParams);
+        if(account.contains("_")){
+            appendProperty("allowUnderscoresInHost","true",connectionParams);
+        }
 
         StringBuilder url = new StringBuilder().append("jdbc:snowflake://").append(account);
         if (StringUtils.isNotEmpty(regionID.getValue())) {
