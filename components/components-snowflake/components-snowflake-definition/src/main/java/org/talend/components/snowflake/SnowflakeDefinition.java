@@ -22,6 +22,9 @@ import org.talend.daikon.runtime.RuntimeInfo;
 import org.talend.daikon.runtime.RuntimeUtil;
 import org.talend.daikon.sandbox.SandboxedInstance;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 /**
  * The SnowflakeDefinition acts as an entry point for all of services that
  * a component provides to integrate with the Studio (at design-time) and other
@@ -33,6 +36,7 @@ public abstract class SnowflakeDefinition extends AbstractComponentDefinition {
 
     public static final String RUNTIME_MVN_GROUP_ID = "org.talend.components";
 
+    public static final String DEFINITION_MVN_ARTIFACT_ID = "components-snowflake-definition";
     public static final String RUNTIME_MVN_ARTIFACT_ID = "components-snowflake-runtime";
 
     public static final String SOURCE_CLASS = "org.talend.components.snowflake.runtime.SnowflakeSource";
@@ -82,7 +86,11 @@ public abstract class SnowflakeDefinition extends AbstractComponentDefinition {
     }
 
     public static RuntimeInfo getCommonRuntimeInfo(String clazzFullName) {
-        return new JarRuntimeInfo(RUNTIME_MVN_URL,
+        return getCommonRuntimeInfo(RUNTIME_MVN_URL, clazzFullName);
+    }
+
+    public static RuntimeInfo getCommonRuntimeInfo(String runtimeMvnUrl, String clazzFullName) {
+        return new JarRuntimeInfo(runtimeMvnUrl,
                 DependenciesReader.computeDependenciesFilePath(RUNTIME_MVN_GROUP_ID, RUNTIME_MVN_ARTIFACT_ID),
                 clazzFullName);
     }
@@ -130,12 +138,36 @@ public abstract class SnowflakeDefinition extends AbstractComponentDefinition {
         public SandboxedInstance getSandboxedInstance(final String runtimeClassName,
                 final boolean useCurrentJvmProperties) {
             ClassLoader classLoader = SnowflakeDefinition.class.getClassLoader();
-            RuntimeInfo runtimeInfo = SnowflakeDefinition.getCommonRuntimeInfo(runtimeClassName);
+            final String definitionVersion = getDefinitionVersion();
+            final RuntimeInfo runtimeInfo;
+            if(definitionVersion != null) {
+                //definition version should be the same with runtime version
+                runtimeInfo = SnowflakeDefinition.getCommonRuntimeInfo(RUNTIME_MVN_URL + "/" + definitionVersion, runtimeClassName);
+            } else {
+                runtimeInfo = SnowflakeDefinition.getCommonRuntimeInfo(runtimeClassName);
+            }
             if (useCurrentJvmProperties) {
                 return RuntimeUtil.createRuntimeClassWithCurrentJVMProperties(runtimeInfo, classLoader);
             } else {
                 return RuntimeUtil.createRuntimeClass(runtimeInfo, classLoader);
             }
+        }
+
+        private String getDefinitionVersion() {
+            String version = null;
+            final String dependenciesFilePath = "/META-INF/maven/" + RUNTIME_MVN_GROUP_ID + "/" + DEFINITION_MVN_ARTIFACT_ID + "/dependencies.txt";
+            try(final BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(dependenciesFilePath), "UTF-8"));) {
+                String line = null;
+                while (reader.ready()) {
+                    line = reader.readLine();
+                }
+                if(line!=null && line.contains(DEFINITION_MVN_ARTIFACT_ID)) {
+                    version = line.split(":")[3];
+                }
+            } catch (Exception e) {
+
+            }
+            return version;
         }
     }
 }
