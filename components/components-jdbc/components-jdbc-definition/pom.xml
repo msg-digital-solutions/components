@@ -227,6 +227,11 @@
             <artifactId>hamcrest-library</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.talend.components.lib</groupId>
+            <artifactId>talend-sql-injection-utils</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
