@@ -17,6 +17,7 @@ import org.talend.components.api.component.Connector;
 import org.talend.components.api.component.ISchemaListener;
 import org.talend.components.api.component.PropertyPathConnector;
 import org.talend.components.common.FixedConnectorsComponentProperties;
+import org.talend.components.lib.SQLInjectionCheckUtil;
 import org.talend.daikon.properties.presentation.Form;
 
 public abstract class SnowflakeConnectionTableProperties extends FixedConnectorsComponentProperties
@@ -73,7 +74,9 @@ public abstract class SnowflakeConnectionTableProperties extends FixedConnectors
 
 
     public String getTableName() {
-        return table.tableName.getValue();
+        final String value = table.tableName.getValue();
+        SQLInjectionCheckUtil.checkSQLInjection(value);
+        return value;
     }
 
     @Override

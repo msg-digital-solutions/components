@@ -25,6 +25,7 @@ import org.talend.components.api.properties.ComponentProperties;
 import org.talend.components.jdbc.CommonUtils;
 import org.talend.components.jdbc.JdbcRuntimeInfo;
 import org.talend.components.jdbc.RuntimeSettingProvider;
+import org.talend.components.lib.SQLInjectionCheckUtil;
 import org.talend.daikon.NamedThing;
 import org.talend.daikon.properties.PropertiesImpl;
 import org.talend.daikon.properties.ValidationResult;
@@ -96,6 +97,12 @@ public class JDBCTableSelectionModule extends PropertiesImpl implements Serializ
             migrated = true;
         }
         return migrated;
+    }
+
+    public String getTableName() {
+        final String value = this.tablename.getValue();
+        SQLInjectionCheckUtil.checkSQLInjection(value);
+        return value;
     }
 
     @Override

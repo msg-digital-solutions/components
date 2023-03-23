@@ -109,7 +109,7 @@ public class TJDBCBulkExecProperties extends BulkModule implements RuntimeSettin
 
         CommonUtils.setReferenceInfoAndConnectionInfo(setting, referencedComponent, connection);
 
-        setting.setTablename(this.tableSelection.tablename.getValue());
+        setting.setTablename(this.tableSelection.getTableName());
         
         setting.setSchema(main.schema.getValue());
         
