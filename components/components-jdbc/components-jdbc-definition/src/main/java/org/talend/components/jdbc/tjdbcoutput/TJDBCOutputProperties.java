@@ -399,7 +399,7 @@ public class TJDBCOutputProperties extends FixedConnectorsComponentProperties im
 
         CommonUtils.setReferenceInfoAndConnectionInfo(setting, referencedComponent, connection);
 
-        setting.setTablename(this.tableSelection.tablename.getValue());
+        setting.setTablename(this.tableSelection.getTableName());
         setting.setDataAction(this.dataAction.getValue());
         setting.setClearDataInTable(this.clearDataInTable.getValue());
         setting.setDieOnError(this.dieOnError.getValue());

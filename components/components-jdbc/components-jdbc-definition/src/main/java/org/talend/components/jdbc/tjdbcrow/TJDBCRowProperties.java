@@ -282,7 +282,7 @@ public class TJDBCRowProperties extends FixedConnectorsComponentProperties imple
 
         CommonUtils.setReferenceInfoAndConnectionInfo(setting, referencedComponent, connection);
 
-        setting.setTablename(this.tableSelection.tablename.getValue());
+        setting.setTablename(this.tableSelection.getTableName());
         setting.setSql(this.sql.getValue());
         setting.setDieOnError(this.dieOnError.getValue());
 
