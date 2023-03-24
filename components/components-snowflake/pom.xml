@@ -3,7 +3,7 @@
 
     <groupId>org.talend.components</groupId>
     <artifactId>components-snowflake-aggregator</artifactId>
-    <version>0.36.21</version>
+    <version>0.36.22-SNAPSHOT</version>
 
     <name>Components - Snowflake Aggregator</name>
     <packaging>pom</packaging>
