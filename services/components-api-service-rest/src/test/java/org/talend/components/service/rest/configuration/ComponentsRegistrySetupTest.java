@@ -3,7 +3,10 @@ package org.talend.components.service.rest.configuration;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
 
+import java.net.URL;
+
 import org.junit.Test;
+import org.talend.components.api.component.runtime.JarRuntimeInfo;
 
 public class ComponentsRegistrySetupTest {
 
@@ -21,5 +24,16 @@ public class ComponentsRegistrySetupTest {
     }
 
     // TODO need more tests on the createDefinitionRegistry
+
+    @Test
+    // Add "--add-opens java.base/java.net=ALL-UNNAMED" option to JVM to run this test with java 17
+    public void testExtractComponentsUrlsWithMavenProtocol() {
+        ComponentsRegistrySetup registrySetup = new ComponentsRegistrySetup();
+        new JarRuntimeInfo((URL) null, null, null); // ensure mvn url -
+
+        // checking with working URL
+        assertThat(registrySetup.extractComponentsUrls(
+                "mvn:org.talend.components/components-jdbc-definition/0.28.18-SNAPSHOT/jar"), arrayWithSize(1));
+    }
 
 }

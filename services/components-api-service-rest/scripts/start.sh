@@ -21,11 +21,18 @@ writeAppInfoInTty() {
   fi
 }
 
-JAVA_VERSION=`java -version 2>&1 > /dev/null | head -1`
+JAVA_BIN=`which java`
 
-if [ $? -ne 0 ]; then
-  echo "Unable to get java version, please check java is installed correctly and try again."
+if [ -z "$JAVA_BIN" ]; then
+  echo "java is not available in the path, install java and try again."
   exit 1
+fi
+
+# Check java major version to add some required options for java >=9
+JAVA_VERSION=$($JAVA_BIN -version 2>&1 | head -1 | cut -d'"' -f2 | sed 's/^1\.//' | cut -d'.' -f1)
+
+if [ $JAVA_VERSION -ge "9" ]; then
+JAVA_OPTS="$JAVA_OPTS --add-opens java.base/java.net=ALL-UNNAMED"
 fi
 
 # There are some relative paths in the application as logback conf and other default data locations so the working dir
@@ -71,7 +78,7 @@ if [ ! -z "$PAX_MVN_REPO" ] ; then
   SCRIPT_JAVA_OPTS="$SCRIPT_JAVA_OPTS -Dorg.ops4j.pax.url.mvn.repositories=$PAX_MVN_REPO"
 fi
 
-THE_CMD="java $SCRIPT_JAVA_OPTS -cp \"$APP_CLASSPATH\" $APP_CLASS $*"
+THE_CMD="${JAVA_BIN} $SCRIPT_JAVA_OPTS -cp \"$APP_CLASSPATH\" $APP_CLASS $*"
 
 writeAppInfoInTty
 
