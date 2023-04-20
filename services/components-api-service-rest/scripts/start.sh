@@ -32,7 +32,7 @@ fi
 JAVA_VERSION=$($JAVA_BIN -version 2>&1 | head -1 | cut -d'"' -f2 | sed 's/^1\.//' | cut -d'.' -f1)
 
 if [ $JAVA_VERSION -ge "9" ]; then
-JAVA_OPTS="$JAVA_OPTS --add-opens java.base/java.net=ALL-UNNAMED"
+JAVA_OPTS="$JAVA_OPTS --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/sun.security.ssl=ALL-UNNAMED"
 fi
 
 # There are some relative paths in the application as logback conf and other default data locations so the working dir

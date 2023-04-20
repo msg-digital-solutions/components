@@ -32,7 +32,7 @@ FOR /f "delims=.-_ tokens=1-2" %%v IN ("%JAVA_VERSION%") DO (
 )
 
 IF %JAVA_VERSION% GEQ 9 (
-    SET JAVA_OPTS=%JAVA_OPTS% --add-opens java.base/java.net=ALL-UNNAMED
+    SET JAVA_OPTS=%JAVA_OPTS% --add-opens java.base/java.net=ALL-UNNAMED --add-opens java.base/sun.security.ssl=ALL-UNNAMED
 )
 
 
