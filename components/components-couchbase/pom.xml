@@ -14,7 +14,7 @@
     <packaging>bundle</packaging>
 
     <properties>
-        <couchbase-core.version>1.7.23</couchbase-core.version>
+        <couchbase-core.version>1.7.24</couchbase-core.version>
         <couchbase-client.version>2.7.23</couchbase-client.version>
         <couchbase-client-encryption.version>1.0.0</couchbase-client-encryption.version>
         <couchbase-dcp.version>0.26.0</couchbase-dcp.version>
@@ -80,11 +80,23 @@
             <groupId>com.couchbase.client</groupId>
             <artifactId>dcp-client</artifactId>
             <version>${couchbase-dcp.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.couchbase.client</groupId>
+                    <artifactId>core.io</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.couchbase.client</groupId>
             <artifactId>java-client</artifactId>
             <version>${couchbase-client.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.couchbase.client</groupId>
+                    <artifactId>core.io</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/com.couchbase.client/encryption -->
