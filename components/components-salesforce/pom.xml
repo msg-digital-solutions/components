@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.talend.components</groupId>
         <artifactId>components-implementation-aggregator</artifactId>
-        <version>0.28.19-SNAPSHOT</version>
+        <version>0.28.19</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     
     <artifactId>components-salesforce-aggregator</artifactId>
-    <version>0.28.19-SNAPSHOT</version>
+    <version>0.28.19</version>
 
     <name>Components - Salesforce Aggregator</name>
     <packaging>pom</packaging>

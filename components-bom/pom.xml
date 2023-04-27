@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.talend.components</groupId>
         <artifactId>components</artifactId>
-        <version>0.28.19-SNAPSHOT</version>
+        <version>0.28.19</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>components-bom</artifactId>
-    <version>0.28.19-SNAPSHOT</version>
+    <version>0.28.19</version>
     <packaging>pom</packaging>
     <name>Component BOM</name>
     <properties>
