@@ -3,11 +3,11 @@
 	{
 		"id" : "DATABRICKS_DELTA_LAKE",
 		"displayName" : "Delta Lake",
-		"class" : "com.simba.spark.jdbc.Driver",
-		"url" : "jdbc:spark://",
+		"class" : "com.databricks.client.jdbc.Driver",
+		"url" : "jdbc:databricks://",
 		"paths" : 
 	 	[
-	 		{"path" : "mvn:Spark/SparkJDBC42/2.6.14.1018/jar"}
+	 		{"path" : "mvn:com.databricks/databricks-jdbc/2.6.32/jar"}
 	 	],
 		"excludes": [{
 				"component": "tJDBCSP"
