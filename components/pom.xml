@@ -6,13 +6,13 @@
     <parent>
         <groupId>org.talend.components</groupId>
         <artifactId>components</artifactId>
-        <version>0.28.18-SNAPSHOT</version>
+        <version>0.28.20-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     
     <name>Component Implementations Aggregator</name>
     <artifactId>components-implementation-aggregator</artifactId>
-    <version>0.28.18-SNAPSHOT</version>
+    <version>0.28.20-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>

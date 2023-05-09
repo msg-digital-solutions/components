@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.talend.components</groupId>
         <artifactId>components</artifactId>
-        <version>0.28.18-SNAPSHOT</version>
+        <version>0.28.20-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>components-bom</artifactId>
-    <version>0.28.18-SNAPSHOT</version>
+    <version>0.28.20-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Component BOM</name>
     <properties>
@@ -127,7 +127,7 @@
         <jackson-jaxrs.version>1.9.13</jackson-jaxrs.version>
         <jackson-xc.version>1.9.13</jackson-xc.version>
         <jackson.1x.version>1.9.15-TALEND</jackson.1x.version>
-        <jackson.version>2.13.4.20221013</jackson.version>
+        <jackson.version>2.13.5</jackson.version>
         <jackson-module-scala_2.11.version>2.13.3</jackson-module-scala_2.11.version>
         <javapoet.version>1.8.0</javapoet.version>
         <javax.activation.version>1.1.1</javax.activation.version>
