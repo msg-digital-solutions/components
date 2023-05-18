@@ -286,6 +286,7 @@ public class TSalesforceInputProperties extends SalesforceConnectionModuleProper
             form.getWidget(condition.getName()).setHidden(manualQuery.getValue());
             form.getWidget(guessSchema.getName()).setHidden(!manualQuery.getValue());
             form.getWidget(guessQuery.getName()).setHidden(!manualQuery.getValue());
+            form.getWidget(includeDeleted.getName()).setVisible(true);
         }
         if (Form.ADVANCED.equals(form.getName())) {
             boolean isBulkQueryV1 = queryMode.getValue().equals(QueryMode.Bulk);
