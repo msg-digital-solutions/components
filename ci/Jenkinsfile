@@ -39,11 +39,12 @@ def sfExpiredSecurityToken = string(
 def branch = env.BRANCH_NAME
 def repo = 'components'
 def slackChannel = 'components-ci'
-def escaped_branch = branch.toLowerCase().replaceAll("/", "_")    
+def escaped_branch = branch.toLowerCase().replaceAll("/", "_")
 def PRODUCTION_DEPLOYMENT_REPOSITORY = "snapshots"
 def deploymentSuffix = (env.BRANCH_NAME == "master" || env.BRANCH_NAME.startsWith("maintenance/")) ? "${PRODUCTION_DEPLOYMENT_REPOSITORY}" : "dev_branch_snapshots/branch_${escaped_branch}"
 def m2 = "/tmp/jenkins/tdi/m2/${deploymentSuffix}"
 def podLabel = "components-${UUID.randomUUID().toString()}".take(53)
+String repository = 'components'
 
 pipeline {
   agent {
@@ -106,11 +107,39 @@ spec:
 
   parameters {
     choice(name: 'Action',
-            choices: ['STANDARD'],
-            description: 'Kind of running : \nSTANDARD (default),[ Compile | Test] for all branch build, and [ Nexus deployment ]for master and maintenance branch  \n(Other actions are under development)')
+            choices: ['STANDARD', 'CHANGELOG'],
+            description: '''
+            Kind of running : 
+            STANDARD (default),[ Compile | Test] for all branch build, and [ Nexus deployment ]for master and maintenance branch
+            CHANGELOG for creating the release changelog. You have to call it after the release is done.
+            (Other actions are under development)'''
+    )
+    booleanParam(
+            name: 'DRAFT_CHANGELOG',
+            defaultValue: true,
+            description: '''
+            Create a draft release changelog. User will need to approve it on github.
+            Only used on release action''')
   }
 
   stages {
+    stage('Prepare build') {
+      steps {
+        container('main') {
+          script {
+            echo 'Git login'
+            withCredentials([gitCredentials]) {
+              sh """
+                            bash ci/git-login.sh \
+                                "\${GITHUB_LOGIN}" \
+                                "\${GITHUB_TOKEN}"
+                        """
+            }
+          }
+        }
+      }
+    }
+
     stage('Compile | Test') {
       when {
         expression { params.Action == 'STANDARD' }
@@ -134,7 +163,7 @@ spec:
         }
       }
     }
-    
+
     stage('Nexus Deployment') {
       when {
         anyOf {
@@ -154,6 +183,34 @@ spec:
         }
       }
     }
+
+    stage('Changelog') {
+      when {
+        expression { params.Action == 'CHANGELOG' }
+      }
+      steps {
+        container('main') {
+          withCredentials([gitCredentials]) {
+            script {
+              final def pom = readMavenPom file: 'pom.xml'
+              String currentVersion = pom.version.split('-')[0]
+              String releaseVersion = evaluatePreviousVersion(currentVersion)
+              String previousVersion = evaluatePreviousVersion(releaseVersion)
+              sh """
+                    bash ci/changelog.sh \
+                        '${repository}' \
+                        '${previousVersion}' \
+                        '${releaseVersion}' \
+                        '${params.DRAFT_CHANGELOG}' \
+                        "\${BRANCH_NAME}" \
+                        "\${GITHUB_LOGIN}" \
+                        "\${GITHUB_TOKEN}"
+                """
+            }
+          }
+        }
+      }
+    }
   }
 
   post {
@@ -164,4 +221,36 @@ spec:
         slackSend(color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: "${slackChannel}")
     }
   }
+}
+
+/**
+ * Evaluate previous SemVer version
+ * @param version current version
+ * @return previous version
+ */
+private static String evaluatePreviousVersion(String version) {
+  def components = version.split('\\.')
+
+  int major = components[0] as int
+  int minor = components[1] as int
+  int patch = components[2] as int
+
+  if (patch > 0) {
+    patch--
+  } else {
+    patch = 0
+    if (minor > 0) {
+      minor--
+    } else {
+      minor = 0
+      if (major > 0) {
+        major--
+      } else {
+        // Invalid state: Cannot calculate previous version if major version is already 0 or less
+        throw new IllegalArgumentException("Invalid version: $version")
+      }
+    }
+  }
+
+  return "${major}.${minor}.${patch}"
 }
