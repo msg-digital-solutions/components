@@ -80,7 +80,7 @@ public class AzureDlsGen2ServicesWithToken implements AzureDlsGen2Services {
 
     @Override
     public BlobServiceClient getBlobServiceClient() {
-        String endpoint = "https://" + accountName + ".dfs.core.windows.net";
+        String endpoint = String.format("https://%s.blob.core.windows.net", accountName);
         return new BlobServiceClientBuilder()
                 .endpoint(endpoint)
                 .credential(clientSecretCredential)
