@@ -73,11 +73,11 @@ public class AzureStorageComponentListPropertiesTest extends AzureStorageConnect
 
     /**
      *
-     * @see org.talend.components.azurestorage.wizard.AzureStorageComponentListProperties#getContainerSchema()
+     * @see org.talend.components.azurestorage.wizard.AzureStorageComponentListProperties#getContainerSchema(String containerId)
      */
     @Test
     public void getContainerSchema() {
-        Schema containerschema = properties.getContainerSchema();
+        Schema containerschema = properties.getContainerSchema("Main");
         assertNotNull("containerschema cannot be null", containerschema);
     }
 
@@ -94,22 +94,22 @@ public class AzureStorageComponentListPropertiesTest extends AzureStorageConnect
 
     /**
      *
-     * @see org.talend.components.azurestorage.wizard.AzureStorageComponentListProperties#getQueueSchema()
+     * @see org.talend.components.azurestorage.wizard.AzureStorageComponentListProperties#getQueueSchema(String queueId)
      */
     @Test
     public void testGetQueueSchema() {
-        Schema queueschema = properties.getQueueSchema();
+        Schema queueschema = properties.getQueueSchema("Main");
         assertNotNull("queueschema cannot be null", queueschema);
         assertEquals(schemaQueue, queueschema);
     }
 
     /**
      *
-     * @see org.talend.components.azurestorage.wizard.AzureStorageComponentListProperties#getContainerSchema()
+     * @see org.talend.components.azurestorage.wizard.AzureStorageComponentListProperties#getContainerSchema(String containerId)
      */
     @Test
     public void testGetContainerSchema() {
-        Schema containerschema = properties.getContainerSchema();
+        Schema containerschema = properties.getContainerSchema("Main");
         assertNotNull("containerschema cannot be null", containerschema);
         assertEquals(schemaContainer, containerschema);
     }

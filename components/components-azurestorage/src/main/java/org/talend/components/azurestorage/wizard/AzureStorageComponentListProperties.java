@@ -138,7 +138,7 @@ public class AzureStorageComponentListProperties extends ComponentPropertiesImpl
                 containerProps.init();
                 containerProps.connection = connection;
                 containerProps.container.setValue(containerId);
-                containerProps.schema.schema.setValue(getContainerSchema());
+                containerProps.schema.schema.setValue(getContainerSchema(formatSchemaName(containerId)));
                 repo.storeProperties(containerProps, formatSchemaName(containerId), repoLoc, "schema.schema");
             }
         }
@@ -149,7 +149,7 @@ public class AzureStorageComponentListProperties extends ComponentPropertiesImpl
                 queueProps.init();
                 queueProps.connection = connection;
                 queueProps.queueName.setValue(queueId);
-                queueProps.schema.schema.setValue(getQueueSchema());
+                queueProps.schema.schema.setValue(getQueueSchema(formatSchemaName(queueId)));
                 repo.storeProperties(queueProps, formatSchemaName(queueId), repoLoc, "schema.schema");
             }
         }
@@ -162,7 +162,15 @@ public class AzureStorageComponentListProperties extends ComponentPropertiesImpl
                 tableProps.tableName.setValue(tableId);
                 try {
                     Schema schema = AzureStorageTableSourceOrSink.getSchema(null, connection, tableId);
-                    tableProps.schema.schema.setValue(schema);
+                    if(schema != null) {
+                        Schema.Parser parser = new Schema.Parser();
+                        final Schema parse = parser.parse(schema.toString().replaceFirst("schemaInfered",formatSchemaName(tableId)));
+                        tableProps.schema.schema.setValue(parse);
+                    }else{
+                        tableProps.schema.schema.setValue(schema);
+                    }
+
+                    SchemaBuilder.builder().record(formatSchemaName(tableId)).fields();
                     repo.storeProperties(tableProps, formatSchemaName(tableId), repoLoc, "schema.schema");
                 } catch (IOException e) {
                     LOGGER.error(e.getLocalizedMessage());
@@ -180,15 +188,15 @@ public class AzureStorageComponentListProperties extends ComponentPropertiesImpl
         return storeId;
     }
 
-    public Schema getContainerSchema() {
-        return SchemaBuilder.builder().record("Main").fields()//
+    public Schema getContainerSchema(String containerId) {
+        return SchemaBuilder.builder().record(containerId).fields()//
                 .name("containerName").prop(SchemaConstants.TALEND_COLUMN_IS_KEY, "true")
                 .prop(SchemaConstants.TALEND_COLUMN_DB_LENGTH, "100").type(AvroUtils._string()).noDefault()//
                 .endRecord();
     }
 
-    public Schema getQueueSchema() {
-        return SchemaBuilder.builder().record("Main").fields()//
+    public Schema getQueueSchema(String queueId) {
+        return SchemaBuilder.builder().record(queueId).fields()//
                 .name(AzureStorageQueueProperties.FIELD_MESSAGE_ID).prop(SchemaConstants.TALEND_COLUMN_IS_KEY, "true")
                 .prop(SchemaConstants.TALEND_COLUMN_DB_LENGTH, "100").type(AvroUtils._string()).noDefault()//
                 .name(AzureStorageQueueProperties.FIELD_MESSAGE_CONTENT).type(AvroUtils._string()).noDefault() //
