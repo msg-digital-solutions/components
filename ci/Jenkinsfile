@@ -141,8 +141,8 @@ spec:
 
     stage('Nexus Deployment') {
       when {
+        expression { params.Action != 'CHANGELOG' }
         anyOf {
-          expression { params.Action != 'CHANGELOG' }
           expression { env.BRANCH_NAME == "master" }
           expression { env.BRANCH_NAME.startsWith('maintenance/') }
         }
