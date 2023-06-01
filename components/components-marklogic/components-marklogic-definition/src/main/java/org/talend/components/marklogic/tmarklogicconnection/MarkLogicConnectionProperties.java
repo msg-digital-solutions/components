@@ -132,7 +132,7 @@ public class MarkLogicConnectionProperties extends ComponentPropertiesImpl imple
 
     public boolean isReferencedConnectionUsed() {
         String refComponentId = referencedComponent.componentInstanceId.getStringValue();
-        return refComponentId != null && refComponentId.startsWith(MarkLogicConnectionDefinition.COMPONENT_NAME);
+        return refComponentId != null && refComponentId.contains(MarkLogicConnectionDefinition.COMPONENT_NAME);
     }
 
     public void afterReferencedComponent() {
