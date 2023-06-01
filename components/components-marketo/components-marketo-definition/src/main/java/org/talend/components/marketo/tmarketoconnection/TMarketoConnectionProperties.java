@@ -140,7 +140,7 @@ public class TMarketoConnectionProperties extends ComponentPropertiesImpl implem
 
         String refComponentIdValue = getReferencedComponentId();
         boolean useOtherConnection = refComponentIdValue != null
-                && refComponentIdValue.startsWith(TMarketoConnectionDefinition.COMPONENT_NAME);
+                && refComponentIdValue.contains(TMarketoConnectionDefinition.COMPONENT_NAME);
 
         if (DEFAULT_ENDPOINT_REST.equals(endpoint.getValue()) && APIMode.SOAP.equals(apiMode.getValue())) {
             endpoint.setValue(DEFAULT_ENDPOINT_SOAP);
