@@ -422,15 +422,24 @@ public class CommonUtils {
                                          * is "MySQL"
                                          */,
             DBTypes dbTypeInComponentSetting/* in tjdbcinput, can choose the db type in advanced setting */) {
-        final String realDbType = getRealDBType(setting, dbTypeByComponentType);
-        final String product = EDatabaseTypeName.getTypeFromDisplayName(realDbType).getProduct();
 
-        String mappingFileSubfix = productValue2DefaultMappingFileSubfix.get(product);
+        String mappingFileSubfix = null;
 
-        if ((dbTypeInComponentSetting != null) && (mappingFileSubfix == null)) {
+        //find mapping file by db type config in component setting firstly
+        if(dbTypeInComponentSetting != null) {
             mappingFileSubfix = dbType2MappingFileSubfix.get(dbTypeInComponentSetting);
         }
 
+        //if not found, then guess mapping file by the driver class and driver jar
+        if(mappingFileSubfix == null) {
+            //for tjdbc case, realDbType is impossible is null, default one if oracle one if not found
+            final String realDbType = getRealDBType(setting, dbTypeByComponentType);
+            //realDbType is A, but can't find in database list below? is possible? TODO
+            final String product = EDatabaseTypeName.getTypeFromDisplayName(realDbType).getProduct();
+            mappingFileSubfix = productValue2DefaultMappingFileSubfix.get(product);
+        }
+
+        //if not found, use mysql one as default
         if (mappingFileSubfix == null) {
             mappingFileSubfix = "Mysql";
         }

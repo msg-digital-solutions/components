@@ -260,7 +260,7 @@ public class JDBCSourceOrSink extends JdbcRuntimeSourceOrSinkDefault {
         } else if (runtime != null) {
             URL mappingFileDir = (URL) runtime.getComponentData(runtime.getCurrentComponentId(),
                     ComponentConstants.MAPPING_URL_SUBFIX);
-            mapping = CommonUtils.getMapping(mappingFileDir, setting, null, setting.getDbMapping());
+            mapping = CommonUtils.getMapping(mappingFileDir, setting, null, setting.getEnableDBMapping() ? setting.getDbMapping() : null);
         }
         return mapping;
     }
