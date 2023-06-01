@@ -231,7 +231,7 @@ public class SalesforceConnectionProperties extends ComponentPropertiesImpl
 
         String refComponentIdValue = getReferencedComponentId();
         boolean useOtherConnection = refComponentIdValue != null
-                && refComponentIdValue.startsWith(TSalesforceConnectionDefinition.COMPONENT_NAME);
+                && refComponentIdValue.contains(TSalesforceConnectionDefinition.COMPONENT_NAME);
         if (form.getName().equals(Form.MAIN) || form.getName().equals(FORM_WIZARD)) {
             if (useOtherConnection) {
                 form.getWidget(loginType.getName()).setHidden(true);

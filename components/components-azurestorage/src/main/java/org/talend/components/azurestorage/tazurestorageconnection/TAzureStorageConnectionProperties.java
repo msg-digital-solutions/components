@@ -148,7 +148,7 @@ public class TAzureStorageConnectionProperties extends ComponentPropertiesImpl
 
         String refComponentIdValue = getReferencedComponentId();
         boolean useOtherConnection = refComponentIdValue != null
-                && refComponentIdValue.startsWith(TAzureStorageConnectionDefinition.COMPONENT_NAME);
+                && refComponentIdValue.contains(TAzureStorageConnectionDefinition.COMPONENT_NAME);
 
         boolean isBasicAuthUsed = authenticationType.getValue() == AuthType.BASIC;
         boolean isSASAuthUsed = useSharedAccessSignature.getValue();

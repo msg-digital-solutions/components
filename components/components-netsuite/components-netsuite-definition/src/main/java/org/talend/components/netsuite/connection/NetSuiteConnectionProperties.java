@@ -162,7 +162,7 @@ public class NetSuiteConnectionProperties extends ComponentPropertiesImpl
 
         String refComponentId = getReferencedComponentId();
         boolean refConnectionUsed =
-                refComponentId != null && refComponentId.startsWith(NetSuiteConnectionDefinition.COMPONENT_NAME);
+                refComponentId != null && refComponentId.contains(NetSuiteConnectionDefinition.COMPONENT_NAME);
 
         if (form.getName().equals(Form.MAIN) || form.getName().equals(FORM_WIZARD)) {
             form.getWidget(endpoint.getName()).setHidden(refConnectionUsed);

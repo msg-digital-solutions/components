@@ -208,7 +208,7 @@ public class GoogleDriveConnectionProperties extends ComponentPropertiesImpl imp
 
         String refComponentIdValue = getReferencedComponentId();
         boolean useOtherConnection = refComponentIdValue != null
-                && refComponentIdValue.startsWith(GoogleDriveConnectionDefinition.COMPONENT_NAME);
+                && refComponentIdValue.contains(GoogleDriveConnectionDefinition.COMPONENT_NAME);
         if (form.getName().equals(Form.MAIN) || form.getName().equals(FORM_WIZARD)) {
             // hides everything...
             form.getWidget(applicationName.getName()).setHidden(true);

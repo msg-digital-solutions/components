@@ -341,7 +341,7 @@ public class TSalesforceInputProperties extends SalesforceConnectionModuleProper
     public boolean isUseExistConnection() {
         String refComponentIdValue = connection.getReferencedComponentId();
         return refComponentIdValue != null
-                && refComponentIdValue.startsWith(TSalesforceConnectionDefinition.COMPONENT_NAME);
+                && refComponentIdValue.contains(TSalesforceConnectionDefinition.COMPONENT_NAME);
     }
 
     public enum QueryMode {
