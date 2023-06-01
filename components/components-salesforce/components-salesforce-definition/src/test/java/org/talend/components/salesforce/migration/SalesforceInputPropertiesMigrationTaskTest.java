@@ -66,4 +66,14 @@ public class SalesforceInputPropertiesMigrationTaskTest {
         TSalesforceOutputProperties properties = deser.object;
         assertFalse(properties.dataTimeUTC.getValue());
     }
+
+    @Test
+    public void testIncludeDelete() throws IOException {
+        Deserialized<TSalesforceInputProperties> deser = Properties.Helper.fromSerializedPersistent(
+                TestUtils.getResourceAsString(getClass(), "tSalesforceInputProperties_621_inlude_delete.json"),
+                TSalesforceInputProperties.class);
+
+        TSalesforceInputProperties properties = deser.object;
+        assertFalse(properties.includeDeleted.getValue());
+    }
 }

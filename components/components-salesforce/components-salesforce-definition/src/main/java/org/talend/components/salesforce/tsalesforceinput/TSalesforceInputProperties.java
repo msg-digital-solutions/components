@@ -126,7 +126,7 @@ public class TSalesforceInputProperties extends SalesforceConnectionModuleProper
 
     @Override
     public int getVersionNumber() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -151,6 +151,15 @@ public class TSalesforceInputProperties extends SalesforceConnectionModuleProper
         if (version < 3) {
             dataTimeUTC.setValue(false);
             deserialized = true;
+        }
+
+        if (version < 4) {
+            if (includeDeleted.getFlags() != null && includeDeleted.getFlags().contains(Property.Flags.HIDDEN)) {
+                if (!((queryMode.getValue() != null) && queryMode.getValue().equals(QueryMode.Query))) {
+                    includeDeleted.setValue(false);
+                    deserialized = true;
+                }
+            }
         }
 
         return deserialized;
