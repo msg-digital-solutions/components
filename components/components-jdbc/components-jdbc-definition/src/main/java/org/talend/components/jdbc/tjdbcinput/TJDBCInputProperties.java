@@ -305,7 +305,7 @@ public class TJDBCInputProperties extends FixedConnectorsComponentProperties imp
             ss.initialize(null, this);
             try {
                 ss.setDBTypeMapping(CommonUtils.getMapping((String) mappingFileLocation, this.getRuntimeSetting(), null,
-                        dbMapping.getValue()));
+                        enableDBMapping.getValue() ? dbMapping.getValue() : null));
                 Schema schema = ss.getSchemaFromQuery(null, sql.getValue());
                 main.schema.setValue(schema);
             } catch (Exception e) {

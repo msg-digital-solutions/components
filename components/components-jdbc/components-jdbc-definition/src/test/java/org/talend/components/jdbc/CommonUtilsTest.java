@@ -193,12 +193,22 @@ public class CommonUtilsTest {
     }
 
     @Test
-    public void testLoadMapping() {
+    public void testLoadMappingByComponentSetting() {
         AllSetting settings = new AllSetting();
-        settings.setDbMapping(DBTypes.MYSQL);
-        settings.setDriverClass("com.mysql.jdbc.Driver");
+        settings.setDriverClass("not provide driver class for auto guess mapping file");
         settings.setDriverPaths(Collections.emptyList());
-        Dbms dbms = CommonUtils.getMapping(getClass().getResource("/xmlMappings"), settings, null, settings.getDbMapping());
+        Dbms dbms = CommonUtils.getMapping(getClass().getResource("/xmlMappings"), settings, null, DBTypes.MYSQL);
+        Assert.assertEquals("mysql_id", dbms.getId());
+        Assert.assertEquals("MYSQL", dbms.getProduct());
+        Assert.assertEquals(43, dbms.getDbmsTypes().size());
+    }
+
+    @Test
+    public void testLoadMappingAuto() {
+        AllSetting settings = new AllSetting();
+        settings.setDriverClass("com.mysql.cj.jdbc.Driver");
+        settings.setDriverPaths(Collections.emptyList());
+        Dbms dbms = CommonUtils.getMapping(getClass().getResource("/xmlMappings"), settings, null, null);
         Assert.assertEquals("mysql_id", dbms.getId());
         Assert.assertEquals("MYSQL", dbms.getProduct());
         Assert.assertEquals(43, dbms.getDbmsTypes().size());
