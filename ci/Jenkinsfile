@@ -195,7 +195,7 @@ spec:
             script {
               final def pom = readMavenPom file: 'pom.xml'
               String currentVersion = pom.version.split('-')[0]
-              String releaseVersion = evaluatePreviousVersion(currentVersion)
+              String releaseVersion = currentVersion
               String previousVersion = evaluatePreviousVersion(releaseVersion)
               sh """
                     bash ci/changelog.sh \
