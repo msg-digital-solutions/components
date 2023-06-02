@@ -339,6 +339,8 @@ pushTag(){
   previous_release_tag=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))
 
   echo "Create release notes on github"
+  echo "Start CHANGELOG Jenkins build on https://jenkins-connectors.datapwn.com/job/components/"
+  echo "The below steps are deprecated and they are for the manual release note creation"
   echo "${REPOSITORY}releases/new?tag=release%2F${release_version}"
   echo "Modify and execute following command to print changelog:"
   echo "git log --format="%s" ${previous_release_tag}..release/${release_version}"
