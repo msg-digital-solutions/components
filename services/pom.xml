@@ -20,6 +20,7 @@
         <!-- /!\ START Spring BOM PROPERTIES /!\ -->
         <talend.springboot.bom.version>0.0.13</talend.springboot.bom.version>
         <talend.springboot.bom.artifactId>2.7</talend.springboot.bom.artifactId>
+        <springboot.actuator.autoconfigure>2.7.11</springboot.actuator.autoconfigure>
         <!-- /!\ END Spring BOM PROPERTIES /!\ -->
 
         <!-- /!\ START TSBI PROPERTIES /!\ -->
@@ -58,6 +59,11 @@
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-actuator-autoconfigure</artifactId>
+                <version>${springboot.actuator.autoconfigure}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
