@@ -62,7 +62,9 @@ public class SnowflakeRowReader implements Reader<IndexedRecord> {
 
     private Connection connection;
 
-    private Result result;
+    private long totalCount;
+
+    private long successCount;
 
     private transient SnowflakeResultSetIndexedRecordConverter converter = new SnowflakeResultSetIndexedRecordConverter();
 
@@ -91,8 +93,9 @@ public class SnowflakeRowReader implements Reader<IndexedRecord> {
     @Override
     public boolean start() throws IOException {
         connection = source.createConnection(container);
-        result = new Result();
         this.dieOnError = properties.dieOnError.getValue();
+        totalCount = 0L;
+        successCount = 0L;
         try {
             if (source.usePreparedStatement()) {
                 statement = connection.prepareStatement(source.getQuery());
@@ -140,8 +143,8 @@ public class SnowflakeRowReader implements Reader<IndexedRecord> {
         }
         if (hasNext) {
             current = converter.convertToAvro(rs);
-            result.totalCount++;
-            result.successCount++;
+            totalCount++;
+            successCount++;
         }
         return hasNext;
     }
@@ -183,11 +186,11 @@ public class SnowflakeRowReader implements Reader<IndexedRecord> {
 
             if (CUD_RESULT_SET_COLUMN_NAMES.contains(rsMetadata.getColumnName(1))) {
                 if (rs.next()) {
-                    result.totalCount += rs.getInt(1);
-                    result.successCount += rs.getInt(1);
+                    totalCount += rs.getLong(1);
+                    successCount += rs.getLong(1);
                 } else {
-                    result.totalCount++;
-                    result.successCount++;
+                    totalCount++;
+                    successCount++;
                 }
                 return false;
             }
@@ -245,11 +248,29 @@ public class SnowflakeRowReader implements Reader<IndexedRecord> {
 
     @Override
     public Map<String, Object> getReturnValues() {
-        Map<String, Object> resultMap = result.toMap();
+        Map<String, Object> resultMap = getResultMap();
         if (rejectInfo != null) {
             resultMap.put(ComponentDefinition.RETURN_ERROR_MESSAGE, rejectInfo.get("exception"));
         }
         return resultMap;
+    }
+
+    private Map<String, Object> getResultMap() {
+        Map<String, Object> map = new HashMap();
+        if(totalCount < Integer.MAX_VALUE){
+            map.put(ComponentDefinition.RETURN_TOTAL_RECORD_COUNT, (int)totalCount);
+        }else{
+            map.put(ComponentDefinition.RETURN_TOTAL_RECORD_COUNT, totalCount);
+        }
+
+        if(successCount < Integer.MAX_VALUE){
+            map.put(ComponentDefinition.RETURN_SUCCESS_RECORD_COUNT, (int)successCount);
+        }else{
+            map.put(ComponentDefinition.RETURN_SUCCESS_RECORD_COUNT, successCount);
+        }
+        map.put(ComponentDefinition.RETURN_REJECT_RECORD_COUNT, 0);
+
+        return map;
     }
 
 }
