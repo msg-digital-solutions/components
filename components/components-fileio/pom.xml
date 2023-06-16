@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.talend.components</groupId>
         <artifactId>components-implementation-aggregator</artifactId>
-        <version>0.28.20-SNAPSHOT</version>
+        <version>0.28.20</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     
     <artifactId>components-fileio-aggregator</artifactId>
-    <version>0.28.20-SNAPSHOT</version>
+    <version>0.28.20</version>
 
     <name>Components - File IO Aggregator</name>
     <packaging>pom</packaging>
