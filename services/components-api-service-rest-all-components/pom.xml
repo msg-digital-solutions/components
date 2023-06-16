@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.talend.components</groupId>
         <artifactId>components-api-service-aggregator</artifactId>
-        <version>0.28.20</version>
+        <version>0.28.21-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>components-api-service-rest-all-components</artifactId>
-    <version>0.28.20</version>
+    <version>0.28.21-SNAPSHOT</version>
 
     <name>Component REST API packaged with all components</name>
 
