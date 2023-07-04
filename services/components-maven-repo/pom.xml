@@ -88,6 +88,52 @@
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
         </dependency>
+
+        <!--redshift jdbc dependencies-->
+        <dependency>
+            <groupId>com.amazon.redshift</groupId>
+            <artifactId>redshift-jdbc42-no-awssdk</artifactId>
+            <version>${redshift.driver.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
+            <version>${redshift.aws.driver.exts.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-redshift</artifactId>
+            <version>${redshift.aws.driver.exts.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-sts</artifactId>
+            <version>${redshift.aws.driver.exts.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -187,22 +233,6 @@
                         </goals>
                         <configuration>
                             <extraArtifacts>
-                                <!-- Components runtime -->
-                                <extraArtifact>
-                                    org.talend.components:components-salesforce-runtime:${project.version}:jar
-                                </extraArtifact>
-                                <extraArtifact>org.talend.components:components-jdbc-runtime:${project.version}:jar
-                                </extraArtifact>
-                                <extraArtifact>
-                                    org.talend.components:components-jdbc-runtime-beam:${project.version}:jar
-                                </extraArtifact>
-                                <extraArtifact>
-                                    org.talend.components:components-azure-dls-gen2-blob:${project.version}:jar
-                                </extraArtifact>
-                                <extraArtifact>org.talend.components:simplefileio-runtime:${project.version}:jar
-                                </extraArtifact>
-                                <extraArtifact>org.talend.components:s3-runtime-di:${project.version}:jar
-                                </extraArtifact>
                                 <!-- JDBC drivers -->
                                 <extraArtifact>org.apache.derby:derbyclient:${derby.driver.version}:jar</extraArtifact>
                                 <extraArtifact>org.mariadb.jdbc:mariadb-java-client:${mariadb.driver.version}:jar
@@ -212,16 +242,10 @@
                                 <extraArtifact>net.sourceforge.jtds:jtds:${jtds.driver.version}:jar</extraArtifact>
                                 <extraArtifact>net.snowflake:snowflake-jdbc:${snowflake.driver.version}:jar
                                 </extraArtifact>
-                                <extraArtifact>
-                                    com.amazon.redshift:redshift-jdbc42-no-awssdk:${redshift.driver.version}:jar
-                                </extraArtifact>
-                                <extraArtifact>com.amazonaws:aws-java-sdk-core:${redshift.aws.driver.exts.version}:jar
-                                </extraArtifact>
-                                <extraArtifact>
-                                    com.amazonaws:aws-java-sdk-redshift:${redshift.aws.driver.exts.version}:jar
-                                </extraArtifact>
-                                <extraArtifact>com.amazonaws:aws-java-sdk-sts:${redshift.aws.driver.exts.version}:jar
-                                </extraArtifact>
+
+                                <!--
+                                    redshift jdbc have 3 aws jars dependencies, that will introduce CVE jars, so use pom dependencies way instead here
+                                -->
                             </extraArtifacts>
                         </configuration>
                     </execution>
