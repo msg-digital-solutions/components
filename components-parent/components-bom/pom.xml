@@ -160,7 +160,7 @@
         <netty-tcnative-boringssl-static.version>2.0.56.Final</netty-tcnative-boringssl-static.version>
         <netty.version>3.10.6.Final</netty.version>
         <nimbus-jose-jwt.version>9.22</nimbus-jose-jwt.version>
-        <okio.version>1.14.0</okio.version>
+        <okio.version>3.4.0</okio.version>
         <org.codehaus.janino.commons-compiler.version>${org.codehaus.janino.version}</org.codehaus.janino.commons-compiler.version>
         <org.codehaus.janino.janino.version>${org.codehaus.janino.version}</org.codehaus.janino.janino.version>
         <org.codehaus.janino.version>2.7.6</org.codehaus.janino.version>
