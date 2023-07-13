@@ -21,7 +21,7 @@
 
         <marklogic-client-api.version>4.0.4</marklogic-client-api.version>
         <marklogic.mlcp.version>9.0.5</marklogic.mlcp.version>
-        <okio.version>1.14.0</okio.version>
+        <okio.version>3.4.0</okio.version>
         <libthrift.version>0.15.0</libthrift.version>
     </properties>
 
