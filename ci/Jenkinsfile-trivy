@@ -1,0 +1,144 @@
+/*
+ * Copyright (C) 2010-2023 Talend Inc. - www.talend.com
+ *
+ * This source code is available under agreement available at https://www.talend.com/legal-terms/us-eula
+ *
+ * You should have received a copy of the agreement along with this program; if not, write to Talend SA
+ * 5 rue Salomon de Rothschild - 92150 Suresnes, France
+ *
+ */
+def podLabel = "components-tdp-trivy-scan-${UUID.randomUUID().toString()}".take(53)
+
+final def mavenSettings = configFile(
+        fileId: 'maven-settings-nexus-zl',
+        variable: 'MAVEN_SETTINGS')
+
+pipeline {
+    agent {
+        kubernetes {
+            label podLabel
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+    containers:
+    - name: main
+      image: artifactory.datapwn.com/tlnd-docker-prod/talend/common/tsbi/jdk8-builder-base:3.0.0-20220719061045
+      tty: true
+      command: 
+      - cat
+      resources: 
+        requests: 
+          cpu: '2' 
+          memory: 3G
+        limits: 
+          cpu: '6'
+          memory: 8G
+        volumeMounts:
+          - name: docker
+            mountPath: /var/run/docker.sock
+          - name: efs-jenkins-components-maven
+            mountPath: /root/.m2/repository
+    - name: trivy
+      image: artifactory.datapwn.com/docker-io-remote/aquasec/trivy:latest
+      tty: true
+      command:
+      - cat
+      resources:
+        requests:
+          cpu: 2000m
+          memory: 8Gi
+        limits:
+          cpu: 2000m
+          memory: 8Gi
+    volumes:
+      - name: docker
+        hostPath:
+          path: /var/run/docker.sock
+      - name: efs-jenkins-components-maven
+        persistentVolumeClaim:
+          claimName: efs-jenkins-components-m2
+    imagePullSecrets:
+      - name: talend-registry
+"""
+        }
+    }
+
+    environment {
+        MAVEN_OPTS = "-Dmaven.artifact.threads=128 -Dorg.slf4j.simpleLogger.showThreadName=true -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss -Dtalend.maven.decrypter.m2.location=${WORKSPACE}/.jenkins/"
+        TALEND_REGISTRY = 'registry.datapwn.com'
+    }
+
+    options {
+        buildDiscarder(logRotator(artifactNumToKeepStr: '5', numToKeepStr: '5'))
+        timeout(time: 60, unit: 'MINUTES')
+        skipStagesAfterUnstable()
+    }
+
+    triggers {
+        cron('0 9 * * 0')
+    }
+
+    stages {
+
+        stage('Build project') {
+            steps {
+                container("main") {
+                    script {
+                        configFileProvider([mavenSettings]) {
+                            // This builds the service ZIP file
+                            sh '''#!/bin/bash
+                            mvn clean install \
+                             --batch-mode \
+                             --threads 1C \
+                             --update-snapshots \
+                             --define 'skipTests' \
+                             --settings "${MAVEN_SETTINGS}"
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Scan zip artifact with Trivy SCA') {
+            steps {
+                container("trivy") {
+                    script {
+                        withCredentials([string(credentialsId: 'defectdojo-token-common', variable: 'DEFECTDOJO_API_TOKEN')]) {
+                            sh """
+                            mkdir output
+                            pwd && for f in \$(find ./services/components-api-service-rest-all-components/target/ -name 'components-api-service-rest-all-components-*.zip'); do unzip \$f -d output; done && cd output && ls -lia
+                            trivy rootfs . -f json --scanners vuln -o trivy-results.json --exit-code 0
+                            """
+
+                            sh """
+                            echo "Scan completed, now uploading to DefectDojo"
+                            apk add curl
+                            curl -s -X 'POST' -H "Authorization: Token ${DEFECTDOJO_API_TOKEN}" \
+                            'https://defectdojo.dagali.talendinc.com/api/v2/reimport-scan/' \
+                            -H 'accept: application/json' \
+                            -H 'Content-Type: multipart/form-data' \
+                            -F 'close_old_findings=true' \
+                            -F 'engagement_name=trivy-sca_components_tdp' \
+                            -F 'auto_create_context=true' \
+                            -F 'push_to_jira=false' \
+                            -F 'scan_date=' \
+                            -F 'do_not_reactivate=true' \
+                            -F 'minimum_severity=Low' \
+                            -F 'product_name=components_tdp' \
+                            -F 'verified=true' \
+                            -F 'product_type_name=Talend' \
+                            -F 'file=' \
+                            -F 'scan_type=Trivy Scan' \
+                            -F 'engagement=' -F file=@./output/trivy-results.json
+                            """
+
+                            archiveArtifacts artifacts: 'output/trivy-results.json'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
