@@ -72,7 +72,7 @@
 		"url" : "jdbc:snowflake://account.snowflakecomputing.com/?warehouse=warehouse&db=db&schema=public",
 		"paths" : 
 	 	[
-	 		{"path" : "mvn:net.snowflake/snowflake-jdbc/3.12.11"}
+	 		{"path" : "mvn:net.snowflake/snowflake-jdbc/3.13.30"}
 	 	]
 	
 	},
