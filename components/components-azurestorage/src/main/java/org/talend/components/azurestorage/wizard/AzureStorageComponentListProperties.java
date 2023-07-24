@@ -163,7 +163,7 @@ public class AzureStorageComponentListProperties extends ComponentPropertiesImpl
                 try {
                     Schema schema = AzureStorageTableSourceOrSink.getSchema(null, connection, tableId);
                     if(schema != null) {
-                        Schema.Parser parser = new Schema.Parser();
+                        Schema.Parser parser = new Schema.Parser().setValidateDefaults(false);
                         final Schema parse = parser.parse(schema.toString().replaceFirst("schemaInfered",formatSchemaName(tableId)));
                         tableProps.schema.schema.setValue(parse);
                     }else{

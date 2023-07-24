@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.talend.components.api.container.RuntimeContainer;
 import org.talend.components.api.exception.ComponentException;
+import org.talend.components.common.avro.AvroTool;
 import org.talend.components.salesforce.soql.FieldDescription;
 import org.talend.components.salesforce.soql.SoqlQuery;
 import org.talend.components.salesforce.tsalesforceinput.TSalesforceInputProperties;
@@ -87,7 +88,7 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
                             continue;
                         }
 
-                        Schema.Field field = new Schema.Field(fullName, schemaField.schema(), schemaField.doc(), schemaField.defaultVal());
+                        Schema.Field field = AvroTool.cloneAvroFieldWithCustomName(schemaField, fullName);
                         Map<String, Object> props = schemaField.getObjectProps();
                         for (String propName : props.keySet()) {
                             Object propValue = props.get(propName);
@@ -100,7 +101,9 @@ public class SalesforceInputReader extends SalesforceReader<IndexedRecord> {
                     Map<String, Object> objectProps = querySchema.getObjectProps();
                     querySchema = Schema.createRecord(querySchema.getName(), querySchema.getDoc(), querySchema.getNamespace(),
                             querySchema.isError());
-                    querySchema.getObjectProps().putAll(objectProps);
+                    for (Map.Entry<String, Object> entry : objectProps.entrySet()) {
+                        querySchema.addProp(entry.getKey(), entry.getValue());
+                    }
                     querySchema.setFields(copyFieldList);
                 }
             }

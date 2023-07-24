@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.talend.components.api.component.ISchemaListener;
 import org.talend.components.api.component.PropertyPathConnector;
+import org.talend.components.common.avro.AvroTool;
 import org.talend.components.marketo.MarketoConstants;
 import org.talend.components.marketo.MarketoUtils;
 import org.talend.components.marketo.helpers.CompoundKeyTable;
@@ -918,7 +919,7 @@ public class TMarketoInputProperties extends MarketoComponentWizardBasePropertie
     }
 
     private Field getMigratedField(Field origin, Schema expectedSchema, String expectedDIType) {
-        Field expectedField = new Schema.Field(origin.name(), expectedSchema, origin.doc(), origin.defaultVal(), origin.order());
+        Field expectedField = AvroTool.cloneAvroFieldWithCustomSchemaAndOrder(origin, expectedSchema);
         for (Map.Entry<String, Object> entry : origin.getObjectProps().entrySet()) {
             if ("di.column.talendType".equals(entry.getKey())) {
                 expectedField.addProp("di.column.talendType", expectedDIType);

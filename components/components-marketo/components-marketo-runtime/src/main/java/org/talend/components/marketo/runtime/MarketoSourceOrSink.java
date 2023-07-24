@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.talend.components.api.component.runtime.SourceOrSink;
 import org.talend.components.api.container.RuntimeContainer;
 import org.talend.components.api.properties.ComponentProperties;
+import org.talend.components.common.avro.AvroTool;
 import org.talend.components.marketo.MarketoConstants;
 import org.talend.components.marketo.MarketoProvideConnectionProperties;
 import org.talend.components.marketo.MarketoUtils;
@@ -253,8 +254,7 @@ public class MarketoSourceOrSink implements SourceOrSink, MarketoSourceOrSinkRun
         List<String> existingFieldNames = new ArrayList<>();
         for (Field f : design.getFields()) {
             existingFieldNames.add(f.name());
-            Field nf = new Field(f.name(), f.schema(), f.doc(), f.defaultVal());
-            nf.getObjectProps().putAll(f.getObjectProps());
+            Field nf = AvroTool.cloneAvroField(f);
             for (Map.Entry<String, Object> entry : f.getObjectProps().entrySet()) {
                 nf.addProp(entry.getKey(), entry.getValue());
             }
@@ -277,7 +277,9 @@ public class MarketoSourceOrSink implements SourceOrSink, MarketoSourceOrSinkRun
             }
         }
         Schema resultSchema = Schema.createRecord(design.getName(), design.getDoc(), design.getNamespace(), design.isError());
-        resultSchema.getObjectProps().putAll(design.getObjectProps());
+        for (Map.Entry<String, Object> entry : design.getObjectProps().entrySet()) {
+            resultSchema.addProp(entry.getKey(), entry.getValue());
+        }
         resultSchema.setFields(resultFields);
 
         return resultSchema;
@@ -286,8 +288,7 @@ public class MarketoSourceOrSink implements SourceOrSink, MarketoSourceOrSinkRun
     public static List<Field> getSchemaFieldsList(Schema schema) {
         List<Field> result = new ArrayList<>();
         for (Field f : schema.getFields()) {
-            Field nf = new Field(f.name(), f.schema(), f.doc(), f.defaultVal());
-            nf.getObjectProps().putAll(f.getObjectProps());
+            Field nf = AvroTool.cloneAvroField(f);
             for (Map.Entry<String, Object> entry : f.getObjectProps().entrySet()) {
                 nf.addProp(entry.getKey(), entry.getValue());
             }

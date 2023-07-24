@@ -24,6 +24,8 @@ import org.apache.avro.Schema;
 import org.apache.avro.Schema.Field;
 import org.apache.avro.Schema.Type;
 
+import org.talend.components.common.avro.AvroTool;
+
 public class MarketoUtils {
 
     private static final List<SimpleDateFormat> allowedDateFormats = Arrays.asList(
@@ -59,8 +61,7 @@ public class MarketoUtils {
     }
 
     public static Field generateNewField(Field origin) {
-        Schema.Field field = new Schema.Field(origin.name(), origin.schema(), origin.doc(), origin.defaultVal(), origin.order());
-        field.getObjectProps().putAll(origin.getObjectProps());
+        Schema.Field field = AvroTool.cloneAvroFieldWithOrder(origin);
         for (Map.Entry<String, Object> entry : origin.getObjectProps().entrySet()) {
             field.addProp(entry.getKey(), entry.getValue());
         }
@@ -81,8 +82,7 @@ public class MarketoUtils {
 
         List<Schema.Field> copyFieldList = new ArrayList<>();
         for (Schema.Field se : metadataSchema.getFields()) {
-            Schema.Field field = new Schema.Field(se.name(), se.schema(), se.doc(), se.defaultVal(), se.order());
-            field.getObjectProps().putAll(se.getObjectProps());
+            Schema.Field field = AvroTool.cloneAvroFieldWithOrder(se);
             for (Map.Entry<String, Object> entry : se.getObjectProps().entrySet()) {
                 field.addProp(entry.getKey(), entry.getValue());
             }
@@ -137,7 +137,7 @@ public class MarketoUtils {
                 }
             }
             if (field == null) {
-                field = new Schema.Field(se.name(), se.schema(), se.doc(), se.defaultVal(), se.order());
+                field = AvroTool.cloneAvroFieldWithOrder(se);
                 for (Map.Entry<String, Object> entry : se.getObjectProps().entrySet()) {
                     field.addProp(entry.getKey(), entry.getValue());
                 }

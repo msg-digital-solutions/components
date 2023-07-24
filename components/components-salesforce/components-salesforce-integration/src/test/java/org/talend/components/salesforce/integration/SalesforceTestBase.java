@@ -185,7 +185,6 @@ public class SalesforceTestBase extends AbstractComponentTest {
                 row.put("ShippingState", "CA");
             }
             LOGGER.debug("Row to insert: " + row.get("Name") //
-                    + " id: " + row.get("Id") //
                     + " shippingPostalCode: " + row.get("ShippingPostalCode") //
                     + " billingPostalCode: " + row.get("BillingPostalCode") //
                     + " billingStreet: " + row.get("BillingStreet"));

@@ -400,8 +400,20 @@ public class SnowflakeWriter implements WriterWithFeedback<Result, IndexedRecord
                 if (Boolean.valueOf(remoteTableField.getProp(SnowflakeAvroRegistry.TALEND_FIELD_AUTOINCREMENTED))) {
                     continue;
                 }
+                //we should never depend on avro field.defaultVal() method except make sure talend default value in talend schema rule 100% match avro rule, or you have a good mapping for that.
+                //we should use field.getProp(SchemaConstants.TALEND_COLUMN_DEFAULT)
                 Object defaultValue = remoteTableField.defaultVal();
-                row[i] = StringUtils.EMPTY.equals(defaultValue) ? null : defaultValue;
+                //the avro schema may come from:
+                //1. studio metadata to avro schema, though studio process most of cases with valid default value, but some special case is not processed, like date type,
+                //here we suppose user not set invalid default value for that type in talend metadata schema in any time, also mean no invalid avro schema in old job studio job item files.
+                //2. snowflake component runtime fetch avro schema code, now after TDI-49492 fix, field.defaultVal() will be null always for this case
+                //3. impossible come from the input component's output record, as tcompv0 common javajet never pass default value when convert between avro record and di rowstruct
+                if(defaultValue == null || StringUtils.EMPTY.equals(defaultValue)) {
+                    defaultValue = remoteTableField.getProp(SchemaConstants.TALEND_COLUMN_DEFAULT);
+                    row[i] = StringUtils.EMPTY.equals(defaultValue) ? null : defaultValue;
+                } else {
+                    row[i] = defaultValue;
+                }
             } else {
                 Object inputValue = input.get(f.pos());
                 row[i] = getFieldValue(inputValue, remoteTableField);
