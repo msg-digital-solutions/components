@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.talend.components</groupId>
         <artifactId>components</artifactId>
-        <version>0.28.21-SNAPSHOT</version>
+        <version>0.28.21</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>components-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.28.21-SNAPSHOT</version>
+    <version>0.28.21</version>
     <name>Component Parent POM</name>
 
     <properties>
