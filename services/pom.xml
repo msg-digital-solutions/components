@@ -25,7 +25,7 @@
 
         <!-- /!\ START TSBI PROPERTIES /!\ -->
         <docker.tsbiImage>java8-base</docker.tsbiImage>
-        <docker.tsbiVersion>3.1.6-20221214132533</docker.tsbiVersion>
+        <docker.tsbiVersion>3.1.18-20230804115923</docker.tsbiVersion>
         <docker.registryName>docker-dev-local</docker.registryName> <!-- Keep the dev registry to push the services image  -->
         <docker.tsbiPath>/tlnd-docker-prod/talend/common/tsbi</docker.tsbiPath>
         <!-- /!\ END TSBI PROPERTIES /!\ -->
