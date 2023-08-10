@@ -18,7 +18,7 @@
 
     <properties>
         <!-- /!\ START Spring BOM PROPERTIES /!\ -->
-        <talend.springboot.bom.version>0.0.13</talend.springboot.bom.version>
+        <talend.springboot.bom.version>0.0.19</talend.springboot.bom.version>
         <talend.springboot.bom.artifactId>2.7</talend.springboot.bom.artifactId>
         <springboot.actuator.autoconfigure>2.7.11</springboot.actuator.autoconfigure>
         <!-- /!\ END Spring BOM PROPERTIES /!\ -->
