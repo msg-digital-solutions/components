@@ -27,7 +27,7 @@
         <derby.driver.version>10.12.1.1</derby.driver.version>
         <snowflake.driver.version>3.13.30</snowflake.driver.version>
         <redshift.driver.version>1.2.37.1061</redshift.driver.version>
-        <redshift.aws.driver.exts.version>1.11.118</redshift.aws.driver.exts.version>
+        <redshift.aws.driver.exts.version>1.12.264</redshift.aws.driver.exts.version>
         <!-- Dependencies version -->
         <winutils.version>2.7.1</winutils.version>
         <!-- Used for Docker images name -->
@@ -94,17 +94,6 @@
             <groupId>com.amazon.redshift</groupId>
             <artifactId>redshift-jdbc42-no-awssdk</artifactId>
             <version>${redshift.driver.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-core</artifactId>
-            <version>${redshift.aws.driver.exts.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
