@@ -81,9 +81,9 @@ public class SObjectAdapterFactory implements IndexedRecordConverter<SObject, In
 
         final private DateCodec dateCodec = new DateCodec();
 
-        private Map<String, Object> valueMap;
+        private final Map<String, Object> valueMap;
 
-        private String rootType;
+        private final String rootType;
 
         private boolean isAggregateResult;
 
@@ -91,22 +91,27 @@ public class SObjectAdapterFactory implements IndexedRecordConverter<SObject, In
             rootType = value.getType();
             isAggregateResult = "AggregateResult".equals(rootType);
             init();
+            valueMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
             Iterator<XmlObject> fields = value.getChildren();
             // Ignore "type" element when find firstly
-            int typeCount = 0;
+            boolean isTypeFieldSkipped = false;
+
             while (fields.hasNext()) {
                 XmlObject field = fields.next();
-                if (valueMap != null && (valueMap.containsKey(field.getName().getLocalPart()) || valueMap.containsKey(rootType
-                        + schema.getProp(SalesforceSchemaConstants.COLUMNNAME_DELIMTER) + field.getName().getLocalPart()))) {
+                if ("type".equals(field.getName().getLocalPart()) && !isTypeFieldSkipped) {
+                    isTypeFieldSkipped = true;
                     continue;
-                } else {
-                    if ("type".equals(field.getName().getLocalPart()) && typeCount == 0) {
-                        typeCount++;
-                        continue;
-                    }
-                    processXmlObject(field, rootType, null);
                 }
+
+                if ((valueMap.containsKey(field.getName().getLocalPart()) || valueMap.containsKey(rootType
+                        + schema.getProp(SalesforceSchemaConstants.COLUMNNAME_DELIMTER) + field.getName()
+                        .getLocalPart()))
+                        && !doesFieldNameStartWithModuleName(field.getName().getLocalPart(), schema, rootType)) {
+                    continue;
+                }
+                processXmlObject(field, rootType, null);
+
             }
         }
 
@@ -125,7 +130,8 @@ public class SObjectAdapterFactory implements IndexedRecordConverter<SObject, In
         public Object get(int i) {
             Object value = valueMap.get(names[i]);
             if (value == null) {
-                value = valueMap.get(rootType + schema.getProp(SalesforceSchemaConstants.COLUMNNAME_DELIMTER) + names[i]);
+                value = valueMap.get(
+                        rootType + schema.getProp(SalesforceSchemaConstants.COLUMNNAME_DELIMTER) + names[i]);
             }
             return fieldConverter[i].convertToAvro(value);
         }
@@ -141,7 +147,9 @@ public class SObjectAdapterFactory implements IndexedRecordConverter<SObject, In
                     names[j] = f.name();
                     fieldConverter[j] = SalesforceAvroRegistry.get().getConverterFromString(f);
                     name2converter.put(f.name(), fieldConverter[j]);
-                    name2converter.put(rootType + schema.getProp(SalesforceSchemaConstants.COLUMNNAME_DELIMTER) + f.name(), fieldConverter[j]);
+                    name2converter.put(
+                            rootType + schema.getProp(SalesforceSchemaConstants.COLUMNNAME_DELIMTER) + f.name(),
+                            fieldConverter[j]);
                 }
             }
         }
@@ -152,15 +160,11 @@ public class SObjectAdapterFactory implements IndexedRecordConverter<SObject, In
          * On the last iteration prefixName will become as a column name.
          * <code>Id</code> and <code>type</code> elements are skipped, except type of child relation.
          *
-         *
-         * @param xo - XML object to be processed.
-         * @param prefixName - name of all parent branches, appended with underscore.
+         * @param xo             - XML object to be processed.
+         * @param prefixName     - name of all parent branches, appended with underscore.
          * @param prefixTypeName - name of child relation.
          */
         protected void processXmlObject(XmlObject xo, String prefixName, String prefixTypeName) {
-            if (valueMap == null) {
-                valueMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-            }
             Iterator<XmlObject> xos = xo.getChildren();
             if (xos.hasNext()) {
                 // delete the fixed id and type elements when find firstly
@@ -182,8 +186,9 @@ public class SObjectAdapterFactory implements IndexedRecordConverter<SObject, In
                             continue;
                         }
                         if (null != prefixName) {
-                            String tempPrefixName = prefixName + schema.getProp(SalesforceSchemaConstants.COLUMNNAME_DELIMTER)
-                                    + xo.getName().getLocalPart();
+                            String tempPrefixName =
+                                    prefixName + schema.getProp(SalesforceSchemaConstants.COLUMNNAME_DELIMTER)
+                                            + xo.getName().getLocalPart();
                             String tempPrefixTypeName = null;
                             if (null != prefixTypeName) {
                                 tempPrefixTypeName = prefixTypeName
@@ -216,7 +221,7 @@ public class SObjectAdapterFactory implements IndexedRecordConverter<SObject, In
          * <code>Contact.Name, Contact.Account.Name</code>
          *
          * @param prefixName - name to be appended to column name.
-         * @param xo - XML object that contains column value.
+         * @param xo         - XML object that contains column value.
          */
         private void placeValueInFieldMap(String prefixName, XmlObject xo) {
             Object value = xo.getValue();
@@ -291,6 +296,11 @@ public class SObjectAdapterFactory implements IndexedRecordConverter<SObject, In
             }
             return text;
         }
+    }
+
+    private static boolean doesFieldNameStartWithModuleName(String fieldLocalName, Schema schema, String rootType) {
+        return fieldLocalName.startsWith(rootType
+                + schema.getProp(SalesforceSchemaConstants.COLUMNNAME_DELIMTER));
     }
 
 }
