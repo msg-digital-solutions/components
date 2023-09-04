@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.talend.components</groupId>
         <artifactId>components-implementation-aggregator</artifactId>
-        <version>0.28.26</version>
+        <version>0.28.27-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>components-jdbc-aggregator</artifactId>
-    <version>0.28.26</version>
+    <version>0.28.27-SNAPSHOT</version>
 
     <name>Components - JDBC Aggregator</name>
     <packaging>pom</packaging>
