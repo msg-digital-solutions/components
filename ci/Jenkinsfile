@@ -36,63 +36,16 @@ def sfExpiredSecurityToken = string(
     credentialsId: 'expired-salesforce-account-key',
     variable: 'EXPIRED_SALESFORCE_SECURITY_TOKEN')
 
-def branch = env.BRANCH_NAME
-def repo = 'components'
-def slackChannel = 'components-ci'
-def escaped_branch = branch.toLowerCase().replaceAll("/", "_")
-def PRODUCTION_DEPLOYMENT_REPOSITORY = "snapshots"
-def deploymentSuffix = (env.BRANCH_NAME == "master" || env.BRANCH_NAME.startsWith("maintenance/")) ? "${PRODUCTION_DEPLOYMENT_REPOSITORY}" : "dev_branch_snapshots/branch_${escaped_branch}"
 final boolean isOnMasterOrMaintenanceBranch = (env.BRANCH_NAME == "master" || env.BRANCH_NAME.startsWith("maintenance/"))
-def m2 = "/tmp/jenkins/tdi/m2/${deploymentSuffix}"
-def podLabel = "components-${UUID.randomUUID().toString()}".take(53)
 String repository = 'components'
 
 pipeline {
   agent {
-        kubernetes {
-            label podLabel
-            yaml """
-apiVersion: v1
-kind: Pod
-spec:
-    containers:
-        -
-            name: main
-            image: artifactory.datapwn.com/tlnd-docker-dev/talend/common/tsbi/jdk8-svc-springboot-builder:1.14.0-2.1-20191203093421
-            command: [cat]
-            tty: true
-            volumeMounts: [{name: m2main, mountPath: /root/.m2/repository}]
-            resources: {requests: {memory: 3G, cpu: '2.5'}, limits: {memory: 3G, cpu: '2.5'}}
-            env:
-              - name: DOCKER_HOST
-                value: tcp://localhost:2375
-        -
-            name: dind-daemon
-            image: artifactory.datapwn.com/docker-io-remote/docker:23.0.1-dind
-            resources:
-                requests:
-                    cpu: 2.5
-                    memory: 3G
-            securityContext:
-                privileged: true
-            volumeMounts:
-              - name: docker-graph-storage
-                mountPath: /var/lib/docker
-            env:
-              - name: DOCKER_TLS_CERTDIR
-                value: ""
-    volumes:
-        -
-            name: m2main
-            hostPath: {path: ${m2} }
-        -
-            name: docker-graph-storage
-            emptyDir: {}
-    imagePullSecrets:
-        - name: talend-registry
-"""
-        }
+    kubernetes {
+      yamlFile 'ci/jenkins_pod.yml'
+      defaultContainer 'main'
     }
+  }
 
   environment {
     MAVEN_OPTS = "-Dmaven.artifact.threads=128 -Dorg.slf4j.simpleLogger.showThreadName=true -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss -Dtalend.maven.decrypter.m2.location=${WORKSPACE}/.jenkins/"
@@ -126,16 +79,24 @@ spec:
   stages {
     stage('Prepare build') {
       steps {
-        container('main') {
-          script {
-            echo 'Git login'
-            withCredentials([gitCredentials]) {
-              sh """
-                            bash ci/git-login.sh \
-                                "\${GITHUB_LOGIN}" \
-                                "\${GITHUB_TOKEN}"
-                        """
-            }
+        ///////////////////////////////////////////
+        // asdf install
+        ///////////////////////////////////////////
+        script {
+          println "asdf install the content of repository .tool-versions"
+          sh 'bash ci/asdf_install.sh'
+        }
+        ///////////////////////////////////////////
+        // Git login
+        ///////////////////////////////////////////
+        script {
+          echo 'Git login'
+          withCredentials([gitCredentials]) {
+            sh """
+              bash ci/git-login.sh \
+                  "\${GITHUB_LOGIN}" \
+                  "\${GITHUB_TOKEN}"
+            """
           }
         }
       }
@@ -146,21 +107,24 @@ spec:
         expression { params.Action == 'STANDARD' }
       }
       steps {
-        container('main') {
-           withCredentials([gitCredentials, nexusCredentials, dockerCredentials, artifactoryCredentials, sfCredentials, sfSecurityToken, sfExpiredCredentials, sfExpiredSecurityToken]) {
-             sh '''#!/bin/bash
-             docker version
-             echo $ARTIFACTORY_PASSWORD | docker login $ARTIFACTORY_REGISTRY -u $ARTIFACTORY_LOGIN --password-stdin
-             mvn clean -B -U -V \
-                -Dsalesforce.user=${SALESFORCE_USERNAME} \
-                -Dsalesforce.password=${SALESFORCE_PASSWORD} \
-                -Dsalesforce.key=${SALESFORCE_SECURITY_TOKEN} \
-                -Dsalesforce.user.expired=${EXPIRED_SALESFORCE_USERNAME} \
-                -Dsalesforce.password.expired=${EXPIRED_SALESFORCE_PASSWORD} \
-                -Dsalesforce.key.expired=${EXPIRED_SALESFORCE_SECURITY_TOKEN} \
-             install
-             '''
-           }
+        withCredentials([gitCredentials, nexusCredentials, dockerCredentials, artifactoryCredentials, sfCredentials, sfSecurityToken, sfExpiredCredentials, sfExpiredSecurityToken]) {
+          sh """\
+            #!/usr/bin/env bash 
+            set -xe
+            docker version
+            echo $ARTIFACTORY_PASSWORD | docker login $ARTIFACTORY_REGISTRY -u $ARTIFACTORY_LOGIN --password-stdin
+
+            mvn clean install \
+              --update-snapshots \
+              --batch-mode \
+              --show-version \
+              -Dsalesforce.user=${SALESFORCE_USERNAME} \
+              -Dsalesforce.password=${SALESFORCE_PASSWORD} \
+              -Dsalesforce.key=${SALESFORCE_SECURITY_TOKEN} \
+              -Dsalesforce.user.expired=${EXPIRED_SALESFORCE_USERNAME} \
+              -Dsalesforce.password.expired=${EXPIRED_SALESFORCE_PASSWORD} \
+              -Dsalesforce.key.expired=${EXPIRED_SALESFORCE_SECURITY_TOKEN}
+          """.stripIndent()
         }
       }
     }
@@ -174,14 +138,14 @@ spec:
         }
       }
       steps {
-        container('main') {
-          withCredentials([gitCredentials, nexusCredentials, dockerCredentials, artifactoryCredentials]) {
-            sh '''#!/bin/bash
+        withCredentials([gitCredentials, nexusCredentials, dockerCredentials, artifactoryCredentials]) {
+          sh """\
+            #!/usr/bin/env bash 
+            set -xe
             docker version
             echo $ARTIFACTORY_PASSWORD | docker login $ARTIFACTORY_REGISTRY -u $ARTIFACTORY_LOGIN --password-stdin
-            mvn clean -B -U -V -s ci/settings.xml deploy -DskipTests -DskipITs
-            '''
-          }
+            mvn clean deploy -B -U -V -s ci/settings.xml -DskipTests -DskipITs
+          """.stripIndent()
         }
       }
     }
@@ -191,24 +155,22 @@ spec:
         expression { params.Action == 'CHANGELOG' }
       }
       steps {
-        container('main') {
-          withCredentials([gitCredentials]) {
-            script {
-              final def pom = readMavenPom file: 'pom.xml'
-              String currentVersion = pom.version.split('-')[0]
-              String releaseVersion = currentVersion
-              String previousVersion = evaluatePreviousVersion(releaseVersion)
-              sh """
-                    bash ci/changelog.sh \
-                        '${repository}' \
-                        '${previousVersion}' \
-                        '${releaseVersion}' \
-                        '${params.DRAFT_CHANGELOG}' \
-                        "\${BRANCH_NAME}" \
-                        "\${GITHUB_LOGIN}" \
-                        "\${GITHUB_TOKEN}"
-                """
-            }
+        withCredentials([gitCredentials]) {
+          script {
+            final def pom = readMavenPom file: 'pom.xml'
+            String currentVersion = pom.version.split('-')[0]
+            String releaseVersion = currentVersion
+            String previousVersion = evaluatePreviousVersion(releaseVersion)
+            sh """
+              bash ci/changelog.sh \
+                  '${repository}' \
+                  '${previousVersion}' \
+                  '${releaseVersion}' \
+                  '${params.DRAFT_CHANGELOG}' \
+                  "\${BRANCH_NAME}" \
+                  "\${GITHUB_LOGIN}" \
+                  "\${GITHUB_TOKEN}"
+              """
           }
         }
       }
@@ -223,7 +185,7 @@ spec:
           slackSend(
             color: '#00FF00',
             message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
-            channel: "${slackChannel}")
+            channel: "${env.SLACK_CI_CHANNEL}")
         }
       }
     }
@@ -236,13 +198,13 @@ spec:
             slackSend(
               color: '#FF0000',
               message: "@here : NEW FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
-              channel: "${slackChannel}")
+              channel: "${env.SLACK_CI_CHANNEL}")
           } else {
             //else send notification without pinging channel
             slackSend(
               color: '#FF0000',
               message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
-              channel: "${slackChannel}")
+              channel: "${env.SLACK_CI_CHANNEL}")
           }
         }
       }
@@ -274,10 +236,10 @@ private static String evaluatePreviousVersion(String version) {
         major--
       } else {
         // Invalid state: Cannot calculate previous version if major version is already 0 or less
-        throw new IllegalArgumentException("Invalid version: $version")
+        throw new IllegalArgumentException("Invalid version: $version") as java.lang.Throwable
       }
     }
   }
 
-  return "${major}.${minor}.${patch}"
+  return "${major}.${minor}.${patch}" as String
 }
