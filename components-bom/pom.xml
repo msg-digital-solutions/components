@@ -46,10 +46,6 @@
         <azure-storage-blob.version>12.17.1</azure-storage-blob.version>
         <azure-identity.version>1.5.3</azure-identity.version>
         <msal4j.version>1.13.0</msal4j.version>
-        <org.bouncycastle.version>1.69</org.bouncycastle.version>
-        <bcmail-jdk15on.version>${org.bouncycastle.version}</bcmail-jdk15on.version>
-        <bcpkix-jdk15on.version>${org.bouncycastle.version}</bcpkix-jdk15on.version>
-        <bcprov-jdk15on.version>${org.bouncycastle.version}</bcprov-jdk15on.version>
         <beam.version>2.33.0</beam.version>
         <bnd-annotation.version>2.4.0</bnd-annotation.version>
         <calcite.version>1.32.0</calcite.version>
@@ -66,7 +62,7 @@
         <commons-codec.version>1.14</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-compress.version>1.21</commons-compress.version>
-        <commons-configuration.version>2.8.0</commons-configuration.version>
+        <commons-configuration.version>2.9.0</commons-configuration.version>
         <commons-csv.version>1.4</commons-csv.version>
         <commons-daemon.version>1.0.13</commons-daemon.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
@@ -75,7 +71,7 @@
         <commons-el.version>1.0</commons-el.version>
         <commons-exec.version>1.2</commons-exec.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
-        <commons-io.version>2.8.0</commons-io.version>
+        <commons-io.version>2.9.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-lang3.version>3.10</commons-lang3.version>
         <commons-logging-api.version>1.1</commons-logging-api.version>
@@ -158,13 +154,12 @@
         <json-smart.version>2.4.9</json-smart.version>
         <jsr305.version>1.3.9</jsr305.version>
         <junit.version>4.13.2</junit.version>
-        <kafka-clients.version>2.4.1</kafka-clients.version>
         <littleproxy.version>1.1.0</littleproxy.version>
         <log4j.version>2.17.2</log4j.version>
         <marketo-soap-sdk.version>3.1</marketo-soap-sdk.version>
         <mockito-core.version>2.24.0</mockito-core.version>
-        <netty.version>4.1.86.Final</netty.version>
-        <nimbus-jose-jwt.version>9.23</nimbus-jose-jwt.version>
+        <netty.version>4.1.87.Final</netty.version>
+        <nimbus-jose-jwt.version>9.25.6</nimbus-jose-jwt.version>
         <okio.version>1.14.0</okio.version>
         <org.codehaus.janino.commons-compiler.version>${org.codehaus.janino.version}
         </org.codehaus.janino.commons-compiler.version>
@@ -178,15 +173,15 @@
         <powermock-api-mockito.version>2.0.0</powermock-api-mockito.version>
         <powermock-module-junit4.version>${powermock-api-mockito.version}</powermock-module-junit4.version>
         <protobuf-java.version>3.21.7</protobuf-java.version>
-        <scala.version>2.11.11</scala.version>
+        <scala.version>2.13.10</scala.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <snakeyaml.version>1.26</snakeyaml.version>
+        <snakeyaml.version>1.33</snakeyaml.version>
         <snappy-java.version>1.1.10.1</snappy-java.version>
         <snowflake-jdbc.version>3.13.30</snowflake-jdbc.version>
-        <spark.version>2.4.8.7.2.16.3-8</spark.version>
+        <spark.version>3.3.3</spark.version>
         <ivy.version>2.5.1</ivy.version>
         <!-- This Spring Boot version is used for some integration tests in components. Services are using a different version -->
-        <spring-boot.version>2.7.1</spring-boot.version>
+        <spring-boot.version>2.7.13</spring-boot.version>
         <stax2-api.version>4.1</stax2-api.version>
         <talend_file_enhanced_20070724.version>6.0.0</talend_file_enhanced_20070724.version>
         <talendcsv.version>1.0.0</talendcsv.version>
@@ -488,21 +483,6 @@
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-core</artifactId>
                 <version>${jersey-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcmail-jdk15on</artifactId>
-                <version>${bcmail-jdk15on.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15on</artifactId>
-                <version>${bcpkix-jdk15on.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
-                <version>${bcprov-jdk15on.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.core</groupId>
@@ -1154,7 +1134,6 @@
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-starter-logging</artifactId>
                     </exclusion>
-
                 </exclusions>
             </dependency>
             <dependency>
@@ -1493,7 +1472,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.beam</groupId>
-                <artifactId>beam-runners-flink_2.11</artifactId>
+                <artifactId>beam-runners-flink_2.13</artifactId>
                 <version>${beam.version}</version>
             </dependency>
             <dependency>
@@ -1510,11 +1489,6 @@
                 <groupId>org.apache.beam</groupId>
                 <artifactId>beam-sdks-java-io-hadoop-common</artifactId>
                 <version>${beam.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka-clients</artifactId>
-                <version>${kafka-clients.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.beam</groupId>
@@ -1575,7 +1549,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.spark</groupId>
-                <artifactId>spark-core_2.11</artifactId>
+                <artifactId>spark-core_2.13</artifactId>
                 <version>${spark.version}</version>
                 <exclusions>
                     <exclusion>
@@ -1599,12 +1573,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.spark</groupId>
-                <artifactId>spark-yarn_2.11</artifactId>
+                <artifactId>spark-yarn_2.13</artifactId>
                 <version>${spark.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.spark</groupId>
-                <artifactId>spark-streaming_2.11</artifactId>
+                <artifactId>spark-streaming_2.13</artifactId>
                 <version>${spark.version}</version>
             </dependency>
             <!-- components-ee -->

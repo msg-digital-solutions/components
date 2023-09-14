@@ -242,7 +242,7 @@
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-scala_2.11</artifactId>
+            <artifactId>jackson-module-scala_2.13</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -319,7 +319,7 @@
                 <!-- prevent spring plugin to create a big startable jar -->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.7.1</version>
+                <version>2.7.15</version>
                 <executions>
                     <execution>
                         <configuration>

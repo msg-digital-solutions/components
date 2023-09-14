@@ -18,11 +18,8 @@
 
     <properties>
         <!-- /!\ START Spring BOM PROPERTIES /!\ -->
-        <talend.springboot.bom.version>0.0.13</talend.springboot.bom.version>
+        <talend.springboot.bom.version>0.0.32</talend.springboot.bom.version>
         <talend.springboot.bom.artifactId>2.7</talend.springboot.bom.artifactId>
-        <springboot.actuator.autoconfigure.version>2.7.11</springboot.actuator.autoconfigure.version>
-        <springboot.autoconfigure.version>2.7.12</springboot.autoconfigure.version>
-        <spring.version>5.3.28</spring.version>
         <!-- /!\ END Spring BOM PROPERTIES /!\ -->
 
         <!-- /!\ START TSBI PROPERTIES /!\ -->
@@ -61,21 +58,6 @@
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-actuator-autoconfigure</artifactId>
-                <version>${springboot.actuator.autoconfigure.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-autoconfigure</artifactId>
-                <version>${springboot.autoconfigure.version}</version>
-            </dependency>
-            <dependency>
-                 <groupId>org.springframework</groupId>
-                 <artifactId>spring-webmvc</artifactId>
-                 <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
