@@ -107,7 +107,14 @@ pipeline {
         expression { params.Action == 'STANDARD' }
       }
       steps {
-        withCredentials([gitCredentials, nexusCredentials, dockerCredentials, artifactoryCredentials, sfCredentials, sfSecurityToken, sfExpiredCredentials, sfExpiredSecurityToken]) {
+        withCredentials([gitCredentials,
+                         nexusCredentials,
+                         dockerCredentials,
+                         artifactoryCredentials,
+                         sfCredentials,
+                         sfSecurityToken,
+                         sfExpiredCredentials,
+                         sfExpiredSecurityToken]) {
           sh """\
             #!/usr/bin/env bash 
             set -xe
