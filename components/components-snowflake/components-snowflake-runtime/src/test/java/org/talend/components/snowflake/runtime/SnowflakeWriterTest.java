@@ -158,7 +158,7 @@ public class SnowflakeWriterTest {
         List<Field> fields = new ArrayList<>();
         Field field = registry.sqlType2Avro(18, 10, Types.VARCHAR, true, "firstColumn", "first_column", "");
         fields.add(field);
-        field = registry.sqlType2Avro(18, 10, Types.BIGINT, true, "secondColumn", "second_column", 0);
+        field = registry.sqlType2Avro(18, 10, Types.BIGINT, true, "secondColumn", "second_column", null);
         fields.add(field);
         field = registry.sqlType2Avro(18, 10, Types.DOUBLE, true, "thirdColumn", "third_column", 0.0);
         fields.add(field);
@@ -170,9 +170,9 @@ public class SnowflakeWriterTest {
         fields.add(field);
         field = registry.sqlType2Avro(18, 10, Types.TIMESTAMP, true, "eleventhColumn", "eleventh_column", 1);
         fields.add(field);
-        field = registry.sqlType2Avro(18, 10, Types.ARRAY, true, "eighthColumn", "eighth_column", "");
+        field = registry.sqlType2Avro(18, 10, Types.ARRAY, true, "eighthColumn", "eighth_column", null);
         fields.add(field);
-        field = registry.sqlType2Avro(18, 10, Types.DATE, true, "ninthColumn", "ninth_column", "");
+        field = registry.sqlType2Avro(18, 10, Types.DATE, true, "ninthColumn", "ninth_column", null);
 
         // I use this workaround to set a date pattern different than the default one SnowflakeConstants.TALEND_DEFAULT_DATE_PATTERN.
         Field fieldDate = new Field(field.name(), field.schema(), field.doc(), field.defaultVal());

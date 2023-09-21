@@ -34,6 +34,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.avro.Schema;
 import org.talend.components.api.exception.ComponentException;
+import org.talend.components.common.avro.AvroTool;
 import org.talend.components.netsuite.avro.converter.EnumToStringConverter;
 import org.talend.components.netsuite.avro.converter.ObjectToJsonConverter;
 import org.talend.components.netsuite.avro.converter.NullConverter;
@@ -170,8 +171,7 @@ public abstract class NsObjectTransducer {
                     }
 
                     // Add fields of design schema
-                    Schema.Field avroField = new Schema.Field(
-                            field.name(), field.schema(), null, field.defaultVal());
+                    Schema.Field avroField = AvroTool.cloneAvroFieldWithoutDoc(field);
                     Map<String, Object> fieldProps = field.getObjectProps();
                     for (String propName : fieldProps.keySet()) {
                         Object propValue = fieldProps.get(propName);

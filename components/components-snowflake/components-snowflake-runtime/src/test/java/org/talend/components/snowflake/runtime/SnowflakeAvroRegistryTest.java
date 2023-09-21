@@ -197,7 +197,8 @@ public class SnowflakeAvroRegistryTest {
     }
 
     /**
-     * This test shows, that we can use {@link Field#defaultVal()} even if it was set to null, or real data.
+     * should never depend on avro defaultVal() method as the migration risk
+     *
      */
     @Test
     public void testWrap() {
@@ -211,10 +212,10 @@ public class SnowflakeAvroRegistryTest {
         assertNull(field.defaultVal());
 
         field = snowflakeAvroRegistry.wrap("nullableRecord", schema, true, "");
-        Assert.assertEquals("", field.defaultVal());
+        Assert.assertEquals(null, field.defaultVal());
 
         field = snowflakeAvroRegistry.wrap("nullableRecord", schema, false, 10);
-        Assert.assertEquals(10, field.defaultVal());
+        Assert.assertEquals(null, field.defaultVal());
 
     }
 
@@ -288,8 +289,9 @@ public class SnowflakeAvroRegistryTest {
 
     @Test
     public void testDefaultValueForNotNullableColumns() {
-        Field f = snowflakeAvroRegistry.sqlType2Avro(1, 1, java.sql.Types.DOUBLE, false, "anyName", "anyName", "");
-        assertNull(f.defaultVal());
+        Field f = snowflakeAvroRegistry.sqlType2Avro(1, 1, java.sql.Types.DOUBLE, false, "anyName", "anyName", null);
+        //f.defaultVal() have type check now, hard to match it
+        assertNull(f.getProp(SchemaConstants.TALEND_COLUMN_DEFAULT));
     }
 
     @Test
@@ -297,8 +299,8 @@ public class SnowflakeAvroRegistryTest {
         String snowflakeEmptyDefaultValue = "";
         Field f = snowflakeAvroRegistry.sqlType2Avro(1, 1, Types.VARCHAR, false, "anyName", "anyName", snowflakeEmptyDefaultValue);
 
-
-        assertEquals(snowflakeEmptyDefaultValue, f.defaultVal());
+        //f.defaultVal() have type check now, hard to match it
+        assertEquals(snowflakeEmptyDefaultValue, f.getProp(SchemaConstants.TALEND_COLUMN_DEFAULT));
 
     }
 }

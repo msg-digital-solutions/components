@@ -11,7 +11,7 @@
     <properties>
         <components.version>0.37.25-SNAPSHOT</components.version>
         <components-api-service-rest.version>0.28.14</components-api-service-rest.version>
-        <daikon.version>7.0.5</daikon.version>
+        <daikon.version>7.1.16</daikon.version>
         <json-io.version>4.13.1-TALEND</json-io.version>
         <!-- repositories -->
         <talend_snapshots_deployment>https://artifacts-oss.talend.com/nexus/content/repositories/TalendOpenSourceSnapshot/</talend_snapshots_deployment>
@@ -23,7 +23,7 @@
         <avatica.avatica-metrics.version>${avatica.version}</avatica.avatica-metrics.version>
         <avatica.version>1.22.0</avatica.version>
         <antlr4-runtime.version>4.7</antlr4-runtime.version>
-        <avro.version>1.8.1</avro.version>
+        <avro.version>1.11.2</avro.version>
         <aws-java-sdk-cloudwatch.version>${aws.version}</aws-java-sdk-cloudwatch.version>
         <aws-java-sdk-core.version>${aws.version}</aws-java-sdk-core.version>
         <aws-java-sdk-dynamodb.version>${aws.version}</aws-java-sdk-dynamodb.version>
@@ -53,7 +53,7 @@
         <!-- NOTE: if you modify the version you should update it also there: https://github.com/Talend/studio-se-master/blob/master/build/dependencies.p2/dependencies.p2.tos/pom.xml#L315 (it's pointer to the same library)-->
         <commons-codec.version>1.14</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <commons-compress.version>1.21</commons-compress.version>
+        <commons-compress.version>1.23.0</commons-compress.version>
         <commons-configuration.version>1.8</commons-configuration.version>
         <commons-configuration2.version>2.9.0</commons-configuration2.version>
         <commons-csv.version>1.4</commons-csv.version>
@@ -117,7 +117,7 @@
         <jackson-jaxrs.version>1.9.13</jackson-jaxrs.version>
         <jackson-xc.version>1.9.13</jackson-xc.version>
         <jackson.1x.version>1.9.16-TALEND</jackson.1x.version>
-        <jackson.version>2.13.4.20221013</jackson.version>
+        <jackson.version>2.14.3</jackson.version>
         <javapoet.version>1.8.0</javapoet.version>
         <javax.activation.version>1.1.1</javax.activation.version>
         <javax.inject.version>1</javax.inject.version>

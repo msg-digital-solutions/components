@@ -46,9 +46,9 @@ public class ComponentsPaxExamOptions {
                 bundle("mvn:org.slf4j/slf4j-simple/1.7.25").noStart(), //
                 linkBundle("com.fasterxml.jackson.core-jackson-annotations"), //
                 linkBundle("com.fasterxml.jackson.core-jackson-core"), //
+                linkBundle("com.fasterxml.jackson.core-jackson-databind"), //
                 linkBundle("com.cedarsoftware-json-io"), //
                 linkBundle("commons-codec-commons-codec"), //
-                linkBundle("com.thoughtworks.paranamer-paranamer"), //
                 linkBundle("org.codehaus.jackson-jackson-core-asl"), //
                 linkBundle("org.codehaus.jackson-jackson-mapper-asl"), //
                 linkBundle("com.google.guava-guava"), //

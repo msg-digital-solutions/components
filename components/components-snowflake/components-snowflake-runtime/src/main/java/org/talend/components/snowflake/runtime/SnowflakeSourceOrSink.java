@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.talend.components.api.component.runtime.SourceOrSink;
 import org.talend.components.api.container.RuntimeContainer;
 import org.talend.components.api.properties.ComponentProperties;
+import org.talend.components.common.avro.AvroTool;
 import org.talend.components.common.avro.JDBCTableMetadata;
 import org.talend.components.common.tableaction.TableAction;
 import org.talend.components.snowflake.SnowflakeConnectionProperties;
@@ -355,9 +356,9 @@ public class SnowflakeSourceOrSink extends SnowflakeRuntime implements SourceOrS
         if (addNullable) {
             final Schema schema = SchemaBuilder.unionOf().nullType().and().type(type).endUnion();
 
-            field = new Schema.Field(se.name(), schema, se.doc(), se.defaultVal());
+            field = AvroTool.cloneAvroFieldWithCustomSchema(se, schema);
         } else {
-            field = new Schema.Field(se.name(), type, se.doc(), se.defaultVal());
+            field = AvroTool.cloneAvroFieldWithCustomSchema(se, type);
         }
         se.getObjectProps().entrySet().forEach(e -> field.addProp(e.getKey(), e.getValue()));
         return field;

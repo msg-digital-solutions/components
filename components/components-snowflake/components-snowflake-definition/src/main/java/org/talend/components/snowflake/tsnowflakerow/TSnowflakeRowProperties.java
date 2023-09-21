@@ -23,6 +23,7 @@ import org.apache.avro.Schema.Field;
 import org.apache.commons.lang3.StringUtils;
 import org.talend.components.api.component.Connector;
 import org.talend.components.api.component.PropertyPathConnector;
+import org.talend.components.common.avro.AvroTool;
 import org.talend.components.common.ComponentConstants;
 import org.talend.components.common.SchemaProperties;
 import org.talend.components.snowflake.SnowflakeGuessSchemaProperties;
@@ -172,8 +173,7 @@ public class TSnowflakeRowProperties extends SnowflakeGuessSchemaProperties {
         Schema newSchema = Schema.createRecord("rejectOutput", schema.getDoc(), schema.getNamespace(), schema.isError());
         List<Schema.Field> copyFieldList = new ArrayList<>();
         for (Schema.Field se : schema.getFields()) {
-            Schema.Field field = new Schema.Field(se.name(), se.schema(), se.doc(), se.defaultVal(), se.order());
-            field.getObjectProps().putAll(se.getObjectProps());
+            Schema.Field field = AvroTool.cloneAvroFieldWithOrder(se);
             for (Map.Entry<String, Object> entry : se.getObjectProps().entrySet()) {
                 field.addProp(entry.getKey(), entry.getValue());
             }

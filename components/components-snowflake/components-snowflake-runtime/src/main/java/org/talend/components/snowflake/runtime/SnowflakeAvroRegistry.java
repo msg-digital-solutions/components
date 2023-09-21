@@ -184,7 +184,8 @@ public class SnowflakeAvroRegistry extends JDBCAvroRegistry {
 
     protected Field wrap(String name, Schema base, boolean nullable, Object defaultValue) {
         Schema schema = nullable ? SchemaBuilder.builder().nullable().type(base) : base;
-        return new Field(name, schema, null, defaultValue);
+        //should use property to store default value instead of avro default one as that make migration risk
+        return new Field(name, schema, null, null);
     }
 
     @Override

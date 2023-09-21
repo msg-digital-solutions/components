@@ -30,6 +30,7 @@ import org.apache.avro.JsonProperties;
 import org.apache.avro.Schema;
 import org.apache.commons.lang3.StringUtils;
 import org.talend.components.api.exception.ComponentException;
+import org.talend.components.common.avro.AvroTool;
 import org.talend.components.netsuite.client.MetaDataSource;
 import org.talend.components.netsuite.client.NetSuiteException;
 import org.talend.components.netsuite.client.NsRef;
@@ -554,9 +555,7 @@ public class NetSuiteDatasetRuntimeImpl implements NetSuiteDatasetRuntime {
      * @return new field
      */
     public static Schema.Field copyField(final Schema.Field sourceField) {
-        Schema.Field field = new Schema.Field(sourceField.name(), sourceField.schema(),
-                sourceField.doc(), sourceField.defaultVal(), sourceField.order());
-        field.getObjectProps().putAll(sourceField.getObjectProps());
+        Schema.Field field = AvroTool.cloneAvroFieldWithOrder(sourceField);
         for (Map.Entry<String, Object> entry : sourceField.getObjectProps().entrySet()) {
             field.addProp(entry.getKey(), entry.getValue());
         }
