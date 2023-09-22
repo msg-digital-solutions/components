@@ -35,6 +35,14 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.talend.components</groupId>
+                <artifactId>components-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.talend.tsbi.java.springboot-bom</groupId>
                 <artifactId>${talend.springboot.bom.artifactId}</artifactId>
                 <version>${talend.springboot.bom.version}</version>
@@ -52,13 +60,6 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>org.talend.components</groupId>
-                <artifactId>components-bom</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
