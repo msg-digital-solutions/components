@@ -5,7 +5,7 @@
     <groupId>org.talend.components</groupId>
     <name>Component Core Aggregator</name>
     <artifactId>components-core-aggregator</artifactId>
-    <version>0.36.30</version>
+    <version>0.36.31-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
