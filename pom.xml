@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.talend.components</groupId>
-    <version>0.28.29</version>
+    <version>0.28.30-SNAPSHOT</version>
     <artifactId>components</artifactId>
     <packaging>pom</packaging>
 
