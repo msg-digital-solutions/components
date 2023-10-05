@@ -78,6 +78,12 @@
             <groupId>org.talend.components</groupId>
             <artifactId>simplefileio-runtime</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.talend.components</groupId>
