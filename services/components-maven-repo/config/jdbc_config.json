@@ -95,7 +95,7 @@
 		"url" : "jdbc:awsathena://AwsRegion=[Region];S3OutputLocation=[Output]",
 		"paths" :
 		[
-			{"path" : "mvn:Athena/AthenaJDBC41/2.0.7"}
+			{"path" : "mvn:Athena/AthenaJDBC42/2.1.1.1000"}
 		]
 
 	}

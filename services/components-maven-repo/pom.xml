@@ -304,10 +304,10 @@
                         </goals>
                         <configuration>
                             <url>
-                                https://s3.amazonaws.com/athena-downloads/drivers/JDBC/SimbaAthenaJDBC_2.0.7/AthenaJDBC41_2.0.7.jar
+                                https://s3.amazonaws.com/athena-downloads/drivers/JDBC/SimbaAthenaJDBC-2.1.1.1000/AthenaJDBC42-2.1.1.1000.jar
                             </url>
-                            <outputFileName>AthenaJDBC41-2.0.7.jar</outputFileName>
-                            <outputDirectory>${project.build.directory}/mvn-repo/Athena/AthenaJDBC41/2.0.7/
+                            <outputFileName>AthenaJDBC42-2.1.1.1000.jar</outputFileName>
+                            <outputDirectory>${project.build.directory}/mvn-repo/Athena/AthenaJDBC42/2.1.1.1000/
                             </outputDirectory>
                         </configuration>
                     </execution>
