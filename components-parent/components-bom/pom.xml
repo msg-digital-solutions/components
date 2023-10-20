@@ -12,7 +12,7 @@
         <components.version>0.38.0-SNAPSHOT</components.version>
         <components-api-service-rest.version>0.28.14</components-api-service-rest.version>
         <daikon.version>7.1.16</daikon.version>
-        <json-io.version>4.13.1-TALEND</json-io.version>
+        <json-io.version>4.14.0-TALEND</json-io.version>
         <!-- repositories -->
         <talend_snapshots_deployment>https://artifacts-oss.talend.com/nexus/content/repositories/TalendOpenSourceSnapshot/</talend_snapshots_deployment>
         <talend.snapshots.repo>https://artifacts-oss.talend.com/nexus/content/repositories/TalendOpenSourceSnapshot/</talend.snapshots.repo>
