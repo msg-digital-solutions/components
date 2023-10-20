@@ -190,6 +190,7 @@
                                     </extraargs>
                                 </wsdlOption>
                             </wsdlOptions>
+                            <additionalJvmArgs>-Djava.util.logging.config.file=${basedir}/logging.properties</additionalJvmArgs>
                         </configuration>
                         <goals>
                             <goal>wsdl2java</goal>
