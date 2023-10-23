@@ -13,10 +13,14 @@
 
 package org.talend.components.simplefileio.runtime.s3;
 
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.talend.shaded.com.amazonaws.auth.AWSCredentials;
+import com.talend.shaded.com.amazonaws.auth.BasicAWSCredentials;
+import com.talend.shaded.com.amazonaws.services.s3.AmazonS3;
+import com.talend.shaded.com.amazonaws.services.s3.AmazonS3Client;
+import com.talend.shaded.org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider;
+import com.talend.shaded.org.apache.hadoop.fs.s3a.Constants;
+import com.talend.shaded.org.apache.hadoop.fs.s3a.S3AEncryptionMethods;
+import com.talend.shaded.org.apache.hadoop.fs.s3a.S3AFileSystem;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -25,28 +29,18 @@ import org.talend.components.simplefileio.s3.S3DatasetProperties;
 import org.talend.components.simplefileio.s3.S3DatastoreProperties;
 import org.talend.components.simplefileio.s3.S3RegionUtil;
 
-import com.talend.shaded.com.amazonaws.auth.AWSCredentialsProviderChain;
-import com.talend.shaded.com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.talend.shaded.com.amazonaws.services.s3.AmazonS3;
-import com.talend.shaded.com.amazonaws.services.s3.AmazonS3Client;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.BasicAWSCredentialsProvider;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.Constants;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.S3AEncryptionMethods;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.S3AFileSystem;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class S3Connection {
 
     public static AmazonS3 createClient(S3DatastoreProperties properties) {
-        AWSCredentialsProviderChain credentials;
+        AWSCredentials credentials;
         if (properties.specifyCredentials.getValue()) {
-            credentials = new AWSCredentialsProviderChain(new BasicAWSCredentialsProvider(properties.accessKey.getValue(),
-                    properties.secretKey.getValue()), new DefaultAWSCredentialsProviderChain(),
-                    new AnonymousAWSCredentialsProvider());
+            credentials = new BasicAWSCredentials(properties.accessKey.getValue(), properties.secretKey.getValue());
         } else {
-            // do not be polluted by hidden accessKey/secretKey
-            credentials = new AWSCredentialsProviderChain(new DefaultAWSCredentialsProviderChain(),
-                    new AnonymousAWSCredentialsProvider());
+            credentials = new AnonymousAWSCredentialsProvider().getCredentials();
         }
         AmazonS3 conn = new AmazonS3Client(credentials);
         return conn;
@@ -88,7 +82,7 @@ public class S3Connection {
         conf.set(Constants.MULTIPART_SIZE, String.valueOf(Constants.DEFAULT_MULTIPART_SIZE));
         conf.set(Constants.FS_S3A_BLOCK_SIZE, String.valueOf(S3AFileSystem.DEFAULT_BLOCKSIZE));
         conf.set(Constants.MAX_THREADS, String.valueOf(Constants.DEFAULT_MAX_THREADS));
-        conf.set(Constants.CORE_THREADS, String.valueOf(Constants.DEFAULT_CORE_THREADS));
+        conf.set("fs.s3a.threads.core", String.valueOf(15));
         conf.set(Constants.MAX_TOTAL_TASKS, String.valueOf(Constants.DEFAULT_MAX_TOTAL_TASKS));
       
         if (properties.encryptDataAtRest.getValue()) {
