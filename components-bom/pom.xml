@@ -17,6 +17,7 @@
     <name>Component BOM</name>
     <properties>
         <daikon.version>6.8.4</daikon.version>
+        <json-io.version>4.14.0-TALEND</json-io.version>
 
         <!-- repositories -->
         <talend_snapshots_deployment>
@@ -1173,6 +1174,11 @@
                 <artifactId>crypto-utils</artifactId>
                 <version>${daikon.version}</version>
                 <classifier>tests</classifier>
+            </dependency>
+            <dependency>
+                <groupId>com.cedarsoftware</groupId>
+                <artifactId>json-io</artifactId>
+                <version>${json-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.avro</groupId>
