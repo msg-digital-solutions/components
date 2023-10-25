@@ -34,8 +34,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class JdbcRuntimeUtils {
@@ -80,6 +82,16 @@ public class JdbcRuntimeUtils {
                 setProperty("allowLocalInfile", "false"); // MariaDB
             }
         }};
+
+        String[] variables = {"socksProxySet", "socksProxyHost", "socksProxyPort", "java.net.socks.username", "java.net.socks.password"};
+        final Map<String, String> env = System.getenv();
+        for (String variable : variables) {
+            final String value = env.get(variable);
+            if(value!= null){
+                System.setProperty(variable,value);
+            }
+        }
+
         return java.sql.DriverManager.getConnection(setting.getJdbcUrl(), properties);
     }
     
