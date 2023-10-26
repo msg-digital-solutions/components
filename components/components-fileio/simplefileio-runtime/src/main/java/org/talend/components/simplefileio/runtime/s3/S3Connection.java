@@ -71,14 +71,30 @@ public class S3Connection {
             // do not be polluted by hidden accessKey/secretKey
             conf.set(Constants.ACCESS_KEY, properties.accessKey.getValue());
             conf.set(Constants.SECRET_KEY, properties.secretKey.getValue());
+            String default_auth_chain = "com.talend.shaded.org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider,com.talend.shaded.com.amazonaws.auth.InstanceProfileCredentialsProvider,com.talend.shaded.org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider";
+            conf.set(Constants.AWS_CREDENTIALS_PROVIDER, default_auth_chain);
+
         }
     }
 
     public static void setS3Configuration(ExtraHadoopConfiguration conf, S3DatasetProperties properties) {
         String endpoint = getEndpoint(properties);
         conf.set(Constants.ENDPOINT, endpoint);
+        // seems since hadoop 3.x.x, core-default provide some parameter to decide s3a filesystem,
+        // need to overwrite the key-value to set class as we repackage org.apache.hadoop.fs.s3a.* package
+        // and why we need to repackage org.apache.hadoop.fs.s3a.* too? as avoid the conflict with other aws jar
+        conf.set("fs.s3a.impl", "com.talend.shaded.org.apache.hadoop.fs.s3a.S3AFileSystem");
+        conf.set("fs.s3a.metadatastore.impl", "com.talend.shaded.org.apache.hadoop.fs.s3a.s3guard.NullMetadataStore");
+        conf.set("fs.viewfs.overload.scheme.target.s3a.impl", "com.talend.shaded.org.apache.hadoop.fs.s3a.S3AFileSystem");
+        conf.set("fs.s3a.assumed.role.credentials.provider",
+                "com.talend.shaded.org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
+        conf.set("fs.AbstractFileSystem.s3a.impl", "com.talend.shaded.org.apache.hadoop.fs.s3a.S3A");
+        conf.set("mapreduce.outputcommitter.factory.scheme.s3a",
+                "com.talend.shaded.org.apache.hadoop.fs.s3a.commit.S3ACommitterFactory");
+
+        conf.set(Constants.S3_CLIENT_FACTORY_IMPL, "org.talend.components.simplefileio.runtime.s3.S3ClientFactory");
         //need to it?
-        //conf.set("fs.s3a.experimental.input.fadvise", "random");
+        conf.set("fs.s3a.experimental.input.fadvise", "random");
         conf.set(Constants.MULTIPART_SIZE, String.valueOf(Constants.DEFAULT_MULTIPART_SIZE));
         conf.set(Constants.FS_S3A_BLOCK_SIZE, String.valueOf(S3AFileSystem.DEFAULT_BLOCKSIZE));
         conf.set(Constants.MAX_THREADS, String.valueOf(Constants.DEFAULT_MAX_THREADS));
