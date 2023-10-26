@@ -184,7 +184,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
         }
         IndexedRecord input = factory.convertToAvro(datum);
         Property<OutputAction> outputAction = sprops.outputAction;
-        LOGGER.info(MESSAGES.getMessage("info.startMessage",
+        LOGGER.trace(MESSAGES.getMessage("info.startMessage",
                 sprops.outputAction.getPossibleValuesDisplayName(outputAction.getValue()).toLowerCase(), dataCount));
         switch (outputAction.getValue()) {
         case INSERT:
@@ -368,7 +368,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
                     for (int i = 0; i < saveResults.length; i++) {
                         ++batch_idx;
                         if (saveResults[i].getSuccess()) {
-                            handleSuccess(insertItems.get(i), saveResults[i].getId(), null);
+                            handleSuccess(insertItems.get(i), saveResults[i].getId(), null, -saveResults.length + i);
                         } else {
                             handleReject(insertItems.get(i), saveResults[i].getErrors(), changedItemKeys, batch_idx);
                         }
@@ -413,7 +413,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
                     for (int i = 0; i < saveResults.length; i++) {
                         ++batch_idx;
                         if (saveResults[i].getSuccess()) {
-                            handleSuccess(updateItems.get(i), saveResults[i].getId(), null);
+                            handleSuccess(updateItems.get(i), saveResults[i].getId(), null, -saveResults.length + i);
                         } else {
                             handleReject(updateItems.get(i), saveResults[i].getErrors(), changedItemKeys, batch_idx);
                         }
@@ -462,9 +462,9 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
                         ++batch_idx;
                         if (upsertResults[i].getSuccess()) {
                             if (upsertResults[i].getCreated()) {
-                                handleSuccess(upsertItems.get(i), upsertResults[i].getId(), "created");
+                                handleSuccess(upsertItems.get(i), upsertResults[i].getId(), "created", -upsertResults.length + i);
                             } else {
-                                handleSuccess(upsertItems.get(i), upsertResults[i].getId(), "updated");
+                                handleSuccess(upsertItems.get(i), upsertResults[i].getId(), "updated", -upsertResults.length + i);
                             }
                         } else {
                             handleReject(upsertItems.get(i), upsertResults[i].getErrors(), changedItemKeys, batch_idx);
@@ -481,7 +481,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
 
     }
 
-    private void handleSuccess(IndexedRecord input, String id, String status) {
+    private void handleSuccess(IndexedRecord input, String id, String status, int dataCountOffset) {
         successCount++;
         Schema outSchema = sprops.schemaFlow.schema.getValue();
         if (outSchema == null || outSchema.getFields().size() == 0) {
@@ -526,7 +526,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
             }
             successfulWrites.add(successful);
         }
-        LOGGER.info(MESSAGES.getMessage("info.successfulRecord", getPastForm(sprops.outputAction.getValue()), dataCount));
+        LOGGER.trace(MESSAGES.getMessage("info.successfulRecord", getPastForm(sprops.outputAction.getValue()), dataCount + dataCountOffset));
     }
 
     private void handleReject(IndexedRecord input, Error[] resultErrors, String[] changedItemKeys, int batchIdx)
@@ -657,7 +657,7 @@ final class SalesforceWriter implements WriterWithFeedback<Result, IndexedRecord
                     for (int i = 0; i < dr.length; i++) {
                         ++batch_idx;
                         if (dr[i].getSuccess()) {
-                            handleSuccess(deleteItems.get(i), dr[i].getId(), null);
+                            handleSuccess(deleteItems.get(i), dr[i].getId(), null, -dr.length + i);
                         } else {
                             handleReject(deleteItems.get(i), dr[i].getErrors(), changedItemKeys, batch_idx);
                         }
