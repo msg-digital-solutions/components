@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.talend.shaded.com.amazonaws.auth.*;
+import com.talend.shaded.org.apache.hadoop.fs.s3a.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -25,23 +27,15 @@ import org.talend.components.simplefileio.s3.S3DatasetProperties;
 import org.talend.components.simplefileio.s3.S3DatastoreProperties;
 import org.talend.components.simplefileio.s3.S3RegionUtil;
 
-import com.talend.shaded.com.amazonaws.auth.AWSCredentialsProviderChain;
-import com.talend.shaded.com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.talend.shaded.com.amazonaws.services.s3.AmazonS3;
 import com.talend.shaded.com.amazonaws.services.s3.AmazonS3Client;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.BasicAWSCredentialsProvider;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.Constants;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.S3AEncryptionMethods;
-import com.talend.shaded.org.apache.hadoop.fs.s3a.S3AFileSystem;
 
 public class S3Connection {
 
     public static AmazonS3 createClient(S3DatastoreProperties properties) {
         AWSCredentialsProviderChain credentials;
         if (properties.specifyCredentials.getValue()) {
-            credentials = new AWSCredentialsProviderChain(new BasicAWSCredentialsProvider(properties.accessKey.getValue(),
-                    properties.secretKey.getValue()), new DefaultAWSCredentialsProviderChain(),
+            credentials = new AWSCredentialsProviderChain(new AWSStaticCredentialsProvider(new BasicAWSCredentials(properties.accessKey.getValue(), properties.secretKey.getValue())), new DefaultAWSCredentialsProviderChain(),
                     new AnonymousAWSCredentialsProvider());
         } else {
             // do not be polluted by hidden accessKey/secretKey
@@ -81,6 +75,23 @@ public class S3Connection {
     }
 
     public static void setS3Configuration(ExtraHadoopConfiguration conf, S3DatasetProperties properties) {
+
+        // seems since hadoop 3.x.x, core-default provide some parameter to decide s3a filesystem,
+        // need to overwrite the key-value to set class as we repackage org.apache.hadoop.fs.s3a.* package
+        // and why we need to repackage org.apache.hadoop.fs.s3a.* too? as avoid the conflict with other aws jar
+        conf.set("fs.s3a.impl", "com.talend.shaded.org.apache.hadoop.fs.s3a.S3AFileSystem");
+        conf.set("fs.s3a.metadatastore.impl", "com.talend.shaded.org.apache.hadoop.fs.s3a.s3guard.NullMetadataStore");
+        conf.set("fs.viewfs.overload.scheme.target.s3a.impl", "com.talend.shaded.org.apache.hadoop.fs.s3a.S3AFileSystem");
+        conf.set("fs.s3a.assumed.role.credentials.provider",
+                "com.talend.shaded.org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
+        conf.set("fs.AbstractFileSystem.s3a.impl", "com.talend.shaded.org.apache.hadoop.fs.s3a.S3A");
+        conf.set("mapreduce.outputcommitter.factory.scheme.s3a",
+                "com.talend.shaded.org.apache.hadoop.fs.s3a.commit.S3ACommitterFactory");
+        String default_auth_chain = "com.talend.shaded.org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider," +
+                "com.talend.shaded.com.amazonaws.auth.InstanceProfileCredentialsProvider," +
+                "com.talend.shaded.org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider";
+        conf.set(Constants.AWS_CREDENTIALS_PROVIDER, default_auth_chain);
+
         String endpoint = getEndpoint(properties);
         conf.set(Constants.ENDPOINT, endpoint);
         //need to it?
@@ -88,7 +99,6 @@ public class S3Connection {
         conf.set(Constants.MULTIPART_SIZE, String.valueOf(Constants.DEFAULT_MULTIPART_SIZE));
         conf.set(Constants.FS_S3A_BLOCK_SIZE, String.valueOf(S3AFileSystem.DEFAULT_BLOCKSIZE));
         conf.set(Constants.MAX_THREADS, String.valueOf(Constants.DEFAULT_MAX_THREADS));
-        conf.set(Constants.CORE_THREADS, String.valueOf(Constants.DEFAULT_CORE_THREADS));
         conf.set(Constants.MAX_TOTAL_TASKS, String.valueOf(Constants.DEFAULT_MAX_TOTAL_TASKS));
       
         if (properties.encryptDataAtRest.getValue()) {
