@@ -76,4 +76,24 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <trimStackTrace>false</trimStackTrace>
+                    <environmentVariables>
+                        <LC_ALL>en_US.UTF-8</LC_ALL>
+                    </environmentVariables>
+                    <argLine>
+                        @{argLine}
+                        -Duser.language=en_US -Duser.country=US
+                        -Dfile.encoding=${project.build.sourceEncoding}
+                        --add-opens java.base/java.net=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
