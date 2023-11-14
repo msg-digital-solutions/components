@@ -22,7 +22,8 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.annotation.Nullable;
+
+import jakarta.validation.constraints.Null;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.annotations.Experimental;
 import org.apache.beam.sdk.coders.Coder;
@@ -94,12 +95,12 @@ public class Write {
      */
     public static class Bound<T> extends PTransform<PCollection<T>, PDone> {
         private final Sink<T> sink;
-        @Nullable
+        @Null
         private final PTransform<PCollection<T>, PCollectionView<Integer>> computeNumShards;
 
         private Bound(
                 Sink<T> sink,
-                @Nullable PTransform<PCollection<T>, PCollectionView<Integer>> computeNumShards) {
+                @Null PTransform<PCollection<T>, PCollectionView<Integer>> computeNumShards) {
             this.sink = sink;
             this.computeNumShards = computeNumShards;
         }
@@ -139,7 +140,7 @@ public class Write {
          * {@link #withSharding(PTransform)}), or runner-determined (by {@link
          * #withRunnerDeterminedSharding()}.
          */
-        @Nullable
+        @Null
         public PTransform<PCollection<T>, PCollectionView<Integer>> getSharding() {
             return computeNumShards;
         }

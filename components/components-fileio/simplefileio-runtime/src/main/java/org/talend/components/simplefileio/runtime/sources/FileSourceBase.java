@@ -16,11 +16,12 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import jakarta.validation.constraints.Null;
 import org.apache.beam.sdk.coders.Coder;
 import org.apache.beam.sdk.coders.KvCoder;
 import org.apache.beam.sdk.io.BoundedSource;
@@ -127,7 +128,7 @@ public abstract class FileSourceBase<K, V, SourceT extends FileSourceBase<K, V, 
             return Lists.transform(computeSplits(splitSize), new Function<InputSplit, BoundedSource<KV<K, V>>>() {
 
                 @Override
-                public BoundedSource<KV<K, V>> apply(@Nullable InputSplit inputSplit) {
+                public BoundedSource<KV<K, V>> apply(@Null InputSplit inputSplit) {
                     return createSourceForSplit(new SerializableSplit(inputSplit));
                 }
             });

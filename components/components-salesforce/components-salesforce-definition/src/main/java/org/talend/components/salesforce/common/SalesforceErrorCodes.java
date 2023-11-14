@@ -12,11 +12,9 @@
 // ============================================================================
 package org.talend.components.salesforce.common;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-
 import java.util.Collection;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.talend.daikon.exception.ExceptionContext;
 import org.talend.daikon.exception.error.DefaultErrorCode;
 import org.talend.daikon.exception.error.ErrorCode;
@@ -26,12 +24,12 @@ import org.talend.daikon.exception.error.ErrorCode;
  */
 public enum SalesforceErrorCodes implements ErrorCode {
 
-    UNABLE_TO_RETRIEVE_MODULES(SC_INTERNAL_SERVER_ERROR),
-    UNABLE_TO_RETRIEVE_MODULE_FIELDS(SC_INTERNAL_SERVER_ERROR),
+    UNABLE_TO_RETRIEVE_MODULES(HttpServletResponse.SC_INTERNAL_SERVER_ERROR),
+    UNABLE_TO_RETRIEVE_MODULE_FIELDS(HttpServletResponse.SC_INTERNAL_SERVER_ERROR),
 
-    ERROR_IN_BULK_QUERY_PROCESSING(SC_BAD_REQUEST, ExceptionContext.KEY_MESSAGE),
+    ERROR_IN_BULK_QUERY_PROCESSING(HttpServletResponse.SC_BAD_REQUEST, ExceptionContext.KEY_MESSAGE),
 
-    INVALID_SOQL(SC_BAD_REQUEST, ExceptionContext.KEY_MESSAGE);
+    INVALID_SOQL(HttpServletResponse.SC_BAD_REQUEST, ExceptionContext.KEY_MESSAGE);
 
     private DefaultErrorCode errorCodeDelegate;
 

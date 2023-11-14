@@ -15,9 +15,9 @@
     <name>Component Parent POM</name>
 
     <properties>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <docker.removeVolumes>true</docker.removeVolumes>
@@ -36,7 +36,7 @@
         <!-- plugin versions -->
         <tycho-p2-extras-plugin.version>0.26.0</tycho-p2-extras-plugin.version>
         <docker-maven-plugin.version>0.34.1</docker-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>3.0.0</maven-assembly-plugin.version>
         <maven-bundle-plugin.version>4.1.0</maven-bundle-plugin.version>
@@ -252,7 +252,12 @@
                     <environmentVariables>
                         <LC_ALL>en_US.UTF-8</LC_ALL>
                     </environmentVariables>
-                    <argLine>-Duser.language=en_US -Duser.country=US</argLine>
+                    <argLine>
+                        @{argLine}
+                        -Duser.language=en_US -Duser.country=US
+                        -Dfile.encoding=${project.build.sourceEncoding}
+                        --add-opens java.base/java.net=ALL-UNNAMED
+                    </argLine>
                 </configuration>
             </plugin>
             <plugin>

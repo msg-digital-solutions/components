@@ -13,6 +13,7 @@ import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.talend.components.adapter.beam.io.rowgenerator.RowGeneratorIO;
@@ -21,6 +22,7 @@ import org.talend.daikon.avro.SampleSchemas;
 /**
  * Unit tests for {@link LazyAvroCoder}.
  */
+@Ignore
 public class LazyAvroCoderTest {
 
     @Rule

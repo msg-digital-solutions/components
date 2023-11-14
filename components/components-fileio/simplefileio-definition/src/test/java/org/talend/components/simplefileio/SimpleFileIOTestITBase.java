@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.components.simplefileio;
 
-import javax.inject.Inject;
-
+import jakarta.inject.Inject;
 import org.junit.Test;
 import org.talend.components.api.test.AbstractComponentTest2;
 import org.talend.components.common.dataset.DatasetDefinition;

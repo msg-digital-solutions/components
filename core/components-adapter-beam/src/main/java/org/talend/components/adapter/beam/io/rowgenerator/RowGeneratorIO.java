@@ -20,10 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Random;
 
-import javax.annotation.Nullable;
-
+import jakarta.validation.constraints.Null;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.IndexedRecord;
 import org.apache.beam.sdk.coders.AvroCoder;
@@ -71,7 +69,7 @@ public class RowGeneratorIO {
         /** Serialized as a String in jsonSchema. */
         private transient Schema schema = null;
 
-        @Nullable
+        @Null
         abstract String getJsonSchema();
 
         /**
@@ -80,7 +78,7 @@ public class RowGeneratorIO {
          * 
          * @return the seed used to generate "deterministic" random rows.
          */
-        @Nullable
+        @Null
         abstract Long getSeed();
 
         abstract long getRows();

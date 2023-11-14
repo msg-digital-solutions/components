@@ -15,8 +15,7 @@ package org.talend.components.service.rest.serialization;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import javax.inject.Inject;
-
+import jakarta.inject.Inject;
 import org.springframework.stereotype.Component;
 import org.talend.daikon.definition.Definition;
 import org.talend.daikon.definition.service.DefinitionRegistryService;

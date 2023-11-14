@@ -5,9 +5,9 @@ import static org.springframework.web.servlet.DispatcherServlet.LOCALE_RESOLVER_
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.LocaleResolver;
 

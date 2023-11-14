@@ -17,7 +17,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import javax.annotation.Nullable;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -28,6 +27,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
+import jakarta.validation.constraints.Null;
 import org.apache.beam.sdk.coders.Coder;
 import org.apache.beam.sdk.coders.KvCoder;
 import org.apache.beam.sdk.coders.VoidCoder;
@@ -227,7 +228,7 @@ public class ConfigurableHDFSFileSource<K, V> extends BoundedSource<KV<K, V>> {
                     new Function<InputSplit, BoundedSource<KV<K, V>>>() {
 
                         @Override
-                        public BoundedSource<KV<K, V>> apply(@Nullable InputSplit inputSplit) {
+                        public BoundedSource<KV<K, V>> apply(@Null InputSplit inputSplit) {
                             return new ConfigurableHDFSFileSource<>(filepattern, formatClass, keyClass, valueClass,
                                     new SerializableSplit(
                                             inputSplit));
