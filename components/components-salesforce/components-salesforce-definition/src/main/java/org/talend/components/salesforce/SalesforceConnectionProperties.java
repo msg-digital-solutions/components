@@ -260,7 +260,14 @@ public class SalesforceConnectionProperties extends ComponentPropertiesImpl
                 case OAuth:
                     refreshOauth2Properties(form);
                     form.getWidget(userPassword).setHidden(true);
-                    form.getWidget(sslProperties).setHidden(true);
+                    form.getWidget(sslProperties).setHidden(false);
+                    sslForm = form.getChildForm(sslProperties.getName());
+                    if (sslForm != null) {
+                        sslForm.getWidget(sslProperties.mutualAuth.getName()).setVisible(true);
+                        //Use same keystore with JWT Auth
+                        sslForm.getWidget(sslProperties.keyStorePath.getName()).setVisible(false);
+                        sslForm.getWidget(sslProperties.keyStorePwd.getName()).setVisible(false);
+                    }
                     break;
                 default:
                     throw new ComponentException(
