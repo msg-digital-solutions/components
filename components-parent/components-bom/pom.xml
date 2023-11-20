@@ -176,7 +176,7 @@
         <org.codehaus.janino.commons-compiler.version>${org.codehaus.janino.version}</org.codehaus.janino.commons-compiler.version>
         <org.codehaus.janino.janino.version>${org.codehaus.janino.version}</org.codehaus.janino.janino.version>
         <org.codehaus.janino.version>2.7.6</org.codehaus.janino.version>
-        <org.json.version>20230227</org.json.version>
+        <org.json.version>20231013</org.json.version>
         <org.reflections.version>0.9.11</org.reflections.version>
         <org.osgi.version>5.0.0</org.osgi.version>
         <oro.version>2.0.8</oro.version>
