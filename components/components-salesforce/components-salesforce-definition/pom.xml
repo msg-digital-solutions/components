@@ -9,7 +9,6 @@
         <relativePath>../../../components-parent/pom.xml</relativePath>
     </parent>
     <properties>
-        <jetty.version>9.2.19.v20160908</jetty.version>
         <coverage.sonar.reportRoot>${project.basedir}/..</coverage.sonar.reportRoot>
     </properties>
 
@@ -89,27 +88,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-http</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-io</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
 

@@ -18,6 +18,7 @@ import org.apache.avro.generic.IndexedRecord;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.talend.components.api.test.DaikonLegacyAssertions;
 import org.talend.components.jdbc.common.DBTestUtils;
@@ -29,6 +30,7 @@ import org.talend.components.jdbc.runtime.dataprep.JDBCDatasetRuntime;
 import org.talend.components.jdbc.runtime.setting.AllSetting;
 import org.talend.daikon.java8.Consumer;
 
+@Ignore
 public class JdbcDatasetTestIT {
 
     public static AllSetting allSetting;

@@ -137,7 +137,6 @@
         <jersey-server.version>1.13</jersey-server.version>
         <jersey-test-framework-core.version>1.13</jersey-test-framework-core.version>
         <jersey-test-framework-grizzly2.version>1.13</jersey-test-framework-grizzly2.version>
-        <jetty.version>9.4.52.v20230823</jetty.version>
         <jline.version>2.12</jline.version>
         <jmespath-java.version>${aws.version}</jmespath-java.version>
         <joda-time.version>2.8.2</joda-time.version>
@@ -148,7 +147,7 @@
         <jsr305.version>1.3.9</jsr305.version>
         <junit.version>4.13.2</junit.version>
         <littleproxy.version>1.1.0</littleproxy.version>
-        <log4j.version>2.17.2</log4j.version>
+        <log4j.version>2.22.0</log4j.version>
         <marketo-soap-sdk.version>3.1</marketo-soap-sdk.version>
         <mockito-core.version>5.7.0</mockito-core.version>
         <netty.version>4.1.94.Final</netty.version>
@@ -851,76 +850,6 @@
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>stax2-api</artifactId>
                 <version>${stax2-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-annotations</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-client</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-continuation</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-http</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-io</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-plus</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-security</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-servlet</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-servlets</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-webapp</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-xml</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-util-ajax</artifactId>
-                <version>${jetty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>

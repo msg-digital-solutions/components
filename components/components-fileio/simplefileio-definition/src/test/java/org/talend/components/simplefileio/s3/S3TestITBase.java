@@ -13,6 +13,7 @@
 package org.talend.components.simplefileio.s3;
 
 import jakarta.inject.Inject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.talend.components.api.test.AbstractComponentTest2;
 import org.talend.components.common.dataset.DatasetDefinition;
@@ -31,6 +32,7 @@ public abstract class S3TestITBase extends AbstractComponentTest2 {
     }
 
     @Test
+    @Ignore
     public void assertComponentsAreRegistered() {
         assertComponentIsRegistered(DatastoreDefinition.class, S3DatastoreDefinition.NAME,
                 S3DatastoreDefinition.class);

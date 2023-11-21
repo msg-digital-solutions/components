@@ -32,6 +32,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.talend.components.api.component.runtime.Reader;
 import org.talend.components.api.component.runtime.WriteOperation;
 import org.talend.components.api.exception.ComponentException;
