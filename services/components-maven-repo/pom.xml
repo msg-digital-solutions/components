@@ -120,16 +120,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.jetty</groupId>-->
-<!--            <artifactId>jetty-util-ajax</artifactId>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>*</groupId>-->
-<!--                    <artifactId>*</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
 
         <!--redshift jdbc dependencies-->
         <dependency>
@@ -166,7 +156,7 @@
             </exclusions>
         </dependency>
 
-        
+
     </dependencies>
 
     <repositories>
@@ -275,6 +265,12 @@
                                 <extraArtifact>net.sourceforge.jtds:jtds:${jtds.driver.version}:jar</extraArtifact>
                                 <extraArtifact>net.snowflake:snowflake-jdbc:${snowflake.driver.version}:jar
                                 </extraArtifact>
+
+                                <!-- HttpClient5 -->
+                                <extraArtifact>org.apache.httpcomponents.client5:httpclient5:5.1.3:jar</extraArtifact>
+                                <extraArtifact>org.apache.httpcomponents.core5:httpcore5:5.1.3:jar</extraArtifact>
+                                <extraArtifact>org.apache.httpcomponents.client5:httpclient5:5.2:jar</extraArtifact>
+                                <extraArtifact>org.apache.httpcomponents.core5:httpcore5:5.2:jar</extraArtifact>
 
                                 <!--
                                     redshift jdbc have 3 aws jars dependencies, that will introduce CVE jars, so use pom dependencies way instead here
