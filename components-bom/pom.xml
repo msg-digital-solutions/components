@@ -166,7 +166,7 @@
         <powermock-module-junit4.version>${powermock-api-mockito.version}</powermock-module-junit4.version>
         <protobuf-java.version>3.21.7</protobuf-java.version>
         <scala.version>2.13.10</scala.version>
-        <slf4j.version>1.7.36</slf4j.version>
+        <slf4j.version>2.0.9</slf4j.version>
         <snakeyaml.version>2.0</snakeyaml.version>
         <snappy-java.version>1.1.10.1</snappy-java.version>
         <snowflake-jdbc.version>3.13.30</snowflake-jdbc.version>
@@ -188,7 +188,8 @@
         <zookeeper.version>3.4.14</zookeeper.version>
         <woodstox.version>6.4.0</woodstox.version>
         <jettison.version>1.5.4</jettison.version>
-        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <!-- see https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#jetty-->
+        <jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
         <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
         <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
@@ -903,6 +904,11 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
             <dependency>
