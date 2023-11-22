@@ -142,6 +142,7 @@ public class SalesforceInputBulkV2ReaderTestIT extends SalesforceTestBase {
             // We can emulate this like calling close the job second time.
             reader.close();
         } catch (Throwable t) {
+            LOGGER.error("Caught an error:", t);
             Assert.fail("This test shouldn't throw any errors, since we're closing already closed job");
         }
 
