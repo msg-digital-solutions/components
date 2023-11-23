@@ -28,7 +28,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import jakarta.validation.constraints.Null;
+import jakarta.annotation.Nullable;
 import org.apache.beam.sdk.coders.Coder;
 import org.apache.beam.sdk.coders.KvCoder;
 import org.apache.beam.sdk.coders.VoidCoder;
@@ -228,7 +228,7 @@ public class ConfigurableHDFSFileSource<K, V> extends BoundedSource<KV<K, V>> {
                     new Function<InputSplit, BoundedSource<KV<K, V>>>() {
 
                         @Override
-                        public BoundedSource<KV<K, V>> apply(@Null InputSplit inputSplit) {
+                        public BoundedSource<KV<K, V>> apply(@Nullable InputSplit inputSplit) {
                             return new ConfigurableHDFSFileSource<>(filepattern, formatClass, keyClass, valueClass,
                                     new SerializableSplit(
                                             inputSplit));

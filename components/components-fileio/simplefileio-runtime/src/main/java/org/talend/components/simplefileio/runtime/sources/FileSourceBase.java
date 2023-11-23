@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import jakarta.validation.constraints.Null;
+import jakarta.annotation.Nullable;
 import org.apache.beam.sdk.coders.Coder;
 import org.apache.beam.sdk.coders.KvCoder;
 import org.apache.beam.sdk.io.BoundedSource;
@@ -128,7 +128,7 @@ public abstract class FileSourceBase<K, V, SourceT extends FileSourceBase<K, V, 
             return Lists.transform(computeSplits(splitSize), new Function<InputSplit, BoundedSource<KV<K, V>>>() {
 
                 @Override
-                public BoundedSource<KV<K, V>> apply(@Null InputSplit inputSplit) {
+                public BoundedSource<KV<K, V>> apply(@Nullable InputSplit inputSplit) {
                     return createSourceForSplit(new SerializableSplit(inputSplit));
                 }
             });
