@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.components.azurestorage;
 
-import jakarta.inject.Inject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -45,14 +44,12 @@ public abstract class AzureStorageGenericBase extends AbstractComponentTest2 {
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
 
-    @Inject
     DefinitionRegistry testComponentRegistry;
 
     @Override
     public DefinitionRegistryService getDefinitionRegistry() {
         if (testComponentRegistry == null) {
             testComponentRegistry = new DefinitionRegistry();
-
             testComponentRegistry.registerComponentFamilyDefinition(new AzureStorageFamilyDefinition());
         }
         return testComponentRegistry;
