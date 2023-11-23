@@ -13,7 +13,6 @@
 package org.talend.components.simplefileio;
 
 import jakarta.inject.Inject;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.talend.components.api.test.AbstractComponentTest2;
 import org.talend.components.common.dataset.DatasetDefinition;
@@ -34,7 +33,6 @@ public abstract class SimpleFileIOTestITBase extends AbstractComponentTest2 {
     }
 
     @Test
-    @Ignore
     public void assertComponentsAreRegistered() {
         assertComponentIsRegistered(DatastoreDefinition.class, SimpleFileIODatastoreDefinition.NAME,
                 SimpleFileIODatastoreDefinition.class);

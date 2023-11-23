@@ -28,7 +28,6 @@ import org.apache.beam.sdk.testing.TestPipeline;
 import org.apache.beam.sdk.testing.ValidatesRunner;
 import org.apache.beam.sdk.transforms.Count;
 import org.apache.beam.sdk.values.PCollection;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -41,7 +40,6 @@ import org.talend.daikon.avro.SampleSchemas;
  * Unit tests for {@link RowGeneratorIO}.
  */
 @RunWith(JUnit4.class)
-@Ignore
 public class RowGeneratorIOTest {
 
     @Rule
