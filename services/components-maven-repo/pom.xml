@@ -272,6 +272,9 @@
                                 <extraArtifact>org.apache.httpcomponents.client5:httpclient5:5.2:jar</extraArtifact>
                                 <extraArtifact>org.apache.httpcomponents.core5:httpcore5:5.2:jar</extraArtifact>
 
+                                <!-- Netty-->
+                                <extraArtifact>io.netty:netty:3.10.6.Final:jar</extraArtifact>
+
                                 <!--
                                     redshift jdbc have 3 aws jars dependencies, that will introduce CVE jars, so use pom dependencies way instead here
                                 -->
