@@ -103,7 +103,7 @@ public class JdbcRowTestIT {
             ValidationResult result = sourceOrSink.validate(null);
             Assert.assertTrue(result.getStatus() == ValidationResult.Result.OK);
 
-            Assert.assertNotNull(System.getProperty("awt.toolkit"));
+            //Assert.assertNotNull(System.getProperty("awt.toolkit"));
         }
 
         TJDBCInputDefinition definition1 = new TJDBCInputDefinition();

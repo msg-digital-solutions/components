@@ -273,6 +273,12 @@
                             +https://artifacts-oss.talend.com/nexus/content/repositories/TalendOpenSourceSnapshot@snapshots@noreleases@id=talend_nexus,https://artifacts-oss.talend.com/nexus/content/repositories/TalendOpenSourceRelease@id=talrelease
                         </org.ops4j.pax.url.mvn.repositories>
                     </systemProperties>
+                    <argLine>
+                        @{argLine}
+                        -Duser.language=en_US -Duser.country=US
+                        -Dfile.encoding=${project.build.sourceEncoding}
+                        --add-opens java.base/java.net=ALL-UNNAMED
+                    </argLine>
                 </configuration>
                 <executions>
                     <execution>
