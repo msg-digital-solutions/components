@@ -147,6 +147,9 @@ pipeline {
                   "\${GITHUB_TOKEN}"
               """
           }
+
+          echo 'Install tools'
+          sh 'bash --login ci/resources/install-tools.sh'
         }
       }
     }
