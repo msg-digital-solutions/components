@@ -23,7 +23,7 @@
         <avatica.avatica-metrics.version>${avatica.version}</avatica.avatica-metrics.version>
         <avatica.version>1.22.0</avatica.version>
         <antlr4-runtime.version>4.7</antlr4-runtime.version>
-        <avro.version>1.11.2</avro.version>
+        <avro.version>1.11.3</avro.version>
         <aws-java-sdk-cloudwatch.version>${aws.version}</aws-java-sdk-cloudwatch.version>
         <aws-java-sdk-core.version>${aws.version}</aws-java-sdk-core.version>
         <aws-java-sdk-dynamodb.version>${aws.version}</aws-java-sdk-dynamodb.version>
