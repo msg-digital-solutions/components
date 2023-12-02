@@ -29,6 +29,9 @@ import org.talend.components.salesforce.SalesforceConnectionProperties;
 
 import com.sforce.ws.ConnectorConfig;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+
 import static org.talend.components.salesforce.runtime.SalesforceSourceOrSink.updateURLForMutualForAuth;
 
 public class SalesforceOAuthConnection {
@@ -49,18 +52,20 @@ public class SalesforceOAuthConnection {
 
         switch (connection.oauth2FlowType.getValue()) {
         case JWT_Flow:
-            JsonNode accessToken = new SalesforceJwtConnection(connection.oauth2JwtFlow, url).getAccessToken();
+            SalesforceJwtConnection jwtConnection = new SalesforceJwtConnection(connection.oauth2JwtFlow, url, connection.sslProperties.mutualAuth.getValue());
+            JsonNode accessToken = jwtConnection.getAccessToken();
             connect.setServiceEndpoint(getSOAPEndpoint(accessToken.get(Oauth2JwtClient.KEY_ID).asText(), //
                     accessToken.get(Oauth2JwtClient.KEY_TOKEN_TYPE).asText(), //
                     accessToken.get(Oauth2JwtClient.KEY_ACCESS_TOKEN).asText(), //
                     accessToken.get(Oauth2JwtClient.KEY_INSTANCE_URL).asText(), //
-                    apiVersion, connection.sslProperties.mutualAuth.getValue()));
+                    apiVersion, connection.sslProperties.mutualAuth.getValue(),jwtConnection.getSslContext()));
             connect.setSessionId(accessToken.get(Oauth2JwtClient.KEY_ACCESS_TOKEN).asText());
+            connect.setSslContext(jwtConnection.getSslContext());
             break;
         case Implicit_Flow:
             //We already removed this type.
             SalesforceOAuthAccessTokenResponse token = new SalesforceImplicitConnection(connection.oauth, url).getToken();
-            connect.setServiceEndpoint(getSOAPEndpoint(token.getID(), token.getTokenType(), token.getAccessToken(), null, apiVersion, false));
+            connect.setServiceEndpoint(getSOAPEndpoint(token.getID(), token.getTokenType(), token.getAccessToken(), null, apiVersion, false, null));
             connect.setSessionId(token.getAccessToken());
             break;
         default:
@@ -70,14 +75,20 @@ public class SalesforceOAuthConnection {
     }
 
     // it's not necessary for bulk, there is another easy way, looking at genBulkEndpoint
-    private String getSOAPEndpoint(String id, String type, String accessToken, String instanceURL, String version, boolean mutualAuth) {
+    private String getSOAPEndpoint(String id, String type, String accessToken, String instanceURL, String version, boolean mutualAuth, SSLContext sslContext) {
         String endpointURL = null;
         BufferedReader reader = null;
         try {
+            URLConnection idConn;
             if(mutualAuth){
                 id= updateURLForMutualForAuth(id,new URI(instanceURL).getHost());
+                idConn = new URL(id).openConnection();
+                if(sslContext != null) {
+                    ((HttpsURLConnection) idConn).setSSLSocketFactory(sslContext.getSocketFactory());
+                }
+            }else {
+                idConn = new URL(id).openConnection();
             }
-            URLConnection idConn = new URL(id).openConnection();
             idConn.setRequestProperty("Authorization", type + " " + accessToken);
             reader = new BufferedReader(new InputStreamReader(idConn.getInputStream()));
             ObjectMapper objectMapper = new ObjectMapper();
