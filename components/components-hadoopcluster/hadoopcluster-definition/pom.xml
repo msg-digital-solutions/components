@@ -160,7 +160,7 @@
                                 <Bundle-SymbolicName>org.talend.components.hadoopcluster.definition
                                 </Bundle-SymbolicName>
                                 <Import-Package>
-                                    !*internal,org.talend*,org.slf4j*,javax.xml.namespace,org.apache.commons*,org.apache.avro.*,org.apache.oltu.oauth2*,org.codehaus.jackson*
+                                    !*internal,org.talend*,org.slf4j*;version=!,javax.xml.namespace,org.apache.commons*,org.apache.avro.*,org.apache.oltu.oauth2*,org.codehaus.jackson*
                                 </Import-Package>
                                 <Service-Component>*</Service-Component>
                                 <Embed-Dependency>

@@ -158,7 +158,7 @@
                                 <Bundle-SymbolicName>org.talend.components.snowflake.runtime</Bundle-SymbolicName>
                                 <Service-Component>*</Service-Component>
                                 <Import-Package>
-                                    !*internal,org.talend*,org.slf4j*,javax*,org.apache.commons*,org.xml.sax*,org.apache.avro.*,org.codehaus.jackson*
+                                    !*internal,org.talend*,org.slf4j*;version=!,javax*,org.apache.commons*,org.xml.sax*,org.apache.avro.*,org.codehaus.jackson*
                                 </Import-Package>
                                 <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!components*|auto-service</Embed-Dependency>
                                 <Include-Resource>

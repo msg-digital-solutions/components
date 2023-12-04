@@ -293,7 +293,7 @@
                                 <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.7))"</Require-Capability>
                                 <Bundle-SymbolicName>org.talend.components.salesforce.runtime</Bundle-SymbolicName>
                                 <Import-Package>
-                                    !*internal,org.talend*,org.slf4j*,javax.xml.namespace,org.apache.commons*,org.apache.http.*,org.apache.avro.*,org.apache.oltu.oauth2*,org.codehaus.jackson*
+                                    !*internal,org.talend*,org.slf4j*;version=!,javax.xml.namespace,org.apache.commons*,org.apache.http.*,org.apache.avro.*,org.apache.oltu.oauth2*,org.codehaus.jackson*
                                 </Import-Package>
                                 <Service-Component>*</Service-Component>
                                 <Embed-Dependency>

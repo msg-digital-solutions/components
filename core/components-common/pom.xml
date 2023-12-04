@@ -133,7 +133,7 @@
                                 <_noee>true</_noee>
                                 <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.7))"</Require-Capability>
                                 <Import-Package>
-                                    !*internal,org.talend*,org.slf4j*,javax.xml.namespace,org.junit*,org.hamcrest*
+                                    !*internal,org.talend*,org.slf4j*;version=!,javax.xml.namespace,org.junit*,org.hamcrest*
                                 </Import-Package>
                                 <Bundle-SymbolicName>org.talend.components.common.test</Bundle-SymbolicName>
                                 <Bundle-Name>Test Fragment for ${project.name}</Bundle-Name>
@@ -160,7 +160,7 @@
                                 <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.7))"</Require-Capability>
                                 <Bundle-SymbolicName>org.talend.components.common</Bundle-SymbolicName>
                                 <Import-Package>
-                                    org.talend*,org.slf4j*,org.apache.commons*,org.apache.avro*,javax.inject*
+                                    org.talend*,org.slf4j*;version=!,org.apache.commons*,org.apache.avro*,javax.inject*
                                 </Import-Package>
                                 <Service-Component>*</Service-Component>
                                 <Embed-Dependency>!components*,*;scope=compile|runtime;artifactId=avro;inline=false

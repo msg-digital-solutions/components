@@ -293,7 +293,7 @@
                                 <_noee>true</_noee>
                                 <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.7))"</Require-Capability>
                                 <Import-Package>
-                                    !*internal,!org.apache.commons.dbcp2*,!org.apache.commons.io.input*,org.talend*,org.slf4j*,javax.xml.namespace,org.junit*,org.hamcrest*
+                                    !*internal,!org.apache.commons.dbcp2*,!org.apache.commons.io.input*,org.talend*,org.slf4j*;version=!,javax.xml.namespace,org.junit*,org.hamcrest*
                                 </Import-Package>
                                 <Bundle-SymbolicName>org.talend.components.jdbc.definition.test</Bundle-SymbolicName>
                                 <Bundle-Name>Test Fragment for ${project.name}</Bundle-Name>
@@ -320,7 +320,7 @@
                                 <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.7))"</Require-Capability>
                                 <Bundle-SymbolicName>org.talend.components.jdbc.definition</Bundle-SymbolicName>
                                 <Import-Package>
-                                    !*internal,!org.apache.commons.dbcp2*,!org.apache.commons.io.input*,org.talend*,org.slf4j*,javax.xml.namespace,org.apache.commons*,org.apache.avro.*
+                                    !*internal,!org.apache.commons.dbcp2*,!org.apache.commons.io.input*,org.talend*,org.slf4j*;version=!,javax.xml.namespace,org.apache.commons*,org.apache.avro.*
                                 </Import-Package>
                                 <Service-Component>*</Service-Component>
                                 <Embed-Dependency>!components*|auto-service|commons-lang*|jackson*|javax.inject*,*;scope=compile|runtime</Embed-Dependency>

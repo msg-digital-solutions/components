@@ -231,7 +231,7 @@
                                 <Import-Package>
                                     !*internal,
                                     org.talend*,
-                                    org.slf4j*,
+                                    org.slf4j*;version=!,
                                     javax.xml.namespace,
                                     org.apache.commons*,
                                     org.apache.avro.*,

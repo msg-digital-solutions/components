@@ -148,7 +148,7 @@
                                 <Bundle-SymbolicName>org.talend.components.api</Bundle-SymbolicName>
                                 <Service-Component>*</Service-Component>
                                 <Import-Package>org.osgi*,javax.net.ssl,javax.security.auth.x500,
-                                    org.slf4j*,org.talend.daikon*,org.apache.avro,org.apache.commons.lang3,org.ops4j.pax.url.mvn*
+                                    org.slf4j*;version=!,org.talend.daikon*,org.apache.avro,org.apache.commons.lang3,org.ops4j.pax.url.mvn*
                                 </Import-Package>
                                 <Embed-Transitive>true</Embed-Transitive>
                                 <Embed-Dependency>

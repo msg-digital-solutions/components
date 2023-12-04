@@ -192,7 +192,7 @@
                                 <Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.7))"</Require-Capability>
                                 <Bundle-SymbolicName>org.talend.components.marklogic.definition</Bundle-SymbolicName>
                                 <Import-Package>
-                                    !*internal,org.talend*,org.slf4j*,javax.xml.namespace,org.apache.commons*,org.apache.avro.*,org.apache.oltu.oauth2.client.response,org.codehaus.jackson*
+                                    !*internal,org.talend*,org.slf4j*;version=!,javax.xml.namespace,org.apache.commons*,org.apache.avro.*,org.apache.oltu.oauth2.client.response,org.codehaus.jackson*
                                 </Import-Package>
                                 <Include-Resource>
                                     {maven-resources},META-INF/services/=target/classes/META-INF/services/,META-INF/maven/${project.groupId}/${project.artifactId}/dependencies.txt=target/classes/META-INF/maven/${project.groupId}/${project.artifactId}/dependencies.txt

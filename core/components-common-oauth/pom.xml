@@ -92,7 +92,7 @@
 								<Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.7))"</Require-Capability>
 								<Bundle-SymbolicName>org.talend.components.common-oauth</Bundle-SymbolicName>
 								<Import-Package>org.talend*,
-									org.slf4j*,
+									org.slf4j*;version=!,
 									org.codehaus.jackson*
 								</Import-Package>
 								<Service-Component>*</Service-Component>

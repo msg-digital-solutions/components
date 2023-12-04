@@ -93,7 +93,7 @@
 								<_dsannotations-options>nocapabilities,norequirements,version;minimum=1.2.0</_dsannotations-options>
 								<_noee>true</_noee>
 								<Require-Capability>osgi.ee;filter:="(&amp;(osgi.ee=JavaSE)(version=1.7))"</Require-Capability>
-								<Import-Package>!*internal,org.talend*,org.slf4j*,javax.xml.namespace,org.junit*</Import-Package>
+								<Import-Package>!*internal,org.talend*,org.slf4j*;version=!,javax.xml.namespace,org.junit*</Import-Package>
 								<Bundle-SymbolicName>org.talend.components.fullexample.test</Bundle-SymbolicName>
 								<Bundle-Name>Test Fragment for ${project.name}</Bundle-Name>
 								<Fragment-Host>org.talend.components.fullexample</Fragment-Host>
