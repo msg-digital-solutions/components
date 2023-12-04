@@ -321,6 +321,10 @@
                                                 <from>
                                                     ${talend_docker_registry}${docker.tsbiPath}/${docker.tsbiImage}:${docker.tsbiVersion}
                                                 </from>
+                                                <runCmds>
+                                                    <run>yum update</run>
+                                                    <run>yum -y install which</run>
+                                                </runCmds>
                                                 <tags>
                                                     <tag>${docker.image.tag}</tag>
                                                 </tags>
