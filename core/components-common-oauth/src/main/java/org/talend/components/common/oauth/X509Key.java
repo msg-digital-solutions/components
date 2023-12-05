@@ -24,9 +24,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.talend.daikon.i18n.GlobalI18N;
 import org.talend.daikon.i18n.I18nMessages;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-
 /**
  * A 509 certificate handler to load certificate from a key store and use it to sign data
  */
@@ -47,8 +44,6 @@ public class X509Key {
 
     private X509Certificate publicKey;
 
-    private SSLContext sslContext;
-
     private X509Key(Builder b) {
 
         try (InputStream keyStoreIS = new FileInputStream(b.keyStorePath)) {
@@ -59,23 +54,12 @@ public class X509Key {
             this.privateKey = (PrivateKey) keystore.getKey(b.certificateAlias, b.keyStorePassword.toCharArray());
             this.publicKey = (X509Certificate) keystore.getCertificate(b.certificateAlias);
 
-            if(b.mutualAuth){
-                // Make a KeyManagerFactory from the KeyStore
-                KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-                kmf.init(keystore, b.keyStorePassword.toCharArray());
-
-                // Now make an SSL Context with our Key Manager and the default Trust Manager
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(kmf.getKeyManagers(), null, null);
-
-                this.sslContext = sslContext;
-            }
-
             if (privateKey == null || publicKey == null) {
                 throw new RuntimeException(messages.getMessage("msg.err.notFoundCert", b.certificateAlias, b.keyStorePath));
             }
 
-        } catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException | UnrecoverableKeyException | KeyManagementException e) {
+        } catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException
+                | UnrecoverableKeyException e) {
             throw new RuntimeException(e);
         }
 
@@ -127,15 +111,6 @@ public class X509Key {
 
     }
 
-    /**
-     * Returns the custom SSLContext created from the specified keystore.
-     *
-     * @return The SSLContext.
-     */
-    public SSLContext getSslContext() {
-        return sslContext;
-    }
-
     // Builder
     public static KeyStorePath builder() {
         return new Builder();
@@ -148,8 +123,6 @@ public class X509Key {
         private String keyStorePassword;
 
         private String certificateAlias;
-
-        private boolean mutualAuth;
 
         @Override
         public KeyStorePasswd keyStorePath(String keyStorePath) {
@@ -166,12 +139,6 @@ public class X509Key {
         @Override
         public Build certificateAlias(String certificateAlias) {
             this.certificateAlias = certificateAlias;
-            return this;
-        }
-
-        @Override
-        public Build mutualAuth(boolean mutualAuth) {
-            this.mutualAuth = mutualAuth;
             return this;
         }
 
@@ -201,10 +168,7 @@ public class X509Key {
 
     public interface Build {
 
-        public Build mutualAuth(boolean mutualAuth);
-
         public X509Key build();
-
     }
 
 }

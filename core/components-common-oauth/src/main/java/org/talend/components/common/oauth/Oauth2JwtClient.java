@@ -29,31 +29,28 @@ import org.talend.components.common.oauth.X509Key.Algorithm;
 import org.talend.daikon.i18n.GlobalI18N;
 import org.talend.daikon.i18n.I18nMessages;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-
 /**
- *
+ * 
  * <p>
  * The OAuth 2.0 JWT bearer token flow is similar to a refresh token flow within OAuth.<br/>
  * The JWT is posted to the OAuth token endpoint, which in turn processes the JWT and issues an access_token based on prior
  * approval of the app.<br/>
  * However, the client doesn’t need to have or store a refresh_token, nor is a client_secret required to be passed to the token
  * endpoint.
- *
+ * 
  * <p>
  * Reference:<br/>
  * <a href="https://tools.ietf.org/html/draft-ietf-oauth-jwt-bearer-12">
  * JWT Profile for OAuth 2.0 Client Authentication and Authorization Grants</a>
- *
+ * 
  * <a href="https://tools.ietf.org/html/draft-jones-json-web-token-10"> JSON Web Token (JWT)</a><br/>
  * </p>
  * <b>Note</b> : A refresh_token is never issued in this flow.<br/>
  * </p>
- *
+ * 
  * This client will construct the Jwt with the signtaure part using an X509 certificate.<br/>
  * it will add play load params for the assertion part under assertion param & client_assertion param
- *
+ * 
  */
 public class Oauth2JwtClient {
 
@@ -100,11 +97,9 @@ public class Oauth2JwtClient {
 
     private Map<String, String> postPlayloadParams = new HashMap<>();
 
-    private final SSLContext sslContext;
-
     /**
      * Perform a request to the token end point to get an access token
-     *
+     * 
      * @throws RuntimeException : if the token can't be gathered or the end point token responds with an http status code != 200
      */
     public JsonNode getAccessToken() throws IOException {
@@ -121,13 +116,7 @@ public class Oauth2JwtClient {
     }
 
     private HttpURLConnection createHttpConnection() throws MalformedURLException, IOException {
-        HttpURLConnection connection = null;
-        if(sslContext != null) {
-            connection = (HttpsURLConnection) new URL(tokenEndpoint).openConnection();
-            ((HttpsURLConnection) connection).setSSLSocketFactory(sslContext.getSocketFactory());
-        } else {
-            connection = (HttpURLConnection) new URL(tokenEndpoint).openConnection();
-        }
+        HttpURLConnection connection = (HttpURLConnection) new URL(tokenEndpoint).openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         connection.setUseCaches(false);
@@ -192,7 +181,6 @@ public class Oauth2JwtClient {
         this.jwt = builder.jwt.toString();
         this.tokenEndpoint = builder.tokenEndpoint;
         this.postPlayloadParams = builder.postPlayloadParams;
-        this.sslContext = builder.sslContext;
     }
 
     public static IJwsHeaders builder() {
@@ -206,8 +194,6 @@ public class Oauth2JwtClient {
         private String tokenEndpoint;
 
         private Map<String, String> postPlayloadParams;
-
-        private SSLContext sslContext;
 
         @Override
         public IBuild withPlayloadParams(Map<String, String> postPlayloadParams) {
@@ -232,7 +218,6 @@ public class Oauth2JwtClient {
 
         @Override
         public ITokenEndpoint signWithX509Key(X509Key x509Key, Algorithm alg) {
-            this.sslContext = x509Key.getSslContext();
             byte[] signedJwtPart = x509Key.sign(jwt.toString(), alg);
             jwt.append(".");
             jwt.append(Base64.getUrlEncoder().encodeToString(signedJwtPart));

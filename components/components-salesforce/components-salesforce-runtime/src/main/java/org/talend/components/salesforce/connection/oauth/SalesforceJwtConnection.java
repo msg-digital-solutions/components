@@ -27,8 +27,6 @@ import org.talend.components.common.oauth.Oauth2JwtClient;
 import org.talend.components.common.oauth.X509Key;
 import org.talend.components.common.oauth.properties.Oauth2JwtFlowProperties;
 
-import javax.net.ssl.SSLContext;
-
 /**
  * This use server to server jwt connection that do not need user interaction
  * see {@link Oauth2JwtClient} for farther details on the process.
@@ -39,10 +37,6 @@ public class SalesforceJwtConnection {
 
     private String tokenEndpoint;
 
-    private boolean mutualAuth;
-
-    private SSLContext sslContext;
-
     /**
      * @param oauth2Prop
      * @param tokenEndpoint
@@ -51,15 +45,6 @@ public class SalesforceJwtConnection {
         super();
         this.oauth2Prop = oauth2Prop;
         this.tokenEndpoint = tokenEndpoint;
-    }
-
-    /**
-     * @param oauth2Prop
-     * @param tokenEndpoint
-     */
-    public SalesforceJwtConnection(Oauth2JwtFlowProperties oauth2Prop, String tokenEndpoint, boolean mutualAuth) {
-        this(oauth2Prop, tokenEndpoint);
-        this.mutualAuth = mutualAuth;
     }
 
     /**
@@ -102,23 +87,16 @@ public class SalesforceJwtConnection {
     }
 
     private X509Key x509Key() {
-        X509Key x509Key = X509Key.builder()//
+        return X509Key.builder()//
                 .keyStorePath(StringUtils.strip(oauth2Prop.keyStore.getStringValue(), "\""))//
                 .keyStorePassword(oauth2Prop.keyStorePassword.getStringValue())//
                 .certificateAlias(oauth2Prop.certificateAlias.getStringValue())// certificate alias
-                .mutualAuth(mutualAuth)
                 .build();
-        this.sslContext = x509Key.getSslContext();
-        return x509Key;
     }
 
     private Map<String, String> playLoadParams() {
         Map<String, String> params = new HashMap<>();
         params.put(Oauth2JwtClient.PARAM_GRANT_TYPE, "urn:ietf:params:oauth:grant-type:jwt-bearer");
         return params;
-    }
-
-    public SSLContext getSslContext() {
-        return sslContext;
     }
 }
