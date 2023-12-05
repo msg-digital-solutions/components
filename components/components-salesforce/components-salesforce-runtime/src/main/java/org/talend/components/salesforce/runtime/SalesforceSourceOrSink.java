@@ -184,13 +184,18 @@ public class SalesforceSourceOrSink implements SalesforceRuntimeSourceOrSink, Sa
                         SalesforceConnectionProperties.ACTIVE_ENDPOINT);
             }
             endpoint = StringUtils.strip(endpoint, "\"");
-            if(!isOAuth && connProps.sslProperties.mutualAuth.getValue()){
-
+            if(connProps.sslProperties.mutualAuth.getValue()) {
                 try {
-                    SSLContext sslContext = getSSLContext(connProps.sslProperties.keyStorePath.getValue(),connProps.sslProperties.keyStorePwd.getValue());
-                    config.setSslContext(sslContext);
+                    if (!isOAuth){
+                        SSLContext sslContext = getSSLContext(connProps.sslProperties.keyStorePath.getValue(), connProps.sslProperties.keyStorePwd.getValue());
+                        config.setSslContext(sslContext);
+                    } else {
+                        if(config.getSslContext() == null) {
+                            config.setSslContext(SSLContext.getDefault());
+                        }
+                    }
                 } catch (Throwable e) {
-                    LOG.error(e.getMessage(),e);
+                    LOG.error(e.getMessage(), e);
                     throw new ConnectionException(e.getMessage());
                 }
             }
