@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.talend.components</groupId>
         <artifactId>components-api-service-aggregator</artifactId>
-        <version>0.28.32</version>
+        <version>0.28.33-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>components-api-service-rest</artifactId>
-    <version>0.28.32</version>
+    <version>0.28.33-SNAPSHOT</version>
     <name>Component REST API</name>
     <properties>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
