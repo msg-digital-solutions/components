@@ -73,7 +73,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public abstract class SalesforceComponentTestIT extends SalesforceTestBase {
+public abstract class   SalesforceComponentTestIT extends SalesforceTestBase {
 
     @ClassRule
     public static final TestRule DISABLE_IF_NEEDED = new DisableIfMissingConfig();

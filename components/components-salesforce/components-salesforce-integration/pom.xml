@@ -19,7 +19,6 @@
         <maven.deploy.skip>true</maven.deploy.skip>
         <coverage.sonar.reportRoot>${project.basedir}/..</coverage.sonar.reportRoot>
 
-        <jetty.version>9.2.19.v20160908</jetty.version>
         <servicemix-bundles-commons-collection.version>3.2.1_3</servicemix-bundles-commons-collection.version>
     </properties>
 
@@ -49,6 +48,11 @@
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.talend.components</groupId>
@@ -67,12 +71,6 @@
             <artifactId>components-api-service-rest</artifactId>
             <classifier>lib</classifier>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.talend.components</groupId>
@@ -93,28 +91,6 @@
             <version>${servicemix-bundles-commons-collection.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-http</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-io</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>

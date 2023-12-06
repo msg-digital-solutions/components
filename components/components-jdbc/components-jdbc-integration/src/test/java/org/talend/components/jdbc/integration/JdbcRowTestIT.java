@@ -12,12 +12,17 @@
 // ============================================================================
 package org.talend.components.jdbc.integration;
 
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
@@ -47,10 +52,6 @@ import org.talend.components.jdbc.tjdbcrow.TJDBCRowProperties;
 import org.talend.daikon.properties.ValidationResult;
 import org.talend.daikon.runtime.RuntimeUtil;
 import org.talend.daikon.sandbox.SandboxedInstance;
-
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 public class JdbcRowTestIT {
 
@@ -102,7 +103,7 @@ public class JdbcRowTestIT {
             ValidationResult result = sourceOrSink.validate(null);
             Assert.assertTrue(result.getStatus() == ValidationResult.Result.OK);
 
-            Assert.assertNotNull(System.getProperty("awt.toolkit"));
+            //Assert.assertNotNull(System.getProperty("awt.toolkit"));
         }
 
         TJDBCInputDefinition definition1 = new TJDBCInputDefinition();

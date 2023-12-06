@@ -19,7 +19,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+
+import org.mockito.junit.MockitoJUnitRunner;
 import org.talend.components.api.service.ComponentService;
 import org.talend.components.common.datastore.DatastoreDefinition;
 import org.talend.daikon.definition.service.DefinitionRegistryService;

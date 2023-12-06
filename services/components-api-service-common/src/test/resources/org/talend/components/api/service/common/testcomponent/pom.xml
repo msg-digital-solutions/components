@@ -12,7 +12,7 @@
     <name>Component API test depenencies pom</name>
 
     <properties>
-        <aetherVersion>1.0.0.v20140518</aetherVersion>
+        <maven.resolver>1.9.17</maven.resolver>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -37,9 +37,9 @@
 
         <!-- dependency with version specified in property -->
         <dependency>
-            <groupId>org.eclipse.aether</groupId>
-            <artifactId>aether-api</artifactId>
-            <version>${aetherVersion}</version>
+            <groupId>org.apache.maven.resolver</groupId>
+            <artifactId>maven-resolver-api</artifactId>
+            <version>${maven.resolver}</version>
         </dependency>
         <!-- simple dependency but in talend repo -->
         <dependency>
@@ -61,9 +61,9 @@
             <id>prof1</id>
             <dependencies>
                 <dependency>
-                    <groupId>org.eclipse.aether</groupId>
-                    <artifactId>aether-util</artifactId>
-                    <version>${aetherVersion}</version>
+                    <groupId>org.apache.maven.resolver</groupId>
+                    <artifactId>maven-resolver-util</artifactId>
+                    <version>${maven.resolver}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -71,9 +71,9 @@
             <id>prof2</id>
             <dependencies>
                 <dependency>
-                    <groupId>org.eclipse.aether</groupId>
-                    <artifactId>aether-bar</artifactId>
-                    <version>${aetherVersion}</version>
+                    <groupId>org.apache.maven.resolver</groupId>
+                    <artifactId>maven-resolver-bar</artifactId>
+                    <version>${maven.resolver}</version>
                 </dependency>
             </dependencies>
         </profile>

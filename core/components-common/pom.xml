@@ -22,6 +22,10 @@
             <groupId>org.talend.components</groupId>
             <artifactId>components-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+        </dependency>
 
         <!-- Tests -->
         <dependency>
@@ -41,10 +45,7 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>org.codehaus.jackson</groupId>

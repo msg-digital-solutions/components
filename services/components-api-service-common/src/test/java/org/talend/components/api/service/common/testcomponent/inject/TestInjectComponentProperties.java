@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.components.api.service.common.testcomponent.inject;
 
-import javax.inject.Inject;
-
+import jakarta.inject.Inject;
 import org.talend.components.api.properties.ComponentPropertiesImpl;
 import org.talend.daikon.definition.service.DefinitionRegistryService;
 

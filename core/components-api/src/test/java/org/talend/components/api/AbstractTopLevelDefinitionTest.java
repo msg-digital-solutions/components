@@ -32,7 +32,7 @@ import org.talend.daikon.i18n.tag.TagUtils;
  */
 public class AbstractTopLevelDefinitionTest {
 
-    class TestingAbstractTopLevelDefinition extends AbstractTopLevelDefinition {
+    static class TestingAbstractTopLevelDefinition extends AbstractTopLevelDefinition {
 
         @Override
         public String getName() {

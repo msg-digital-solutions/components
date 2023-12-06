@@ -15,8 +15,8 @@ package org.talend.components.adapter.beam;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.talend.daikon.exception.ExceptionContext;
 import org.talend.daikon.exception.TalendRuntimeException;
 import org.talend.daikon.exception.error.ErrorCode;

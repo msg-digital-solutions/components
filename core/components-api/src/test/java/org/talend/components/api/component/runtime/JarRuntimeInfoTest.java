@@ -96,7 +96,7 @@ public class JarRuntimeInfoTest {
                 new URL("mvn:org.talend.components/components-common/0.13.1/jar"),
                 new URL("mvn:org.slf4j/slf4j-api/1.7.12/jar"),
                 new URL("mvn:org.talend.components/components-api-full-example/0.1.0/jar"), new URL("mvn:org.tukaani/xz/1.5/jar"),
-                new URL("mvn:javax.inject/javax.inject/1/jar"), new URL("mvn:org.apache.commons/commons-compress/1.8.1/jar"),
+                new URL("mvn:jakarta.inject/jakarta.inject-api/2.0.1/jar"), new URL("mvn:org.apache.commons/commons-compress/1.8.1/jar"),
                 new URL("mvn:org.apache.commons/commons-lang3/3.4/jar"), new URL("mvn:javax.servlet/javax.servlet-api/3.1.0/jar"),
                 new URL("mvn:commons-codec/commons-codec/1.6/jar"),
                 new URL("mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.13/jar"))//

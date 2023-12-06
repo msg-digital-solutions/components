@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.components.salesforce.integration;
 
-import javax.inject.Inject;
-
+import jakarta.inject.Inject;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;

@@ -13,9 +13,10 @@
 
 package org.talend.components.service.rest.impl;
 
-import javax.activation.MimetypesFileTypeMap;
 import java.io.InputStream;
 import java.util.List;
+
+import jakarta.activation.MimetypesFileTypeMap;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;

@@ -23,19 +23,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonNumber;
-import javax.json.JsonReader;
-import javax.json.JsonStructure;
-import javax.json.JsonValue;
-import javax.json.JsonValue.ValueType;
-
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.models.BlobItem;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonBuilderFactory;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.IndexedRecord;
@@ -118,7 +116,7 @@ public class JsonBlobReader extends BlobReader {
                         }
                     };
                 } else {
-                    if (structure.getValueType() == ValueType.ARRAY) {
+                    if (structure.getValueType() == JsonValue.ValueType.ARRAY) {
                         jsonRecordIterator = structure.asJsonArray().stream().iterator();
                     } else {
                         List<JsonValue> l = new ArrayList<>();

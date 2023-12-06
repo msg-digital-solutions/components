@@ -13,6 +13,7 @@
 package org.talend.components.jdbc.dataprep;
 
 import java.sql.Connection;
+
 import org.apache.avro.Schema;
 import org.apache.avro.generic.IndexedRecord;
 import org.junit.AfterClass;

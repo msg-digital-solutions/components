@@ -15,12 +15,10 @@ package org.talend.components.salesforce.test;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.talend.components.api.container.RuntimeContainer;
 import org.talend.components.common.oauth.OAuth2FlowType;
 import org.talend.components.salesforce.SalesforceConnectionProperties;
 import org.talend.components.salesforce.SalesforceTestBase;

@@ -18,13 +18,13 @@
 
     <properties>
         <!-- /!\ START Spring BOM PROPERTIES /!\ -->
-        <talend.springboot.bom.version>0.0.32</talend.springboot.bom.version>
-        <talend.springboot.bom.artifactId>2.7</talend.springboot.bom.artifactId>
+        <talend.springboot.bom.version>0.0.23</talend.springboot.bom.version>
+        <talend.springboot.bom.artifactId>3.1</talend.springboot.bom.artifactId>
         <!-- /!\ END Spring BOM PROPERTIES /!\ -->
 
         <!-- /!\ START TSBI PROPERTIES /!\ -->
-        <docker.tsbiImage>java8-base</docker.tsbiImage>
-        <docker.tsbiVersion>3.1.6-20221214132533</docker.tsbiVersion>
+        <docker.tsbiImage>java17-base</docker.tsbiImage>
+        <docker.tsbiVersion>4.0.6-20231205095555</docker.tsbiVersion>
         <docker.registryName>docker-dev-local</docker.registryName> <!-- Keep the dev registry to push the services image  -->
         <docker.tsbiPath>/tlnd-docker-prod/talend/common/tsbi</docker.tsbiPath>
         <!-- /!\ END TSBI PROPERTIES /!\ -->

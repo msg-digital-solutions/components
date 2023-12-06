@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.components.azurestorage;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Rule;
